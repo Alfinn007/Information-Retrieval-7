@@ -23,10 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const stickerBrand = document.getElementById('sticker-brand');
   const stickerDate = document.getElementById('sticker-date');
 
-  // Mini Quick Search in Results Area
-  const miniSearchInput = document.getElementById('mini-search-input');
-  const btnMiniSearch = document.getElementById('btn-mini-search');
-
   // Mobile Floating Search Button
   const mobileFloatingBtn = document.getElementById('mobile-floating-btn');
 
@@ -298,7 +294,6 @@ document.addEventListener('DOMContentLoaded', () => {
     loadingState.style.display = 'flex';
     summaryQuery.textContent = trimmed;
     searchInput.value = trimmed;
-    if (miniSearchInput) miniSearchInput.value = trimmed;
     
     // Smooth scroll ke section hasil
     const resultsSection = document.getElementById('hasil');
@@ -620,18 +615,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnSubmitSearch) {
     btnSubmitSearch.addEventListener('click', () => {
       performSearch(searchInput.value);
-    });
-  }
-
-  // Mini Search di Area Hasil
-  if (btnMiniSearch && miniSearchInput) {
-    btnMiniSearch.addEventListener('click', () => {
-      performSearch(miniSearchInput.value);
-    });
-    miniSearchInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        performSearch(miniSearchInput.value);
-      }
     });
   }
 
