@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // DOM Elements
   const searchForm = document.getElementById('search-form');
   const searchInput = document.getElementById('search-input');
-  const btnSubmitSearch = document.getElementById('btn-submit-search');
   const linkLihatHasil = document.getElementById('link-lihat-hasil');
   const cardsContainer = document.getElementById('cards-container');
   const loadingState = document.getElementById('loading-state');
@@ -608,12 +607,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (searchForm) {
     searchForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      performSearch(searchInput.value);
-    });
-  }
-
-  if (btnSubmitSearch) {
-    btnSubmitSearch.addEventListener('click', () => {
       performSearch(searchInput.value);
     });
   }

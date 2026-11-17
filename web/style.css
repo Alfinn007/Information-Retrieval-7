@@ -812,23 +812,13 @@ body {
   font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  cursor: pointer;
+  cursor: default;
+  user-select: none;
+  pointer-events: none;
   box-shadow: 0 -4px 0px var(--ink);
   display: flex;
   align-items: center;
   gap: 10px;
-  transition: transform 0.15s, background 0.15s;
-  touch-action: manipulation;
-}
-
-.trapezoid-cta-btn:hover {
-  background: var(--orange-hover);
-  transform: translateY(-3px);
-  box-shadow: 0 -6px 0px var(--ink);
-}
-
-.trapezoid-cta-btn:active {
-  transform: translateY(0);
 }
 
 .cta-stripes {
