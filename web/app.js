@@ -170,36 +170,97 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // =========================================================================
-  // 2. PARALLAX 3D TILT INTERAKTIF (MOUSE & GYROSCOPE HP)
+  // 2. PARALLAX & TOUCH 3D TILT INTERAKTIF (DESKTOP MOUSE & MOBILE TOUCH)
   // =========================================================================
-  if (laptopChassis && window.matchMedia('(min-width: 681px)').matches) {
-    // Desktop: Mengikuti gerakan kursor mouse
-    if (heroStage) {
+  function triggerHaptic(duration = 25) {
+    if (navigator && navigator.vibrate) {
+      try { navigator.vibrate(duration); } catch (e) {}
+    }
+  }
+
+  // Interaktivitas Tap Layar Terminal Laptop
+  const screenContainer = document.getElementById('screen-container');
+  if (screenContainer && searchInput) {
+    screenContainer.addEventListener('click', (e) => {
+      if (e.target !== searchInput) {
+        searchInput.focus();
+        triggerHaptic(15);
+        playClickSound();
+        screenContainer.style.boxShadow = 'inset 0 0 24px rgba(134, 209, 42, 0.5), 0 0 10px rgba(134, 209, 42, 0.4)';
+        setTimeout(() => {
+          screenContainer.style.boxShadow = '';
+        }, 800);
+      }
+    });
+  }
+
+  if (laptopChassis) {
+    // A. Desktop Mousemove Tilt (layar lebar > 680px)
+    if (window.matchMedia('(min-width: 681px)').matches && heroStage) {
       heroStage.addEventListener('mousemove', (e) => {
         const rect = heroStage.getBoundingClientRect();
         const x = (e.clientX - rect.left) / rect.width - 0.5;
         const y = (e.clientY - rect.top) / rect.height - 0.5;
         
-        const tiltX = 11 - (y * 12);
-        const tiltY = x * 14;
-        laptopChassis.style.transform = `rotate(${tiltX}deg) rotateY(${tiltY}deg) translateY(${y * -6}px)`;
+        const tiltX = 11 - (y * 10);
+        const tiltY = x * 12;
+        laptopChassis.style.transform = `rotate(${tiltX}deg) rotateY(${tiltY}deg) translateY(${y * -5}px)`;
       });
 
       heroStage.addEventListener('mouseleave', () => {
         laptopChassis.style.transform = '';
       });
     }
-  }
 
-  // Mobile / Tablet: Gyroscope (DeviceOrientation)
-  if (window.DeviceOrientationEvent && window.matchMedia('(max-width: 680px)').matches) {
-    window.addEventListener('deviceorientation', (e) => {
-      if (laptopChassis && e.gamma !== null && e.beta !== null) {
-        const gamma = Math.max(Math.min(e.gamma, 20), -20); // Tilt kiri/kanan (-20 s/d 20)
-        const tiltAngle = (gamma / 20) * 8;
-        laptopChassis.style.transform = `rotate(${2 + tiltAngle}deg) translateY(0)`;
+    // B. Mobile Touch Drag Tilt (layar <= 680px)
+    if (window.matchMedia('(max-width: 680px)').matches) {
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let isTouching = false;
+
+      laptopChassis.addEventListener('touchstart', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return;
+        isTouching = true;
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        laptopChassis.style.transition = 'none';
+      }, { passive: true });
+
+      laptopChassis.addEventListener('touchmove', (e) => {
+        if (!isTouching) return;
+        const currentX = e.touches[0].clientX;
+        const currentY = e.touches[0].clientY;
+        const deltaX = currentX - touchStartX;
+        const deltaY = currentY - touchStartY;
+
+        // Batasi sudut kemiringan agar pas di layar HP dan tidak pernah terpotong (max 5 deg)
+        const rotY = Math.max(Math.min(deltaX * 0.08, 5), -5);
+        const rotX = Math.max(Math.min(-deltaY * 0.08, 4), -4);
+
+        laptopChassis.style.transform = `perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.01)`;
+      }, { passive: true });
+
+      const resetTouchTilt = () => {
+        if (!isTouching) return;
+        isTouching = false;
+        laptopChassis.style.transition = 'transform 0.4s cubic-bezier(0.18, 0.9, 0.3, 1)';
+        laptopChassis.style.transform = 'none';
+      };
+
+      laptopChassis.addEventListener('touchend', resetTouchTilt);
+      laptopChassis.addEventListener('touchcancel', resetTouchTilt);
+
+      // Gyroscope halus tanpa memotong batas layar HP
+      if (window.DeviceOrientationEvent) {
+        window.addEventListener('deviceorientation', (e) => {
+          if (!isTouching && e.gamma !== null) {
+            const gamma = Math.max(Math.min(e.gamma, 15), -15);
+            const subtleTilt = (gamma / 15) * 2.5; // Max 2.5 deg
+            laptopChassis.style.transform = `rotate(${subtleTilt}deg)`;
+          }
+        }, { passive: true });
       }
-    }, { passive: true });
+    }
   }
 
 
@@ -212,6 +273,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (msgEl) msgEl.textContent = msg;
     retroToast.classList.add('show');
     playClickSound();
+    triggerHaptic(30);
     setTimeout(() => {
       retroToast.classList.remove('show');
     }, 2400);
@@ -463,6 +525,7 @@ document.addEventListener('DOMContentLoaded', () => {
       function toggleAccordion(e) {
         e.stopPropagation();
         playClickSound();
+        triggerHaptic(15);
         const isOpen = accordion.classList.toggle('open');
         btnToggle.textContent = isOpen ? 'Tutup Detail ▲' : 'Detail Lengkap ▼';
       }
@@ -597,6 +660,7 @@ document.addEventListener('DOMContentLoaded', () => {
   queryChips.forEach(chip => {
     chip.addEventListener('click', () => {
       playClickSound();
+      triggerHaptic(20);
       const q = chip.getAttribute('data-query');
       searchInput.value = q;
       performSearch(q);

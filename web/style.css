@@ -1517,21 +1517,341 @@ body {
   }
   
   .hero-section {
-    padding: 14px 10px 0 10px;
+    padding: 12px 10px 0 10px;
     min-height: auto;
   }
   
-  /* Supaya laptop tetap tegak dan nyaman di-touch di layar HP */
+  /* Header Mobile: Rapi & Terpusat tanpa overflow */
+  .hero-header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+  }
+
+  .header-center {
+    order: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .blade-ornament {
+    width: 26px;
+    height: 10px;
+    flex-shrink: 0;
+  }
+
+  .brand-wordmark {
+    font-size: clamp(2rem, 8vw, 2.7rem);
+  }
+
+  .brand-tagline {
+    font-size: 0.56rem;
+    letter-spacing: 0.16em;
+  }
+
+  .header-left {
+    order: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .micro-badge-group {
+    padding-right: 8px;
+    gap: 6px;
+  }
+
+  .header-right {
+    order: 3;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .hero-divider {
+    margin: 10px 0 6px 0;
+  }
+
+  /* STAGE & LAPTOP 3D: Presisi dan Bebas Terpotong */
+  .hero-center-stage {
+    width: 100%;
+    padding: 8px 0 14px 0;
+    overflow: visible;
+  }
+
+  .laptop-3d-stage {
+    perspective: 1000px;
+    width: 100%;
+    max-width: 100%;
+    padding: 6px 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 12px;
+    overflow: visible;
+  }
+  
+  /* Laptop tegak lurus proporsional, ramah sentuhan (touch drag) */
   .laptop-chassis {
-    transform: rotate(2deg) translateY(0) !important;
-    animation: none;
-    max-width: 96%;
+    width: 100%;
+    max-width: 440px;
+    transform: none !important;
+    animation: none !important;
+    transform-origin: center center;
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.4, 1);
+    touch-action: pan-y;
   }
   
   .laptop-drop-shadow {
-    bottom: -10px;
+    bottom: -8px;
+    height: 20px;
   }
-  
+
+  .laptop-lid {
+    padding: 10px 12px 8px 12px;
+  }
+
+  .laptop-screen {
+    padding: 10px 12px;
+  }
+
+  .screen-header-bar {
+    font-size: 0.56rem;
+    padding-bottom: 4px;
+    margin-bottom: 6px;
+  }
+
+  .terminal-prompt {
+    font-size: 1rem;
+  }
+
+  .terminal-input {
+    font-size: 14px;
+  }
+
+  .terminal-input::placeholder {
+    font-size: 0.74rem;
+  }
+
+  .screen-subtext {
+    font-size: 0.52rem;
+    margin-top: 5px;
+  }
+
+  .laptop-base {
+    padding: 10px 12px;
+  }
+
+  .internal-circuit {
+    top: 6px;
+    left: 10px;
+    right: 10px;
+    gap: 8px;
+    height: 30px;
+  }
+
+  .circuit-chip {
+    font-size: 0.42rem;
+    padding: 2px 4px;
+    height: 16px;
+  }
+
+  .circuit-ram-slot {
+    width: 42px;
+    height: 10px;
+  }
+
+  .circuit-fan {
+    width: 24px;
+    height: 24px;
+  }
+
+  .laptop-keyboard {
+    padding: 6px 8px;
+    gap: 3px;
+  }
+
+  .kb-row {
+    gap: 3px;
+  }
+
+  .kb-row span {
+    height: 9px;
+  }
+
+  .space-row .spacebar {
+    height: 9px;
+  }
+
+  /* Palmrest & Stiker Kaset: Bersanding Rapih tanpa tabrakan */
+  .palmrest-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    position: relative;
+    gap: 8px;
+  }
+
+  .trackpad {
+    width: 72px;
+    height: 44px;
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  .cassette-sticker {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: auto;
+    max-width: 140px;
+    padding: 4px 6px;
+    font-size: 0.52rem;
+    transform: rotate(-1deg);
+    box-shadow: 1.5px 1.5px 0px rgba(20, 20, 20, 0.3);
+    flex-shrink: 0;
+  }
+
+  .sticker-meta {
+    font-size: 0.48rem;
+  }
+
+  .sticker-ruler {
+    font-size: 0.44rem;
+    margin-top: 2px;
+  }
+
+  /* Quick Query Chips */
+  .quick-chips-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 4px 0;
+    width: 100%;
+  }
+
+  .chips-list {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    padding: 4px 6px;
+  }
+
+  .query-chip {
+    flex-shrink: 0;
+    font-size: 0.7rem;
+    padding: 6px 10px;
+  }
+
+  /* Footer Hero Mobile: Tombol Oranye Trapesium Melekat di Bawah */
+  .hero-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    width: 100%;
+    padding-top: 14px;
+  }
+
+  .footer-left {
+    order: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding-bottom: 0;
+  }
+
+  .footer-right {
+    order: 2;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding-bottom: 0;
+  }
+
+  .counter-value {
+    font-size: 1.05rem;
+    letter-spacing: 0.08em;
+    padding: 2px 8px;
+  }
+
+  .footer-center {
+    order: 3;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .trapezoid-cta-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 18px;
+    font-size: 1rem;
+    clip-path: polygon(3% 0%, 97% 0%, 100% 100%, 0% 100%);
+  }
+
+  .marquee-text {
+    font-size: 3.2rem;
+  }
+
+  /* Section Hasil: Rapi & Mudah Di-Scroll di Layar Ponsel */
+  .results-section {
+    padding: 20px 10px 40px 10px;
+  }
+
+  .results-header-block {
+    padding: 14px 12px;
+    margin-bottom: 20px;
+  }
+
+  .tape-deck-toolbar {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .deck-buttons {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  .deck-btn {
+    justify-content: center;
+    font-size: 0.68rem;
+    padding: 8px 6px;
+  }
+
+  .info-row {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .info-row-label,
+  .expanded-raw-label {
+    width: 100%;
+    margin-bottom: 2px;
+  }
+
+  .expanded-raw-line {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  /* Kartu Hasil Laptop */
   .laptop-card {
     grid-template-columns: 1fr;
     gap: 12px;
@@ -1561,6 +1881,18 @@ body {
   .spec-item {
     font-size: 0.68rem;
   }
+
+  .card-actions-row {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .btn-card-action {
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+    justify-content: center;
+  }
   
   .card-right-box {
     flex-direction: column;
@@ -1576,38 +1908,55 @@ body {
   .meter-wrapper {
     max-width: 100%;
   }
-  
-  .trapezoid-cta-btn {
-    padding: 12px 28px;
-    font-size: 0.95rem;
-  }
-  
-  .marquee-text {
-    font-size: 3.2rem;
-  }
 
-  .quick-chips-wrapper {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 4px 0;
-  }
-
-  .chips-list {
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    padding: 4px 6px;
-  }
-
-  .query-chip {
-    flex-shrink: 0;
-    font-size: 0.7rem;
-  }
-
-  /* Munculkan floating quick search di mobile */
+  /* Floating quick search di mobile */
   .mobile-floating-search-btn {
     display: flex;
     align-items: center;
     gap: 6px;
+  }
+}
+
+/* Extra Small Mobile (Max 420px) */
+@media (max-width: 420px) {
+  .blade-ornament {
+    width: 18px;
+    height: 8px;
+  }
+
+  .brand-wordmark {
+    font-size: 1.85rem;
+  }
+
+  .hero-divider .blade-strip-left,
+  .hero-divider .blade-strip-right {
+    display: none;
+  }
+
+  .divider-center-text {
+    font-size: 0.52rem;
+    letter-spacing: 0.08em;
+  }
+
+  .trapezoid-cta-btn {
+    font-size: 0.9rem;
+    padding: 10px 12px;
+  }
+
+  .cta-stripes {
+    display: none;
+  }
+
+  .deck-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .card-name {
+    font-size: 0.95rem;
+  }
+
+  .price-tag {
+    font-size: 0.95rem;
   }
 }
 
