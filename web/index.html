@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>LAPTOPEX — Sistem Rekomendasi Laptop (IR-7)</title>
+  
+  <!-- Google Fonts: Anybody & Space Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@150,900&family=Dela+Gothic+One&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Overlay Grain / Noise Filter SVG -->
+  <svg class="film-grain-svg" aria-hidden="true">
+    <filter id="filmGrainFilter">
+      <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" stitchTiles="stitch" />
+      <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.18 0" />
+    </filter>
+    <rect width="100%" height="100%" filter="url(#filmGrainFilter)" />
+  </svg>
+
+  <div class="outer-viewport">
+    
+    <!-- FRAME UTAMA (RETRO SAGE CONTAINER) -->
+    <main class="retro-frame" id="main-frame">
+
+      <!-- ======================================================= -->
+      <!-- 1. SECTION HERO                                         -->
+      <!-- ======================================================= -->
+      <section class="hero-section" id="hero">
+        
+        <!-- A. HEADER (3 Kolom Microtext) -->
+        <header class="hero-header">
+          <!-- Kiri -->
+          <div class="header-col header-left">
+            <div class="micro-badge-group">
+              <span class="micro-glyph">XX/ZZ</span>
+              <div class="header-lines">
+                <span class="micro-label">LAPTOP FINDER</span>
+                <span class="micro-label dim">IR-LAPTOP-7 SYSTEM</span>
+              </div>
+            </div>
+            <div class="rec-indicator" title="Sistem Siap Menerima Query">
+              <span class="rec-dot"></span>
+              <span class="rec-text">MULAI CARI</span>
+            </div>
+          </div>
+
+          <!-- Tengah: Wordmark Krom + Ornamen Blade -->
+          <div class="header-col header-center">
+            <svg class="blade-ornament blade-left" viewBox="0 0 60 16" aria-hidden="true">
+              <polygon points="60,8 45,0 30,5 15,2 0,8 15,14 30,11 45,16" fill="var(--ink)" />
+            </svg>
+            <div class="wordmark-container">
+              <h1 class="brand-wordmark" data-text="LAPTOPEX">LAPTOPEX</h1>
+              <span class="brand-tagline">CARI. BANDINGKAN. PILIH.</span>
+            </div>
+            <svg class="blade-ornament blade-right" viewBox="0 0 60 16" aria-hidden="true">
+              <polygon points="0,8 15,0 30,5 45,2 60,8 45,14 30,11 15,16" fill="var(--ink)" />
+            </svg>
+          </div>
+
+          <!-- Kanan: Kontrol Audio & Link Hasil -->
+          <div class="header-col header-right">
+            <!-- Audio FX Toggle -->
+            <button type="button" class="btn-sound-toggle" id="btn-sound-toggle" title="Aktifkan/Matikan Efek Suara Retro">
+              <span class="sound-icon">🔊</span>
+              <span class="sound-text">AUDIO: ON</span>
+            </button>
+
+            <a href="#hasil" class="btn-text-link" id="link-lihat-hasil">
+              HASIL &darr;
+            </a>
+          </div>
+        </header>
+
+        <!-- B. DIVIDER ORNAMEN -->
+        <div class="hero-divider" aria-hidden="true">
+          <div class="blade-strip-left">
+            <span class="blade-tick t5"></span>
+            <span class="blade-tick t4"></span>
+            <span class="blade-tick t3"></span>
+            <span class="blade-tick t2"></span>
+            <span class="blade-tick t1"></span>
+          </div>
+          <div class="divider-line"></div>
+          <span class="divider-center-text">CARI, BANDINGKAN, PILIH</span>
+          <div class="divider-line"></div>
+          <div class="blade-strip-right">
+            <span class="blade-tick t1"></span>
+            <span class="blade-tick t2"></span>
+            <span class="blade-tick t3"></span>
+            <span class="blade-tick t4"></span>
+            <span class="blade-tick t5"></span>
+          </div>
+        </div>
+
+        <!-- C. MARQUEE TEKS RAKSASA (Di Belakang Laptop) -->
+        <div class="marquee-wrapper" aria-hidden="true">
+          <div class="marquee-track">
+            <span class="marquee-text">CARI LAPTOP IMPIANMU — CARI LAPTOP IMPIANMU — CARI LAPTOP IMPIANMU — </span>
+            <span class="marquee-text">CARI LAPTOP IMPIANMU — CARI LAPTOP IMPIANMU — CARI LAPTOP IMPIANMU — </span>
+          </div>
+        </div>
+
+        <!-- D. OBJEK UTAMA: LAPTOP RETRO CLEAR-SHELL (CSS 3D INTERAKTIF) -->
+        <div class="hero-center-stage" id="hero-stage">
+          
+          <div class="laptop-3d-stage" id="laptop-stage">
+            
+            <!-- Slot Gambar Laptop PNG Alternatif (Opsional) -->
+            <img id="laptop-img" src="" alt="3D Laptop Render" style="display: none;" />
+
+            <!-- MOCKUP LAPTOP CLEAR-SHELL MURNI CSS/SVG -->
+            <div class="laptop-chassis" id="laptop-chassis">
+              
+              <!-- Layar Laptop (Tutup Atas / Display Lid) -->
+              <div class="laptop-lid">
+                <div class="lid-bezel">
+                  <div class="lid-webcam"></div>
+                  
+                  <!-- DISPLAY TERMINAL CRT / INPUT QUERY -->
+                  <div class="laptop-screen" id="screen-container">
+                    <div class="screen-header-bar">
+                      <span class="screen-title">TERMINAL IR-7 [SYS_REC]</span>
+                      <span class="screen-stat">1.303 DOCS ONLINE</span>
+                    </div>
+                    
+                    <form id="search-form" class="screen-form" autocomplete="off">
+                      <label for="search-input" class="sr-only">Masukkan kata kunci pencarian laptop</label>
+                      <div class="terminal-input-row">
+                        <span class="terminal-prompt">&gt;&gt;</span>
+                        <input 
+                          type="text" 
+                          id="search-input" 
+                          class="terminal-input" 
+                          placeholder="ketik: laptop gaming murah 16gb" 
+                          autofocus
+                        />
+                        <span class="terminal-cursor">_</span>
+                      </div>
+                    </form>
+
+                    <div class="screen-subtext">
+                      [TEKAN ENTER / KLIK TOMBOL ORANYE UNTUK CARI]
+                    </div>
+                  </div>
+
+                  <div class="lid-logo">LAPTOPEX</div>
+                </div>
+              </div>
+
+              <!-- Engsel Laptop (Hinge) -->
+              <div class="laptop-hinge">
+                <span class="hinge-rib"></span>
+                <span class="hinge-rib"></span>
+                <span class="hinge-rib"></span>
+              </div>
+
+              <!-- Base / Bodi Bawah Laptop (Clear Smoky Lime Glass) -->
+              <div class="laptop-base">
+                <!-- Komponen internal transparan (PCB & sirkuit samar) -->
+                <div class="internal-circuit" aria-hidden="true">
+                  <span class="circuit-chip chip-1">CPU</span>
+                  <span class="circuit-chip chip-2">GPU</span>
+                  <span class="circuit-ram-slot"></span>
+                  <span class="circuit-fan"></span>
+                </div>
+
+                <!-- Keyboard Transparan -->
+                <div class="laptop-keyboard" aria-hidden="true">
+                  <div class="kb-row"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                  <div class="kb-row"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                  <div class="kb-row"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                  <div class="kb-row space-row"><span class="spacebar"></span></div>
+                </div>
+
+                <!-- Palmrest & Trackpad -->
+                <div class="palmrest-area">
+                  <div class="trackpad"></div>
+
+                  <!-- Stiker Kertas Kaset Analog (Label J-Card) -->
+                  <div class="cassette-sticker" id="cassette-sticker">
+                    <div class="sticker-header">
+                      <span class="sticker-brand" id="sticker-brand">LAPTOPEX</span>
+                      <span class="sticker-type">TYPE 1</span>
+                    </div>
+                    <div class="sticker-meta">
+                      <span class="sticker-id">IR-LAPTOP-7</span>
+                      <span class="sticker-date" id="sticker-date">2026.11.17</span>
+                    </div>
+                    <!-- Garis skala penggaris tape -->
+                    <div class="sticker-ruler">
+                      <span>|</span><span>.</span><span>.</span><span>|</span><span>.</span><span>.</span><span>|</span><span>.</span><span>.</span><span>|</span>
+                    </div>
+                  </div>
+                </div>
+
+              </div> <!-- end laptop-base -->
+
+              <!-- Bayangan di bawah laptop -->
+              <div class="laptop-drop-shadow" aria-hidden="true"></div>
+
+            </div> <!-- end laptop-chassis -->
+
+          </div> <!-- end laptop-3d-stage -->
+
+          <!-- CHIPS QUERY CONTOH CEPAT (Horizontal Swipeable di HP) -->
+          <div class="quick-chips-wrapper">
+            <span class="chips-label">REKOMENDASI KATA KUNCI:</span>
+            <div class="chips-list">
+              <button type="button" class="query-chip" data-query="laptop gaming murah">🎮 laptop gaming murah</button>
+              <button type="button" class="query-chip" data-query="edit video 16gb 15 inch">🎬 edit video 16gb 15 inch</button>
+              <button type="button" class="query-chip" data-query="kuliah ringan di bawah 8 juta">🎓 kuliah ringan di bawah 8 juta</button>
+              <button type="button" class="query-chip" data-query="coding ssd 512gb">💻 coding ssd 512gb</button>
+              <button type="button" class="query-chip" data-query="laptop 2 in 1 touch screen">📱 2 in 1 touchscreen</button>
+              <button type="button" class="query-chip" data-query="laptop macbook">🍎 laptop macbook</button>
+            </div>
+          </div>
+
+        </div> <!-- end hero-center-stage -->
+
+        <!-- E. BARIS BAWAH (Footer Hero) -->
+        <footer class="hero-footer">
+          <!-- Kiri -->
+          <div class="footer-col footer-left">
+            <span class="badge-xx1">XX1</span>
+            <div class="footer-meta">
+              <span class="meta-line">IR-LAPTOP-7 · TF-IDF + QUERY EXPANSION</span>
+              <span class="meta-line dim">DATASET: 1.303 LAPTOP · 2026</span>
+            </div>
+          </div>
+
+          <!-- Tengah: Tab Oranye Trapesium (Submit Button) -->
+          <div class="footer-col footer-center">
+            <button type="button" id="btn-submit-search" class="trapezoid-cta-btn" title="Klik untuk mencari rekomendasi">
+              <span class="cta-stripes">----</span>
+              <span class="cta-label">CARI SEKARANG</span>
+              <span class="cta-stripes">----</span>
+            </button>
+          </div>
+
+          <!-- Kanan: Odometer Counter Hasil -->
+          <div class="footer-col footer-right">
+            <div class="counter-display">
+              <span class="counter-label">HASIL COCOK:</span>
+              <span class="counter-value" id="result-counter">000000000000</span>
+            </div>
+          </div>
+        </footer>
+
+      </section> <!-- end hero-section -->
+
+
+      <!-- ======================================================= -->
+      <!-- 2. SECTION HASIL REKOMENDASI                            -->
+      <!-- ======================================================= -->
+      <section class="results-section" id="hasil">
+
+        <!-- Header Hasil & Tape-Deck Controls -->
+        <div class="results-header-block">
+          
+          <!-- Sticky Search Bar Tambahan (Cari Cepat di Bagian Hasil) -->
+          <div class="results-quick-search-bar">
+            <div class="mini-search-box">
+              <span class="mini-prompt">&gt;</span>
+              <input type="text" id="mini-search-input" class="mini-search-input" placeholder="Cari lagi tanpa harus scroll ke atas..." />
+              <button type="button" id="btn-mini-search" class="btn-mini-search">CARI</button>
+            </div>
+          </div>
+
+          <div class="results-title-row">
+            <div class="tape-deck-toolbar">
+              <span class="toolbar-title">KONTROL PITA [PLAY/SORT]:</span>
+              <div class="deck-buttons">
+                <button type="button" class="deck-btn active" id="btn-sort-rel" title="Urutkan Relevansi (TF-IDF)">
+                  <span class="deck-icon">&#9658;</span> RELEVANSI
+                </button>
+                <button type="button" class="deck-btn" id="btn-sort-price-asc" title="Urutkan Harga Termurah">
+                  <span class="deck-icon">&#9668;&#9668;</span> TERMURAH
+                </button>
+                <button type="button" class="deck-btn" id="btn-sort-price-desc" title="Urutkan Harga Termahal">
+                  <span class="deck-icon">&#9658;&#9658;</span> TERMAHAL
+                </button>
+                <button type="button" class="deck-btn" id="btn-scroll-top" title="Kembali ke Atas">
+                  <span class="deck-icon">&#9632;</span> ATAS
+                </button>
+              </div>
+            </div>
+
+            <!-- Ringkasan Info Query -->
+            <div class="results-query-summary">
+              <span class="summary-label">QUERY:</span>
+              <span class="summary-query-text" id="summary-query">-</span>
+            </div>
+          </div>
+
+          <!-- Baris Filter & Query Expansion Chips -->
+          <div class="tech-info-panel">
+            
+            <!-- Warning Banner (Relaxed Filter) -->
+            <div class="warning-strip" id="relaxed-banner" style="display: none;">
+              <span class="warning-icon">&#9888;</span>
+              <span class="warning-text">Tidak ada laptop yang cocok 100% dengan semua batasan spesifikasi. Filter dilonggarkan untuk memberikan alternatif terdekat.</span>
+            </div>
+
+            <!-- Chips Filter Terdeteksi -->
+            <div class="info-row" id="row-constraints">
+              <span class="info-row-label">FILTER TERDETEKSI:</span>
+              <div class="chips-group" id="container-constraints">
+                <span class="chip-black">Belum ada pencarian</span>
+              </div>
+            </div>
+
+            <!-- Chips Query Expansion -->
+            <div class="info-row" id="row-expansion">
+              <span class="info-row-label">QUERY EXPANSION:</span>
+              <div class="chips-group" id="container-matched">
+                <span class="chip-outline">-</span>
+              </div>
+            </div>
+            
+            <div class="expanded-raw-line">
+              <span class="expanded-raw-label">EXPANDED QUERY:</span>
+              <span class="expanded-raw-text" id="expanded-query-text">-</span>
+            </div>
+
+          </div> <!-- end tech-info-panel -->
+
+        </div> <!-- end results-header-block -->
+
+
+        <!-- CONTAINER STATUS: LOADING & EMPTY STATE -->
+        
+        <!-- Loading State: Reel Kaset Berputar -->
+        <div class="state-container" id="loading-state" style="display: none;">
+          <div class="cassette-reels-anim" aria-hidden="true">
+            <svg class="reel reel-left" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="44" stroke="var(--ink)" stroke-width="6" fill="var(--paper)" />
+              <circle cx="50" cy="50" r="16" fill="var(--ink)" />
+              <line x1="50" y1="6" x2="50" y2="34" stroke="var(--ink)" stroke-width="5" />
+              <line x1="50" y1="66" x2="50" y2="94" stroke="var(--ink)" stroke-width="5" />
+              <line x1="6" y1="50" x2="34" y2="50" stroke="var(--ink)" stroke-width="5" />
+              <line x1="66" y1="50" x2="94" y2="50" stroke="var(--ink)" stroke-width="5" />
+            </svg>
+            <div class="tape-bridge"></div>
+            <svg class="reel reel-right" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="44" stroke="var(--ink)" stroke-width="6" fill="var(--paper)" />
+              <circle cx="50" cy="50" r="16" fill="var(--ink)" />
+              <line x1="50" y1="6" x2="50" y2="34" stroke="var(--ink)" stroke-width="5" />
+              <line x1="50" y1="66" x2="50" y2="94" stroke="var(--ink)" stroke-width="5" />
+              <line x1="6" y1="50" x2="34" y2="50" stroke="var(--ink)" stroke-width="5" />
+              <line x1="66" y1="50" x2="94" y2="50" stroke="var(--ink)" stroke-width="5" />
+            </svg>
+          </div>
+          <p class="state-text">MEMUAT... REWINDING TAPE DATASET</p>
+        </div>
+
+        <!-- Empty State: Pita Kaset Kusut -->
+        <div class="state-container" id="empty-state" style="display: none;">
+          <svg class="tangled-tape-svg" viewBox="0 0 120 70" aria-hidden="true">
+            <path d="M10,40 Q25,10 40,40 T70,40 T100,20 Q110,60 85,55 T40,60 T10,40 Z" fill="none" stroke="var(--ink)" stroke-width="3" stroke-dasharray="4 2" />
+            <circle cx="30" cy="35" r="8" fill="var(--paper)" stroke="var(--ink)" stroke-width="3" />
+            <circle cx="90" cy="35" r="8" fill="var(--paper)" stroke="var(--ink)" stroke-width="3" />
+          </svg>
+          <p class="empty-title">TIDAK DITEMUKAN HASIL</p>
+          <p class="empty-sub">Maaf, tidak ditemukan laptop yang cocok dengan kata kunci tersebut. Coba gunakan istilah spesifikasi atau rentang harga yang lebih fleksibel.</p>
+        </div>
+
+
+        <!-- DAFTAR KARTU HASIL (J-CARD STYLE) -->
+        <div class="laptop-cards-grid" id="cards-container">
+          <!-- Kartu-kartu akan di-inject secara dinamis oleh app.js -->
+        </div>
+
+      </section> <!-- end results-section -->
+
+    </main> <!-- end retro-frame -->
+
+  </div> <!-- end outer-viewport -->
+
+  <!-- TOAST NOTIFIKASI SALIN -->
+  <div class="retro-toast" id="retro-toast">
+    <span class="toast-icon">✓</span>
+    <span class="toast-msg">Spesifikasi laptop tersalin ke clipboard!</span>
+  </div>
+
+  <!-- FLOATING QUICK SEARCH BUTTON (MOBILE) -->
+  <button type="button" class="mobile-floating-search-btn" id="mobile-floating-btn" title="Cari Laptop">
+    🔍 CARI
+  </button>
+
+  <script src="app.js"></script>
+</body>
+</html>
