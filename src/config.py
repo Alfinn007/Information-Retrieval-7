@@ -14,10 +14,12 @@ STOPWORDS_ID = {
 }
 
 TECH_NORMALIZATION_RULES = {
-    r'\bcore i(\d)\b': r'i\1',
-    r'\bryzen (\d)\b': r'ryzen\1',
+    r'\bcore\s*i(\d)\b': r'i\1',
+    r'\bryzen\s*(\d)\b': r'ryzen\1',
+    r'\b(gtx|rtx)\s*(\d{3,4}(?:ti)?)\b': r'\1 \2',
     r'\b(\d+)\s*gb\b': r'\1gb',
     r'\b(\d+)(?:\.0)?\s*tb\b': r'\1tb',
-    r'\bfull hd\b': 'fhd 1920x1080',
-    r'\bflash storage\b': 'ssd'
+    r'\bfull\s*hd\b': 'fhd 1920x1080',
+    r'\bflash storage\b': 'ssd',
+    r'(\d+(?:[.,]\d+)?)\s*(?:inch|inci|")': r'\1 inch'
 }

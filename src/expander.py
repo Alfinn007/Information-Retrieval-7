@@ -23,6 +23,7 @@ CONTEXTUAL_CHEAP_SPECS = {
     "desain": "ips fhd mx150 radeon i5 ryzen5 8gb ssd ultrabook notebook",
     "coding": "i5 ryzen5 i3 8gb ssd fhd notebook ultrabook",
     "kuliah": "notebook i3 ryzen3 celeron pentium 4gb 8gb ssd murah terjangkau entry",
+    "kantor": "notebook ultrabook i3 i5 8gb ssd fhd murah terjangkau",
 }
 
 
@@ -71,15 +72,23 @@ class QueryExpander:
     def expansion_terms(self, query: str) -> str:
         """Mengambil term ekspansi dari kamus tanpa menimpa spek eksplisit yang diminta user."""
         query_lower = query.lower()
-        user_has_ram = bool(re.search(r'\b(2|4|6|8|12|16|24|32|64)\s*gb\b', query_lower))
+        user_ram_match = re.search(r'\b(2|4|6|8|12|16|24|32|64)\s*gb\b', query_lower)
+        user_ram_val = int(user_ram_match.group(1)) if user_ram_match else 0
+        user_has_ram = user_ram_val > 0
         user_has_storage = bool(re.search(r'\b(128gb|256gb|500gb|512gb|1tb|2tb|ssd|hdd)\b', query_lower))
         
-        heavy_words = set(SYNONYM_GROUPS["gaming"] + SYNONYM_GROUPS["edit video"] + SYNONYM_GROUPS["desain"] + ["kencang", "cepat", "ngebut", "gahar"])
+        heavy_words = set(
+            SYNONYM_GROUPS.get("gaming", []) + 
+            SYNONYM_GROUPS.get("edit video", []) + 
+            SYNONYM_GROUPS.get("desain", []) + 
+            SYNONYM_GROUPS.get("coding", []) + 
+            ["kencang", "cepat", "ngebut", "gahar"]
+        )
         user_has_heavy_task = any(w in query_lower for w in heavy_words)
 
         ram_tokens = {'2gb', '4gb', '6gb', '8gb', '12gb', '16gb', '24gb', '32gb', '64gb'}
         storage_tokens = {'128gb', '256gb', '500gb', '512gb', '1tb', '2tb', 'ssd', 'hdd'}
-        low_end_bias = {'celeron', 'pentium', 'i3', 'ryzen3', '2gb', '4gb', 'notebook', 'murah', 'terjangkau', 'entry'}
+        weak_tokens = {'celeron', 'pentium', 'atom', '2gb', '4gb'}
 
         seen_values, tokens = set(), []
         for key in self.matched_phrases(query):
@@ -93,7 +102,7 @@ class QueryExpander:
                     continue
                 if user_has_storage and tok in storage_tokens:
                     continue
-                if (user_has_ram or user_has_storage or user_has_heavy_task) and tok in low_end_bias:
+                if (user_has_heavy_task or user_ram_val >= 8) and tok in weak_tokens:
                     continue
                 tokens.append(tok)
                 

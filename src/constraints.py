@@ -20,6 +20,9 @@ _GAMING_INTENT = re.compile(
 _CREATOR_INTENT = re.compile(
     r'\b(edit\s+video|video\s+edit|editing\s+video|ngedit|render|rendering|animasi|3d|premiere|after\s+effects|blender|davinci|autocad|sketchup|arsitek|workstation)\b'
 )
+_CODING_INTENT = re.compile(
+    r'\b(coding|ngoding|programmer|programming|pemrograman|developer|software\s+engineer|web\s+dev|data\s+science|machine\s+learning|android\s+studio|vscode|informatika|ilmu\s+komputer)\b'
+)
 
 _MONEY = re.compile(
     r'(?:rp\.?\s*(?P<full>\d{1,3}(?:\.\d{3})+)'
@@ -57,10 +60,13 @@ class Constraints:
 
     def describe(self) -> str:
         parts = []
-        if self.price_min is not None:
+        if self.price_min is not None and self.price_max is not None:
+            parts.append(f"harga Rp{self.price_min:,.0f} - Rp{self.price_max:,.0f}".replace(',', '.'))
+        elif self.price_min is not None:
             parts.append(f"harga >= Rp{self.price_min:,.0f}".replace(',', '.'))
-        if self.price_max is not None:
+        elif self.price_max is not None:
             parts.append(f"harga <= Rp{self.price_max:,.0f}".replace(',', '.'))
+
         if self.ram_min is not None:
             parts.append(f"RAM >= {self.ram_min}GB")
         if self.storage_min_gb is not None:
@@ -69,12 +75,12 @@ class Constraints:
         if self.screen_inch is not None:
             parts.append(f"layar ~{self.screen_inch} inch")
         if self.require_gaming_gpu:
-            parts.append("Kategori Gaming / GPU GTX/RTX (RAM >= 8GB)")
+            parts.append("GPU Gaming (GTX/RTX/Radeon RX)")
         elif self.require_creator_spec:
-            parts.append("GPU Dedicated & RAM >= 8GB")
+            parts.append("GPU Dedicated (Quadro/MX/GTX)")
         if self.sort_cheapest:
             parts.append("prioritas harga termurah")
-        return ", ".join(parts) if parts else "-"
+        return ", ".join(parts) if parts else "Tidak ada filter khusus"
 
 
 def _to_float(s: str) -> float:
@@ -162,6 +168,9 @@ def parse_constraints(query: str) -> Tuple[Constraints, str]:
             c.ram_min = 8
     elif _CREATOR_INTENT.search(text):
         c.require_creator_spec = True
+        if c.ram_min is None:
+            c.ram_min = 8
+    elif _CODING_INTENT.search(text):
         if c.ram_min is None:
             c.ram_min = 8
 
