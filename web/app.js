@@ -29,10 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Mobile Floating Search Button
   const mobileFloatingBtn = document.getElementById('mobile-floating-btn');
 
-  // Deck Sort Buttons
-  const btnSortRel = document.getElementById('btn-sort-rel');
-  const btnSortPriceAsc = document.getElementById('btn-sort-price-asc');
-  const btnSortPriceDesc = document.getElementById('btn-sort-price-desc');
+  // Deck Control Buttons
   const btnScrollTop = document.getElementById('btn-scroll-top');
   
   // Quick Query Chips
@@ -47,8 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const retroToast = document.getElementById('retro-toast');
 
   // State
-  let currentResults = [];
-  let currentSort = 'relevance';
   let soundEnabled = true;
   let activeController = null;
   let latestRequestId = 0;
@@ -355,7 +350,6 @@ document.addEventListener('DOMContentLoaded', () => {
     emptyState.style.display = 'none';
     if (relaxedBanner) relaxedBanner.style.display = 'none';
     cardsContainer.innerHTML = '';
-    currentResults = [];
     animateCounter(0);
 
     if (stickerBrand) stickerBrand.textContent = 'LAPTOPEX';
@@ -372,32 +366,30 @@ document.addEventListener('DOMContentLoaded', () => {
     if (errorState) errorState.style.display = 'none';
     playSuccessBeep();
 
-    currentResults = data.results || [];
-    currentSort = 'relevance';
-    updateActiveSortButton();
+    const results = data.results || [];
 
     // 1. Update Counter Odometer
-    animateCounter(currentResults.length);
+    animateCounter(results.length);
 
     // 2. Update Informasi Metadata & Chips
     renderMetadata(data);
 
     // 3. Update Stiker di Palmrest Laptop
     if (stickerBrand) {
-      if (currentResults.length > 0) {
-        stickerBrand.textContent = currentResults[0].brand.toUpperCase();
+      if (results.length > 0) {
+        stickerBrand.textContent = results[0].brand.toUpperCase();
       } else {
         stickerBrand.textContent = 'LAPTOPEX';
       }
     }
 
-    // 4. Render Kartu
-    if (currentResults.length === 0) {
+    // 4. Render Kartu sesuai urutan dari API
+    if (results.length === 0) {
       emptyState.style.display = 'flex';
       cardsContainer.innerHTML = '';
     } else {
       emptyState.style.display = 'none';
-      renderCards(currentResults);
+      renderCards(results);
     }
   }
 
@@ -621,41 +613,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /**
-   * Sort Handler Sisi Client
-   */
-  function sortResults(type) {
-    if (!currentResults || currentResults.length <= 1) return;
-    playClickSound();
-    currentSort = type;
-    updateActiveSortButton();
-
-    const sorted = [...currentResults];
-    if (type === 'relevance') {
-      sorted.sort((a, b) => (b.score || 0) - (a.score || 0));
-    } else if (type === 'price-asc') {
-      sorted.sort((a, b) => a.price_idr - b.price_idr);
-    } else if (type === 'price-desc') {
-      sorted.sort((a, b) => b.price_idr - a.price_idr);
-    }
-
-    sorted.forEach((item, idx) => {
-      item.rank = idx + 1;
-    });
-
-    renderCards(sorted);
-  }
-
-  function updateActiveSortButton() {
-    [btnSortRel, btnSortPriceAsc, btnSortPriceDesc].forEach(btn => {
-      if (btn) btn.classList.remove('active');
-    });
-
-    if (currentSort === 'relevance' && btnSortRel) btnSortRel.classList.add('active');
-    if (currentSort === 'price-asc' && btnSortPriceAsc) btnSortPriceAsc.classList.add('active');
-    if (currentSort === 'price-desc' && btnSortPriceDesc) btnSortPriceDesc.classList.add('active');
-  }
-
-  /**
    * Animasi Angka Counter Odometer
    */
   function animateCounter(targetNumber) {
@@ -731,11 +688,6 @@ document.addEventListener('DOMContentLoaded', () => {
       performSearch(q);
     });
   });
-
-  // Sort Buttons Click
-  if (btnSortRel) btnSortRel.addEventListener('click', () => sortResults('relevance'));
-  if (btnSortPriceAsc) btnSortPriceAsc.addEventListener('click', () => sortResults('price-asc'));
-  if (btnSortPriceDesc) btnSortPriceDesc.addEventListener('click', () => sortResults('price-desc'));
 
   // Scroll to Top
   if (btnScrollTop) {

@@ -46,8 +46,8 @@ function setupHarness(fetchImpl) {
     'btn-retry-search', 'summary-query', 'container-constraints',
     'container-matched', 'expanded-query-text', 'price-note-text',
     'relaxed-banner', 'result-counter', 'sticker-brand', 'sticker-date',
-    'mobile-floating-btn', 'btn-sort-rel', 'btn-sort-price-asc',
-    'btn-sort-price-desc', 'btn-scroll-top', 'laptop-chassis', 'hero-stage',
+    'mobile-floating-btn', 'btn-sort-rel',
+    'btn-scroll-top', 'laptop-chassis', 'hero-stage',
     'btn-sound-toggle', 'retro-toast', 'screen-container', 'hasil', 'hero'
   ];
   ids.forEach(id => elements.set(id, createElement(id)));
