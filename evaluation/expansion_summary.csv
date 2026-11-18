@@ -1,0 +1,49 @@
+query,mode,returned_count,total_candidates,constraint_violations,unique_models_top5,overlap_top5_count,overlap_top5_jaccard
+laptop gaming murah,no_expansion,5,124,0,5,3,0.4286
+laptop gaming murah,with_expansion,5,142,0,5,3,0.4286
+edit video 16gb 15 inch,no_expansion,0,0,0,0,0,0.0
+edit video 16gb 15 inch,with_expansion,5,49,0,5,0,0.0
+kuliah ringan di bawah 8 juta,no_expansion,0,0,0,0,0,0.0
+kuliah ringan di bawah 8 juta,with_expansion,5,125,0,5,0,0.0
+coding ssd 512gb,no_expansion,0,0,0,0,0,0.0
+coding ssd 512gb,with_expansion,5,90,0,5,0,0.0
+laptop 2 in 1 touch screen,no_expansion,5,54,0,5,1,0.1111
+laptop 2 in 1 touch screen,with_expansion,5,237,0,5,1,0.1111
+laptop macbook,no_expansion,3,3,0,3,2,0.5
+laptop macbook,with_expansion,3,3,0,3,2,0.5
+"buat kuliah, nggak buat gaming",no_expansion,0,0,0,0,0,0.0
+"buat kuliah, nggak buat gaming",with_expansion,5,474,0,5,0,0.0
+bukan laptop gaming,no_expansion,5,458,0,5,5,1.0
+bukan laptop gaming,with_expansion,5,458,0,5,5,1.0
+laptop kerja kantoran tahan lama,no_expansion,0,0,0,0,0,0.0
+laptop kerja kantoran tahan lama,with_expansion,5,573,0,5,0,0.0
+untuk mahasiswa desain grafis,no_expansion,0,0,0,0,0,0.0
+untuk mahasiswa desain grafis,with_expansion,5,201,0,5,0,0.0
+laptop buat anak sekolah daring hemat,no_expansion,0,0,0,0,0,0.0
+laptop buat anak sekolah daring hemat,with_expansion,5,556,0,5,0,0.0
+perangkat ringan buat dibawa bepergian,no_expansion,0,0,0,0,0,0.0
+perangkat ringan buat dibawa bepergian,with_expansion,5,499,0,5,0,0.0
+ThinkPad RAM 16 GB,no_expansion,5,10,0,5,5,1.0
+ThinkPad RAM 16 GB,with_expansion,5,10,0,5,5,1.0
+Asus ROG gaming,no_expansion,5,29,0,5,3,0.4286
+Asus ROG gaming,with_expansion,5,29,0,5,3,0.4286
+Dell XPS layar 15 inch,no_expansion,1,1,0,1,1,1.0
+Dell XPS layar 15 inch,with_expansion,1,1,0,1,1,1.0
+Lenovo ThinkPad tanpa HDD,no_expansion,5,27,0,5,5,1.0
+Lenovo ThinkPad tanpa HDD,with_expansion,5,27,0,5,5,1.0
+ngoding budget 8 juta,no_expansion,0,0,0,0,0,0.0
+ngoding budget 8 juta,with_expansion,5,13,0,5,0,0.0
+laptop maksimal 8000000,no_expansion,5,125,0,5,5,1.0
+laptop maksimal 8000000,with_expansion,5,125,0,5,5,1.0
+"laptop 7,5 juta ssd 256gb",no_expansion,5,11,0,5,5,1.0
+"laptop 7,5 juta ssd 256gb",with_expansion,5,11,0,5,5,1.0
+kisaran 10 juta ram 8gb,no_expansion,5,47,0,5,5,1.0
+kisaran 10 juta ram 8gb,with_expansion,5,47,0,5,5,1.0
+"berat maksimal 1,5 kg ssd 256gb",no_expansion,5,92,0,5,5,1.0
+"berat maksimal 1,5 kg ssd 256gb",with_expansion,5,92,0,5,5,1.0
+yang paling murah di bawah 8 juta,no_expansion,5,125,0,5,5,1.0
+yang paling murah di bawah 8 juta,with_expansion,5,125,0,5,5,1.0
+gaming maksimal 5 juta,no_expansion,0,0,0,0,0,1.0
+gaming maksimal 5 juta,with_expansion,0,0,0,0,0,1.0
+macbook maksimal 5 juta,no_expansion,0,0,0,0,0,1.0
+macbook maksimal 5 juta,with_expansion,0,0,0,0,0,1.0

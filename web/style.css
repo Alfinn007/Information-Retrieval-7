@@ -1924,3 +1924,75 @@ body {
     animation: none;
   }
 }
+
+
+/* Tambahan: Chip Asumsi Sistem, Preferensi, Alasan Peringkat, Varian & Retry */
+.chip-assumption {
+  background: var(--paper);
+  color: var(--ink);
+  border: 1.5px dashed var(--ink);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 3px;
+  letter-spacing: 0.04em;
+}
+
+.chip-preference {
+  background: rgba(20, 20, 20, 0.08);
+  color: var(--ink);
+  border: 1px solid rgba(20, 20, 20, 0.45);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 3px;
+  letter-spacing: 0.04em;
+}
+
+.match-reasons-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.reason-pill {
+  font-size: 0.68rem;
+  padding: 2px 7px;
+  border: 1px solid rgba(20, 20, 20, 0.35);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.variants-section {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(20, 20, 20, 0.3);
+}
+
+.variants-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.variants-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.variant-item {
+  font-size: 0.7rem;
+  padding: 6px 8px;
+  border: 1px solid rgba(20, 20, 20, 0.25);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.btn-retry-search {
+  margin-top: 12px;
+  padding: 8px 18px;
+  font-weight: 700;
+  cursor: pointer;
+}

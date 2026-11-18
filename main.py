@@ -9,6 +9,7 @@ pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', 1000)
 
+
 def main():
     preprocessor = TextPreprocessor()
     expander = QueryExpander(DICT_JSON_PATH)
@@ -32,30 +33,28 @@ def main():
         if not user_query:
             continue
 
-        hasil = engine.search(user_query, top_n=JUMLAH_LIST, use_expansion=True)
-        hasil_relevan = hasil[hasil['score'] > 0].copy() if not hasil.empty else pd.DataFrame()
+        search_out = engine.search(user_query, top_n=JUMLAH_LIST, use_expansion=True)
+        hasil_relevan = search_out.results
 
         print(f"\n[+] Query Pengguna       : {user_query}")
         print(f"[+] Query Asli (Cleaned) : {preprocessor.clean_text(user_query) or '-'}")
-        print(f"[+] Filter Terdeteksi    : {engine.last_constraints.describe()}")
-        expanded_info = hasil['expanded_query'].iloc[0] if not hasil.empty else "-"
-        print(f"[+] Hasil Query Expansion: {expanded_info}")
-        if engine.last_relaxed:
-            print("[!] Catatan              : Filter dilonggarkan karena tidak ada laptop yang cocok 100%.")
+        print(f"[+] Filter Terdeteksi    : {search_out.constraints.describe()}")
+        print(f"[+] Hasil Query Expansion: {search_out.expanded_query}")
 
         if hasil_relevan.empty:
-            print("\n[!] Maaf, tidak ditemukan laptop yang cocok dengan kata kunci tersebut.")
+            print("\n[!] Maaf, tidak ditemukan laptop yang cocok dengan syarat pencarian tersebut.")
             continue
 
-        kolom_tampil = ['brand', 'name', 'category', 'cpu', 'ram', 'storage', 'gpu', 'price_idr', 'score']
+        kolom_tampil = ['brand', 'name', 'category', 'cpu', 'ram', 'storage', 'gpu', 'weight', 'price_idr', 'score']
         tabel_tampil = hasil_relevan[kolom_tampil].copy()
         tabel_tampil.index = range(1, len(tabel_tampil) + 1)
         tabel_tampil.index.name = 'Rank'
 
         tabel_tampil['price_idr'] = tabel_tampil['price_idr'].apply(lambda x: f"Rp{x:,.0f}".replace(',', '.'))
 
-        print(f"\n--- DAFTAR REKOMENDASI LAPTOP (Menampilkan {len(tabel_tampil)} Hasil Teratas) ---")
+        print(f"\n--- DAFTAR REKOMENDASI LAPTOP (Menampilkan {len(tabel_tampil)} dari {search_out.total_candidates} Kandidat Cocok) ---")
         print(tabel_tampil.to_string())
+
 
 if __name__ == "__main__":
     main()

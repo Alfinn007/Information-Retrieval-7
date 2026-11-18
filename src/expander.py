@@ -1,21 +1,9 @@
 import json
 import re
 from pathlib import Path
+from typing import List, Optional, Tuple
 
-SYNONYM_GROUPS = {
-    "murah": ["murah", "terjangkau", "budget", "hemat", "murmer", "ekonomis", "low end", "entry level", "harga bersahabat", "harga miring", "pas kantong"],
-    "menengah": ["menengah", "mid range", "midrange", "harga standar"],
-    "mahal": ["mahal", "premium", "sultan", "high end", "flagship", "kelas atas"],
-    "gaming": ["gaming", "game", "gamer", "ngegame", "main game", "esport", "e-sport", "valorant", "dota", "pubg", "fortnite", "battlefield", "free fire", "mobile legends", "roblox", "minecraft", "genshin", "pes", "fifa", "gta"],
-    "edit video": ["edit video", "video edit", "editing video", "ngedit video", "ngedit", "untuk edit", "buat edit", "bisa edit", "laptop edit", "render", "rendering", "animasi", "3d", "premiere", "after effects", "blender", "davinci", "capcut", "youtuber", "konten kreator", "content creator", "streaming", "livestream", "vlog"],
-    "desain": ["desain", "design", "edit foto", "editing", "editor", "kreatif", "grafis", "desain grafis", "photoshop", "illustrator", "coreldraw", "figma", "canva", "autocad", "sketchup", "arsitek", "ilustrasi", "lukis"],
-    "coding": ["coding", "ngoding", "programmer", "programming", "pemrograman", "developer", "software engineer", "web dev", "data science", "machine learning", "android studio", "vscode", "informatika", "ilmu komputer"],
-    "kuliah": ["kuliah", "mahasiswa", "kampus", "skripsi", "anak kuliahan", "anak kuliah", "makalah"],
-    "pelajar": ["pelajar", "sekolah", "siswa", "anak sekolah", "belajar", "online class", "daring", "tugas"],
-    "kantor": ["kantor", "kantoran", "office", "kerja", "karyawan", "wfh", "dokumen", "ms word", "excel", "presentasi", "admin", "administrasi", "akuntansi"],
-    "kencang": ["kencang", "cepat", "performa", "performa tinggi", "bertenaga", "powerful", "ngebut", "gak lemot", "tidak lemot", "anti lemot", "gak ngelag", "anti ngelag", "responsif", "high performance", "spek tinggi", "spek dewa", "spesifikasi tinggi", "gahar"],
-    "ringan": ["ringan", "enteng", "tipis", "portabel", "portable", "travel", "mudah dibawa", "praktis", "compact", "kompak", "slim", "mobilitas"],
-}
+from src.intents import INTENT_SYNONYMS
 
 CONTEXTUAL_CHEAP_SPECS = {
     "gaming": "gaming gtx geforce 1050 960m 950m rx 560 i5 ryzen5 8gb ssd fhd",
@@ -26,6 +14,8 @@ CONTEXTUAL_CHEAP_SPECS = {
     "kantor": "notebook ultrabook i3 i5 8gb ssd fhd murah terjangkau",
 }
 
+PRODUCT_IDENTITY_TOKENS = {"macbook", "apple", "macos", "mac os", "imac", "chromebook"}
+
 
 class QueryExpander:
     def __init__(self, json_path: Path):
@@ -33,16 +23,16 @@ class QueryExpander:
             base_dict = json.load(f)
 
         self.dictionary = dict(base_dict)
-        
-        for canonical, aliases in SYNONYM_GROUPS.items():
+
+        for canonical, aliases in INTENT_SYNONYMS.items():
             if canonical in self.dictionary:
                 spec = self.dictionary[canonical]
                 for alias in aliases:
                     self.dictionary.setdefault(alias, spec)
 
         for uc_key, combo_spec in CONTEXTUAL_CHEAP_SPECS.items():
-            for uc_alias in SYNONYM_GROUPS.get(uc_key, [uc_key]):
-                for cheap_alias in SYNONYM_GROUPS["murah"]:
+            for uc_alias in INTENT_SYNONYMS.get(uc_key, [uc_key]):
+                for cheap_alias in INTENT_SYNONYMS["murah"]:
                     self.dictionary[f"{uc_alias} {cheap_alias}"] = combo_spec
                     self.dictionary[f"{cheap_alias} {uc_alias}"] = combo_spec
                     self.dictionary[f"{uc_alias} yang {cheap_alias}"] = combo_spec
@@ -58,7 +48,7 @@ class QueryExpander:
             for k in self._keys
         }
 
-    def matched_phrases(self, query: str):
+    def matched_phrases(self, query: str) -> List[str]:
         """Daftar frasa kamus yang cocok pada query (tanpa tumpang tindih)."""
         remaining = query.lower()
         matched = []
@@ -69,35 +59,67 @@ class QueryExpander:
                 remaining = pattern.sub(' ' * len(key), remaining)
         return matched
 
-    def expansion_terms(self, query: str) -> str:
-        """Mengambil term ekspansi dari kamus tanpa menimpa spek eksplisit yang diminta user."""
+    def expand_with_matches(
+        self,
+        query: str,
+        constraints=None,
+    ) -> Tuple[str, List[str]]:
+        """
+        Mengembalikan (expansion_terms, matched_phrases) dalam satu kali pencocokan frasa.
+        Menghormati syarat eksplisit user (RAM, storage, SSD, tanpa HDD, dan negasi gaming).
+        """
         query_lower = query.lower()
-        user_ram_match = re.search(r'\b(2|4|6|8|12|16|24|32|64)\s*gb\b', query_lower)
-        user_ram_val = int(user_ram_match.group(1)) if user_ram_match else 0
+        matched = self.matched_phrases(query_lower)
+
+        user_ram_val = 0
+        if constraints is not None and getattr(constraints, 'ram_min', None):
+            user_ram_val = int(constraints.ram_min)
+        else:
+            user_ram_match = re.search(r'\b(2|4|6|8|12|16|24|32|64)\s*gb\b', query_lower)
+            user_ram_val = int(user_ram_match.group(1)) if user_ram_match else 0
+
         user_has_ram = user_ram_val > 0
-        user_has_storage = bool(re.search(r'\b(128gb|256gb|500gb|512gb|1tb|2tb|ssd|hdd)\b', query_lower))
-        
+        user_has_storage = bool(
+            (constraints is not None and (getattr(constraints, 'storage_min_gb', None) or getattr(constraints, 'ssd_min_gb', None)))
+            or re.search(r'\b(128gb|256gb|500gb|512gb|1tb|2tb|ssd|hdd)\b', query_lower)
+        )
+        exclude_hdd = bool(constraints is not None and getattr(constraints, 'exclude_hdd', False))
+        gaming_blocked = bool(
+            constraints is not None and (getattr(constraints, 'exclude_gaming', False) or getattr(constraints, 'gaming_negated', False))
+        )
+
         heavy_words = set(
-            SYNONYM_GROUPS.get("gaming", []) + 
-            SYNONYM_GROUPS.get("edit video", []) + 
-            SYNONYM_GROUPS.get("desain", []) + 
-            SYNONYM_GROUPS.get("coding", []) + 
-            ["kencang", "cepat", "ngebut", "gahar"]
+            INTENT_SYNONYMS.get("gaming", [])
+            + INTENT_SYNONYMS.get("edit video", [])
+            + INTENT_SYNONYMS.get("desain", [])
+            + INTENT_SYNONYMS.get("coding", [])
+            + ["kencang", "cepat", "ngebut", "gahar"]
         )
         user_has_heavy_task = any(w in query_lower for w in heavy_words)
+        gaming_alias_set = set(INTENT_SYNONYMS.get("gaming", []))
 
         ram_tokens = {'2gb', '4gb', '6gb', '8gb', '12gb', '16gb', '24gb', '32gb', '64gb'}
         storage_tokens = {'128gb', '256gb', '500gb', '512gb', '1tb', '2tb', 'ssd', 'hdd'}
         weak_tokens = {'celeron', 'pentium', 'atom', '2gb', '4gb'}
+        generic_product_noise = {'ssd', 'retina'}
 
         seen_values, tokens = set(), []
-        for key in self.matched_phrases(query):
+        filtered_matched: List[str] = []
+        for key in matched:
+            if gaming_blocked and (key in gaming_alias_set or 'gaming' in key or 'game' in key):
+                continue
+            filtered_matched.append(key)
             value = self.dictionary[key]
             if value in seen_values:
                 continue
             seen_values.add(value)
-            
+
+            is_product_phrase = key in PRODUCT_IDENTITY_TOKENS
             for tok in value.split():
+                if is_product_phrase and tok in generic_product_noise:
+                    continue
+                if exclude_hdd and tok == 'hdd':
+                    continue
                 if user_has_ram and tok in ram_tokens:
                     continue
                 if user_has_storage and tok in storage_tokens:
@@ -105,8 +127,12 @@ class QueryExpander:
                 if (user_has_heavy_task or user_ram_val >= 8) and tok in weak_tokens:
                     continue
                 tokens.append(tok)
-                
-        return " ".join(tokens)
 
-    def expand(self, query: str) -> str:
-        return (query.lower() + " " + self.expansion_terms(query)).strip()
+        return " ".join(tokens), filtered_matched
+
+    def expansion_terms(self, query: str, constraints=None) -> str:
+        terms, _ = self.expand_with_matches(query, constraints=constraints)
+        return terms
+
+    def expand(self, query: str, constraints=None) -> str:
+        return (query.lower() + " " + self.expansion_terms(query, constraints=constraints)).strip()

@@ -11,11 +11,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const cardsContainer = document.getElementById('cards-container');
   const loadingState = document.getElementById('loading-state');
   const emptyState = document.getElementById('empty-state');
+  const errorState = document.getElementById('error-state');
+  const errorStateMessage = document.getElementById('error-state-message');
+  const btnRetrySearch = document.getElementById('btn-retry-search');
   
   const summaryQuery = document.getElementById('summary-query');
   const containerConstraints = document.getElementById('container-constraints');
   const containerMatched = document.getElementById('container-matched');
   const expandedQueryText = document.getElementById('expanded-query-text');
+  const priceNoteText = document.getElementById('price-note-text');
   const relaxedBanner = document.getElementById('relaxed-banner');
   const resultCounter = document.getElementById('result-counter');
   
@@ -46,6 +50,9 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentResults = [];
   let currentSort = 'relevance';
   let soundEnabled = true;
+  let activeController = null;
+  let latestRequestId = 0;
+  let lastSubmittedQuery = '';
 
   // Format Tanggal Hari Ini untuk Stiker Kaset
   const today = new Date();
@@ -278,46 +285,91 @@ document.addEventListener('DOMContentLoaded', () => {
   // =========================================================================
   // 4. EKSEKUSI PENCARIAN (SEARCH LOGIC)
   // =========================================================================
-  async function performSearch(query) {
+  async function performSearch(query, options = {}) {
+    const { scrollToResults = true } = options;
     const trimmed = (query || '').trim();
     if (!trimmed) {
       searchInput.focus();
       return;
     }
 
+    if (activeController) {
+      activeController.abort();
+    }
+    const controller = new AbortController();
+    activeController = controller;
+    const requestId = ++latestRequestId;
+    lastSubmittedQuery = trimmed;
+
     playTapeRewindSound();
 
     // Tampilkan Loading State
     cardsContainer.innerHTML = '';
     emptyState.style.display = 'none';
+    if (errorState) errorState.style.display = 'none';
     loadingState.style.display = 'flex';
     summaryQuery.textContent = trimmed;
     searchInput.value = trimmed;
-    
-    // Smooth scroll ke section hasil
-    const resultsSection = document.getElementById('hasil');
-    if (resultsSection) {
-      resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    if (scrollToResults) {
+      const resultsSection = document.getElementById('hasil');
+      if (resultsSection) {
+        resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
 
     try {
-      // Panggil API Backend Flask
-      const response = await fetch(`/api/search?q=${encodeURIComponent(trimmed)}&top=30`);
-      if (!response.ok) {
-        throw new Error(`HTTP Error: ${response.status}`);
+      const response = await fetch(`/api/search?q=${encodeURIComponent(trimmed)}&top=30`, {
+        signal: controller.signal
+      });
+
+      if (requestId !== latestRequestId) return;
+
+      let data = null;
+      try {
+        data = await response.json();
+      } catch (parseErr) {
+        throw new Error(`Respons server tidak valid (HTTP ${response.status}).`);
       }
-      const data = await response.json();
+
+      if (!response.ok) {
+        const msg = (data && data.error) ? data.error : `HTTP Error: ${response.status}`;
+        throw new Error(msg);
+      }
+
+      if (!data || !Array.isArray(data.results)) {
+        throw new Error('Format data hasil pencarian tidak valid.');
+      }
+
+      if (requestId !== latestRequestId) return;
       handleSearchResults(data);
     } catch (err) {
-      console.warn('[!] Menggunakan Fallback Mock Data:', err);
-      // Fallback Mock Data agar desain tetap dapat diuji standalone
-      const fallbackData = getFallbackMockData(trimmed);
-      handleSearchResults(fallbackData);
+      if (err && err.name === 'AbortError') return;
+      if (requestId !== latestRequestId) return;
+      handleSearchError(err && err.message ? err.message : 'Gagal terhubung ke server pencarian.');
     }
+  }
+
+  function handleSearchError(errorMessage) {
+    loadingState.style.display = 'none';
+    emptyState.style.display = 'none';
+    if (relaxedBanner) relaxedBanner.style.display = 'none';
+    cardsContainer.innerHTML = '';
+    currentResults = [];
+    animateCounter(0);
+
+    if (stickerBrand) stickerBrand.textContent = 'LAPTOPEX';
+    containerConstraints.innerHTML = '<span class="chip-black">-</span>';
+    containerMatched.innerHTML = '<span class="chip-outline">-</span>';
+    expandedQueryText.textContent = '-';
+
+    if (errorStateMessage) errorStateMessage.textContent = errorMessage;
+    if (errorState) errorState.style.display = 'flex';
   }
 
   function handleSearchResults(data) {
     loadingState.style.display = 'none';
+    if (errorState) errorState.style.display = 'none';
     playSuccessBeep();
 
     currentResults = data.results || [];
@@ -353,16 +405,32 @@ document.addEventListener('DOMContentLoaded', () => {
    * Render Filter & Expansion Chips
    */
   function renderMetadata(data) {
-    // Constraints
+    // Constraints terstruktur jika tersedia
     containerConstraints.innerHTML = '';
-    const rawConstraints = data.constraints || 'Tidak ada filter khusus';
-    const parts = rawConstraints.split(',').map(s => s.trim()).filter(Boolean);
-    parts.forEach(part => {
-      const chip = document.createElement('span');
-      chip.className = 'chip-black';
-      chip.textContent = part;
-      containerConstraints.appendChild(chip);
-    });
+    const detailList = Array.isArray(data.constraints_detail) ? data.constraints_detail : null;
+    if (detailList && detailList.length > 0) {
+      detailList.forEach(item => {
+        const chip = document.createElement('span');
+        if (item.source === 'system_assumption') {
+          chip.className = 'chip-assumption';
+        } else if (item.kind === 'preference') {
+          chip.className = 'chip-preference';
+        } else {
+          chip.className = 'chip-black';
+        }
+        chip.textContent = item.label;
+        containerConstraints.appendChild(chip);
+      });
+    } else {
+      const rawConstraints = data.constraints || 'Tidak ada filter khusus';
+      const parts = rawConstraints.split(',').map(s => s.trim()).filter(Boolean);
+      parts.forEach(part => {
+        const chip = document.createElement('span');
+        chip.className = 'chip-black';
+        chip.textContent = part;
+        containerConstraints.appendChild(chip);
+      });
+    }
 
     // Matched Expansion Phrases
     containerMatched.innerHTML = '';
@@ -384,11 +452,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Expanded Query Text
     expandedQueryText.textContent = data.expanded_query || '-';
 
+    if (priceNoteText && data.price_note) {
+      priceNoteText.textContent = data.price_note;
+    }
+
     // Relaxed Warning Banner
-    if (data.relaxed) {
-      relaxedBanner.style.display = 'flex';
-    } else {
-      relaxedBanner.style.display = 'none';
+    if (relaxedBanner) {
+      relaxedBanner.style.display = data.relaxed ? 'flex' : 'none';
     }
   }
 
@@ -416,6 +486,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Format Harga IDR
       const formattedPrice = rupiahFormatter.format(item.price_idr).replace(/\s/g, '');
+      const reasons = Array.isArray(item.match_reasons) ? item.match_reasons : [];
+      const reasonsHtml = reasons.length > 0
+        ? `<div class="match-reasons-row">${reasons.map(r => `<span class="reason-pill">${escapeHtml(r)}</span>`).join('')}</div>`
+        : '';
+
+      const variants = Array.isArray(item.variants) ? item.variants : [];
+      const variantsHtml = variants.length > 0
+        ? `<div class="variants-section">
+             <div class="variants-title">Varian konfigurasi lain (${variants.length}):</div>
+             <div class="variants-list">
+               ${variants.slice(0, 5).map(v => {
+                 const vPrice = rupiahFormatter.format(v.price_idr).replace(/\s/g, '');
+                 return `<div class="variant-item"><strong>${vPrice}</strong> · ${escapeHtml(v.cpu)} · ${escapeHtml(v.ram)} · ${escapeHtml(v.storage)} · ${escapeHtml(v.gpu)}</div>`;
+               }).join('')}
+             </div>
+           </div>`
+        : '';
 
       card.innerHTML = `
         <!-- Rank Raksasa -->
@@ -464,9 +551,10 @@ document.addEventListener('DOMContentLoaded', () => {
               📋 Salin Spek
             </button>
             <button type="button" class="btn-card-action btn-toggle-detail" title="Buka Detail">
-              Detail Lengkap ▼
+              Detail Lengkap ▼${variants.length > 0 ? ` (+${variants.length} varian)` : ''}
             </button>
           </div>
+          ${reasonsHtml}
         </div>
 
         <!-- Kolom Kanan: Harga & Meter -->
@@ -474,10 +562,10 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="price-tag">${formattedPrice}</div>
           <div class="meter-wrapper">
             <div class="meter-header">
-              <span>SKOR TF-IDF:</span>
+              <span>SKOR PERINGKAT:</span>
               <span class="meter-score-text">${(item.score || 0).toFixed(4)}</span>
             </div>
-            <div class="equalizer-bar" title="Relevansi: ${(scoreNormalized * 100).toFixed(1)}%">
+            <div class="equalizer-bar" title="Skor peringkat: ${(item.score || 0).toFixed(4)}">
               ${eqSegmentsHtml}
             </div>
           </div>
@@ -493,6 +581,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div><strong>Spesifikasi Prosesor:</strong> ${escapeHtml(item.cpu || '-')}</div>
             <div><strong>Kartu Grafis:</strong> ${escapeHtml(item.gpu || '-')}</div>
           </div>
+          ${variantsHtml}
         </div>
       `;
 
@@ -666,70 +755,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /**
-   * Mock Data Fallback (Offline Mode)
-   */
-  function getFallbackMockData(query) {
-    return {
-      query: query,
-      expanded_query: query + ' i5 i7 8gb 16gb ssd fhd ips notebook gtx',
-      constraints: 'RAM >= 8GB, Kategori Gaming / Diskrit GPU',
-      matched_phrases: ['gaming', 'murah'],
-      relaxed: false,
-      count: 3,
-      results: [
-        {
-          rank: 1,
-          id: '1',
-          brand: 'Acer',
-          name: 'Aspire 7 A715-71G',
-          category: 'Gaming',
-          display: '15.6 inch FHD 1920x1080 IPS',
-          cpu: 'Intel Core i5 7300HQ 2.5GHz',
-          ram: '8GB',
-          storage: '1TB HDD + 128GB SSD',
-          gpu: 'Nvidia GeForce GTX 1050',
-          os: 'Windows 10',
-          weight: '2.4kg',
-          price_idr: 13566000,
-          score: 0.5992
-        },
-        {
-          rank: 2,
-          id: '2',
-          brand: 'Lenovo',
-          name: 'Legion Y520-15IKBN',
-          category: 'Gaming',
-          display: '15.6 inch FHD 1920x1080 IPS',
-          cpu: 'Intel Core i5 7300HQ 2.5GHz',
-          ram: '8GB',
-          storage: '1TB HDD + 128GB SSD',
-          gpu: 'Nvidia GeForce GTX 1050',
-          os: 'Windows 10',
-          weight: '2.5kg',
-          price_idr: 13243000,
-          score: 0.5878
-        },
-        {
-          rank: 3,
-          id: '3',
-          brand: 'Asus',
-          name: 'FX550IK-DM018T',
-          category: 'Gaming',
-          display: '15.6 inch FHD 1920x1080',
-          cpu: 'AMD FX 9830P 3GHz',
-          ram: '8GB',
-          storage: '1TB HDD',
-          gpu: 'AMD Radeon RX 560',
-          os: 'Windows 10',
-          weight: '2.45kg',
-          price_idr: 11883000,
-          score: 0.5874
-        }
-      ]
-    };
+  if (btnRetrySearch) {
+    btnRetrySearch.addEventListener('click', () => {
+      playClickSound();
+      if (lastSubmittedQuery) {
+        performSearch(lastSubmittedQuery, { scrollToResults: true });
+      }
+    });
   }
 
-  // Pencarian awal default
-  performSearch('laptop gaming murah');
+  // Pencarian awal default tanpa menggeser layar menjauhi kolom pencarian
+  performSearch('laptop gaming murah', { scrollToResults: false });
 });

@@ -1,11 +1,10 @@
 import os
 import socket
+from pathlib import Path
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-from pathlib import Path
-import pandas as pd
 
-from src.config import LEGACY_CSV_PATH, SCRAPED_CSV_PATH, DICT_JSON_PATH
+from src.config import LEGACY_CSV_PATH, SCRAPED_CSV_PATH, DICT_JSON_PATH, EURO_TO_IDR_RATE
 from src.preprocessor import TextPreprocessor
 from src.repository import LaptopRepository
 from src.expander import QueryExpander
@@ -13,6 +12,9 @@ from src.engine import LaptopRecommenderEngine
 
 BASE_DIR = Path(__file__).resolve().parent
 WEB_DIR = BASE_DIR / "web"
+
+DEFAULT_TOP_N = 30
+MAX_TOP_N = 100
 
 app = Flask(__name__, static_folder=str(WEB_DIR), static_url_path='')
 CORS(app)
@@ -30,7 +32,7 @@ def get_local_ip():
         return '127.0.0.1'
 
 
-# Inisialisasi engine SEKALI saat server start
+# Inisialisasi engine SEKALI saat server start (read-only setelah inisialisasi)
 print("[*] Menginisialisasi Sistem Rekomendasi Laptop IR-7...")
 preprocessor = TextPreprocessor()
 expander = QueryExpander(DICT_JSON_PATH)
@@ -57,21 +59,29 @@ def serve_static(path):
 def api_search():
     """
     Endpoint pencarian rekomendasi laptop:
-    GET /api/search?q=<query>&top=30
+    GET /api/search?q=<query>&top=30 (top: integer 1..100, default 30)
     """
     user_query = request.args.get('q', '').strip()
     if not user_query:
         return jsonify({"error": "Query pencarian tidak boleh kosong."}), 400
 
-    top_n = request.args.get('top', default=30, type=int)
+    raw_top = request.args.get('top')
+    if raw_top is None or raw_top == '':
+        top_n = DEFAULT_TOP_N
+    else:
+        try:
+            top_n = int(raw_top)
+        except (TypeError, ValueError):
+            return jsonify({"error": f"Parameter 'top' harus berupa bilangan bulat (1-{MAX_TOP_N})."}), 400
+        if top_n < 1 or top_n > MAX_TOP_N:
+            return jsonify({"error": f"Parameter 'top' harus berada di antara 1 dan {MAX_TOP_N}."}), 400
 
-    # Eksekusi search engine
-    df_results = engine.search(user_query, top_n=top_n, use_expansion=True)
-    df_relevan = df_results[df_results['score'] > 0].copy() if not df_results.empty else pd.DataFrame()
+    search_out = engine.search(user_query, top_n=top_n, use_expansion=True)
+    df_results = search_out.results
 
     results_list = []
-    if not df_relevan.empty:
-        for rank, (_, row) in enumerate(df_relevan.iterrows(), start=1):
+    if not df_results.empty:
+        for rank, (_, row) in enumerate(df_results.iterrows(), start=1):
             results_list.append({
                 "rank": rank,
                 "id": str(row.get('id', '')),
@@ -86,19 +96,23 @@ def api_search():
                 "os": str(row.get('os', '')),
                 "weight": str(row.get('weight', '')),
                 "price_idr": int(row.get('price_idr', 0)),
-                "score": float(row.get('score', 0.0))
+                "score": float(row.get('score', 0.0)),
+                "match_reasons": list(row.get('match_reasons', []) or []),
+                "variants": list(row.get('variants', []) or []),
             })
-
-    expanded_text = df_results['expanded_query'].iloc[0] if not df_results.empty else "-"
 
     response_data = {
         "query": user_query,
-        "expanded_query": expanded_text,
-        "constraints": engine.last_constraints.describe(),
-        "matched_phrases": engine.last_matched,
-        "relaxed": bool(engine.last_relaxed),
+        "expanded_query": search_out.expanded_query,
+        "constraints": search_out.constraints.describe(),
+        "constraints_detail": search_out.constraints.to_structured_list(),
+        "matched_phrases": search_out.matched_phrases,
+        "relaxed": bool(search_out.relaxed),
         "count": len(results_list),
-        "results": results_list
+        "total_candidates": int(search_out.total_candidates),
+        "top_limit": top_n,
+        "price_note": f"Harga IDR adalah estimasi dari harga EUR dataset dengan kurs tetap 1 EUR = Rp{EURO_TO_IDR_RATE:,.0f}".replace(',', '.'),
+        "results": results_list,
     }
 
     return jsonify(response_data)

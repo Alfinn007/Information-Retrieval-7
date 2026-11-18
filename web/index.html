@@ -266,11 +266,11 @@
                 <button type="button" class="deck-btn active" id="btn-sort-rel" title="Urutkan Relevansi (TF-IDF)">
                   <span class="deck-icon">&#9658;</span> RELEVANSI
                 </button>
-                <button type="button" class="deck-btn" id="btn-sort-price-asc" title="Urutkan Harga Termurah">
-                  <span class="deck-icon">&#9668;&#9668;</span> TERMURAH
+                <button type="button" class="deck-btn" id="btn-sort-price-asc" title="Urutkan Harga Termurah dari hasil ini">
+                  <span class="deck-icon">&#9668;&#9668;</span> TERMURAH (HASIL INI)
                 </button>
-                <button type="button" class="deck-btn" id="btn-sort-price-desc" title="Urutkan Harga Termahal">
-                  <span class="deck-icon">&#9658;&#9658;</span> TERMAHAL
+                <button type="button" class="deck-btn" id="btn-sort-price-desc" title="Urutkan Harga Termahal dari hasil ini">
+                  <span class="deck-icon">&#9658;&#9658;</span> TERMAHAL (HASIL INI)
                 </button>
                 <button type="button" class="deck-btn" id="btn-scroll-top" title="Kembali ke Atas">
                   <span class="deck-icon">&#9632;</span> ATAS
@@ -315,6 +315,11 @@
               <span class="expanded-raw-text" id="expanded-query-text">-</span>
             </div>
 
+            <div class="expanded-raw-line" id="price-note-row">
+              <span class="expanded-raw-label">CATATAN HARGA:</span>
+              <span class="expanded-raw-text" id="price-note-text">Harga IDR adalah estimasi dari harga EUR dataset dengan kurs tetap 1 EUR = Rp17.000.</span>
+            </div>
+
           </div> <!-- end tech-info-panel -->
 
         </div> <!-- end results-header-block -->
@@ -354,7 +359,14 @@
             <circle cx="90" cy="35" r="8" fill="var(--paper)" stroke="var(--ink)" stroke-width="3" />
           </svg>
           <p class="empty-title">TIDAK DITEMUKAN HASIL</p>
-          <p class="empty-sub">Maaf, tidak ditemukan laptop yang cocok dengan kata kunci tersebut. Coba gunakan istilah spesifikasi atau rentang harga yang lebih fleksibel.</p>
+          <p class="empty-sub">Tidak ada laptop yang memenuhi semua syarat wajib tersebut. Coba ubah batas harga, spesifikasi, atau kata kunci pencarian.</p>
+        </div>
+
+        <!-- Error State: Gangguan API / Jaringan -->
+        <div class="state-container" id="error-state" style="display: none;">
+          <p class="empty-title">GAGAL MEMUAT HASIL</p>
+          <p class="empty-sub" id="error-state-message">Terjadi kesalahan saat menghubungi server pencarian.</p>
+          <button type="button" class="btn-card-action btn-retry-search" id="btn-retry-search">Coba lagi</button>
         </div>
 
 
