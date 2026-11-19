@@ -495,16 +495,30 @@ document.addEventListener('DOMContentLoaded', () => {
         : '';
 
       const variants = Array.isArray(item.variants) ? item.variants : [];
+      const VARIANT_PREVIEW_LIMIT = 5;
+      const formatVariantItem = (v) => {
+        const vPrice = rupiahFormatter.format(v.price_idr).replace(/\s/g, '');
+        return `<div class="variant-item"><strong>${vPrice}</strong> · ${escapeHtml(v.cpu)} · ${escapeHtml(v.ram)} · ${escapeHtml(v.storage)} · ${escapeHtml(v.gpu)}</div>`;
+      };
+      const initialVariants = variants.slice(0, VARIANT_PREVIEW_LIMIT);
+      const extraVariants = variants.slice(VARIANT_PREVIEW_LIMIT);
+      const hasExtraVariants = extraVariants.length > 0;
+      const collapsedVariantsTitle = hasExtraVariants
+        ? `Varian konfigurasi lain (menampilkan ${initialVariants.length} dari ${variants.length}):`
+        : `Varian konfigurasi lain (${variants.length}):`;
+      const expandedVariantsTitle = `Varian konfigurasi lain (menampilkan semua ${variants.length}):`;
+      const showAllVariantsLabel = `Tampilkan semua ${variants.length} varian (+${extraVariants.length} lainnya)`;
+      const showLessVariantsLabel = `Tampilkan lebih sedikit (${VARIANT_PREVIEW_LIMIT})`;
+
       const closedDetailLabel = variants.length > 0 ? `Detail Lengkap ▼ (+${variants.length} varian)` : 'Detail Lengkap ▼';
       const variantsHtml = variants.length > 0
         ? `<div class="variants-section">
-             <div class="variants-title">Varian konfigurasi lain (${variants.length}):</div>
+             <div class="variants-title">${collapsedVariantsTitle}</div>
              <div class="variants-list">
-               ${variants.slice(0, 5).map(v => {
-                 const vPrice = rupiahFormatter.format(v.price_idr).replace(/\s/g, '');
-                 return `<div class="variant-item"><strong>${vPrice}</strong> · ${escapeHtml(v.cpu)} · ${escapeHtml(v.ram)} · ${escapeHtml(v.storage)} · ${escapeHtml(v.gpu)}</div>`;
-               }).join('')}
+               ${initialVariants.map(formatVariantItem).join('')}
              </div>
+             ${hasExtraVariants ? `<div class="variants-extra">${extraVariants.map(formatVariantItem).join('')}</div>` : ''}
+             ${hasExtraVariants ? `<button type="button" class="btn-card-action btn-toggle-variants">${showAllVariantsLabel}</button>` : ''}
            </div>`
         : '';
 
@@ -619,6 +633,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (btnToggle) btnToggle.addEventListener('click', toggleAccordion);
       card.addEventListener('click', toggleAccordion);
+
+      if (hasExtraVariants) {
+        const btnToggleVariants = card.querySelector('.btn-toggle-variants');
+        const extraVariantsEl = card.querySelector('.variants-extra');
+        const variantsTitleEl = card.querySelector('.variants-title');
+        if (btnToggleVariants && extraVariantsEl) {
+          btnToggleVariants.addEventListener('click', (e) => {
+            e.stopPropagation();
+            playClickSound();
+            triggerHaptic(15);
+            const isExpanded = extraVariantsEl.classList.toggle('expanded');
+            btnToggleVariants.textContent = isExpanded ? showLessVariantsLabel : showAllVariantsLabel;
+            if (variantsTitleEl) {
+              variantsTitleEl.textContent = isExpanded ? expandedVariantsTitle : collapsedVariantsTitle;
+            }
+          });
+        }
+      }
 
       cardsContainer.appendChild(card);
     });

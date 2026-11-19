@@ -2008,6 +2008,21 @@ body {
   background: rgba(255, 255, 255, 0.45);
 }
 
+.variants-extra {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.variants-extra.expanded {
+  display: flex;
+}
+
+.btn-toggle-variants {
+  margin-top: 8px;
+}
+
 .btn-retry-search {
   margin-top: 12px;
   padding: 8px 18px;

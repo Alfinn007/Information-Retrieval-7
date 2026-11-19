@@ -32,7 +32,10 @@ function createElement(id = '') {
     },
     appendChild(child) { this.children.push(child); },
     querySelector(sel) {
-      if (['.btn-toggle-detail', '.card-accordion', '.btn-copy-spec', '.toast-msg'].includes(sel)) {
+      if ([
+        '.btn-toggle-detail', '.card-accordion', '.btn-copy-spec', '.toast-msg',
+        '.btn-toggle-variants', '.variants-extra', '.variants-title'
+      ].includes(sel)) {
         if (!this._selectors[sel]) {
           this._selectors[sel] = createElement(sel);
         }
@@ -267,6 +270,66 @@ async function flushMicrotasks() {
   elements.get('btn-cta-search').listeners.click[0]();
   await flushMicrotasks();
   assert.ok(requestedUrls.some(u => u.includes('q=asus%20rog')));
+}
+
+// 6. Kartu dengan >5 varian (contoh 9 varian MacBook Pro) bisa membuka semua varian tanpa men-tutup accordion
+{
+  const nineVariants = Array.from({ length: 9 }, (_, i) => ({
+    id: String(100 + i),
+    cpu: `Intel Core i7-${i}`,
+    ram: '16GB',
+    storage: '512GB SSD',
+    gpu: 'Intel Iris',
+    price_idr: 25000000 + (i * 500000),
+  }));
+
+  const { elements, start } = setupHarness(async () => ({
+    ok: true,
+    status: 200,
+    async json() {
+      return {
+        query: 'laptop macbook',
+        expanded_query: 'macbook',
+        constraints: 'seri macbook',
+        matched_phrases: ['macbook'],
+        relaxed: false,
+        count: 1,
+        total_candidates: 3,
+        catalog_size: 1275,
+        results: [{
+          rank: 1, id: '1', brand: 'Apple', name: 'MacBook Pro', category: 'Ultrabook',
+          display: '15.4 inch', cpu: 'Intel Core i7', ram: '16GB', storage: '512GB SSD',
+          gpu: 'Radeon Pro', os: 'macOS', weight: '1.83kg', price_idr: 30000000, score: 0.9,
+          match_reasons: [],
+          variants: nineVariants
+        }]
+      };
+    }
+  }));
+
+  start();
+  await flushMicrotasks();
+
+  const card = elements.get('cards-container').children[0];
+  assert.equal((card.innerHTML.match(/class="variant-item"/g) || []).length, 9);
+  assert.ok(card.innerHTML.includes('menampilkan 5 dari 9'));
+  assert.ok(card.innerHTML.includes('Tampilkan semua 9 varian (+4 lainnya)'));
+
+  const btnToggleVariants = card.querySelector('.btn-toggle-variants');
+  const extraVariantsEl = card.querySelector('.variants-extra');
+  const variantsTitleEl = card.querySelector('.variants-title');
+
+  let stopped = false;
+  btnToggleVariants.listeners.click[0]({ stopPropagation() { stopped = true; } });
+  assert.equal(stopped, true);
+  assert.equal(extraVariantsEl.classList.contains('expanded'), true);
+  assert.equal(btnToggleVariants.textContent, 'Tampilkan lebih sedikit (5)');
+  assert.equal(variantsTitleEl.textContent, 'Varian konfigurasi lain (menampilkan semua 9):');
+
+  btnToggleVariants.listeners.click[0]({ stopPropagation() {} });
+  assert.equal(extraVariantsEl.classList.contains('expanded'), false);
+  assert.equal(btnToggleVariants.textContent, 'Tampilkan semua 9 varian (+4 lainnya)');
+  assert.equal(variantsTitleEl.textContent, 'Varian konfigurasi lain (menampilkan 5 dari 9):');
 }
 
 console.log('ALL FRONTEND JS TESTS PASSED');
