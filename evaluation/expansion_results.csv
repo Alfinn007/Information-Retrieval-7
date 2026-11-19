@@ -1,164 +1,164 @@
-query,mode,rank,product_id,brand,name,category,ram,storage,gpu,weight,price_idr,score
-laptop gaming murah,no_expansion,1,550,Acer,Aspire 7,Gaming,8GB,1TB HDD,Nvidia GeForce GTX 1050,2.4kg,13566000,0.3936
-laptop gaming murah,no_expansion,2,708,Dell,Inspiron 5577,Gaming,8GB,1TB HDD,Nvidia GeForce GTX 1050,2.56kg,13923000,0.3852
-laptop gaming murah,no_expansion,3,1208,Lenovo,Legion Y520-15IKBN,Gaming,8GB,1TB HDD,Nvidia GeForce GTX 1050,2.4kg,13923000,0.3835
-laptop gaming murah,no_expansion,4,1187,MSI,PL60 7RD,Gaming,8GB,1TB HDD,Nvidia GeForce GTX 1050,2.2kg,14263000,0.3758
-laptop gaming murah,no_expansion,5,154,Dell,Inspiron 7567,Gaming,8GB,1.0TB Hybrid,Nvidia GeForce GTX 1050,2.62kg,15283000,0.3734
-laptop gaming murah,with_expansion,1,550,Acer,Aspire 7,Gaming,8GB,1TB HDD,Nvidia GeForce GTX 1050,2.4kg,13566000,0.4358
-laptop gaming murah,with_expansion,2,191,Lenovo,Legion Y520-15IKBN,Gaming,8GB,256GB SSD,Nvidia GeForce GTX 1050,2.4kg,13243000,0.426
-laptop gaming murah,with_expansion,3,708,Dell,Inspiron 5577,Gaming,8GB,1TB HDD,Nvidia GeForce GTX 1050,2.56kg,13923000,0.4238
-laptop gaming murah,with_expansion,4,92,Asus,FX550IK-DM018T (FX-9830P/8GB/1TB/Radeon,Gaming,8GB,1TB HDD,AMD Radeon RX 560,2.45kg,11883000,0.4167
-laptop gaming murah,with_expansion,5,1187,MSI,PL60 7RD,Gaming,8GB,1TB HDD,Nvidia GeForce GTX 1050,2.2kg,14263000,0.4064
-edit video 16gb 15 inch,with_expansion,1,744,HP,ZBook 15,Workstation,16GB,256GB SSD,Nvidia Quadro M2200,2.6kg,41123000,0.3987
-edit video 16gb 15 inch,with_expansion,2,458,Dell,Precision 3520,Workstation,16GB,256GB SSD,Nvidia Quadro M620,2.17kg,33575000,0.3878
-edit video 16gb 15 inch,with_expansion,3,715,Lenovo,ThinkPad P51s,Workstation,16GB,512GB SSD,Nvidia Quadro M520M,2.18kg,31535000,0.3709
-edit video 16gb 15 inch,with_expansion,4,440,Lenovo,Thinkpad T570,Workstation,16GB,512GB SSD,Nvidia GeForce 940MX,2.3kg,41565000,0.274
-edit video 16gb 15 inch,with_expansion,5,208,Dell,Precision 7520,Workstation,16GB,256GB SSD +  1TB HDD,Nvidia Quadro M1200,2.8kg,51935000,0.2471
-kuliah ringan di bawah 8 juta,with_expansion,1,540,Mediacom,SmartBook Edge,Notebook,4GB,32GB SSD,Intel HD Graphics 500,1.2kg,6273000,0.3324
-kuliah ringan di bawah 8 juta,with_expansion,2,522,Asus,VivoBook E12,Netbook,2GB,32GB Flash Storage,Intel HD Graphics 500,1.1kg,4165000,0.3094
-kuliah ringan di bawah 8 juta,with_expansion,3,319,Asus,VivoBook Flip,2 in 1 Convertible,2GB,32GB Flash Storage,Intel HD Graphics 500,1.1kg,4675000,0.3083
-kuliah ringan di bawah 8 juta,with_expansion,4,195,Vero,K147 (N3350/4GB/32GB/FHD/W10),Notebook,4GB,32GB Flash Storage,Intel HD Graphics 500,1.3kg,4420000,0.294
-kuliah ringan di bawah 8 juta,with_expansion,5,507,Asus,VivoBook E201NA,Netbook,4GB,64GB Flash Storage,Intel HD Graphics 500,1.2kg,5780000,0.2906
-coding ssd 512gb,with_expansion,1,916,Lenovo,ThinkPad T570,Notebook,8GB,512GB SSD,Intel HD Graphics 620,1.95kg,33370830,0.1626
-coding ssd 512gb,with_expansion,2,201,HP,ProBook 430,Notebook,8GB,512GB SSD,Intel UHD Graphics 620,1.49kg,16303000,0.1536
-coding ssd 512gb,with_expansion,3,722,Dell,Latitude 5580,Notebook,16GB,512GB SSD,Intel HD Graphics 620,1.93kg,24253220,0.1488
-coding ssd 512gb,with_expansion,4,1257,Lenovo,ThinkPad 13,Notebook,16GB,512GB SSD,Intel HD Graphics 620,1.4kg,25483000,0.1479
-coding ssd 512gb,with_expansion,5,1189,HP,ProBook 450,Notebook,16GB,512GB SSD,Intel UHD Graphics 620,2.1kg,19703000,0.145
-laptop 2 in 1 touch screen,no_expansion,1,1204,Dell,Inspiron 5578,2 in 1 Convertible,16GB,512GB SSD,Intel HD Graphics 620,2.09kg,20043000,0.9289
-laptop 2 in 1 touch screen,no_expansion,2,224,Dell,Inspiron 5379,2 in 1 Convertible,16GB,512GB SSD,Intel UHD Graphics 620,1.62kg,21743000,0.925
-laptop 2 in 1 touch screen,no_expansion,3,1220,Dell,Inspiron 5579,2 in 1 Convertible,16GB,512GB SSD,Intel UHD Graphics 620,2kg,21845000,0.9237
-laptop 2 in 1 touch screen,no_expansion,4,1289,Lenovo,Yoga 900-13ISK,2 in 1 Convertible,16GB,512GB SSD,Intel HD Graphics 520,1.3kg,25483000,0.9092
-laptop 2 in 1 touch screen,no_expansion,5,914,Dell,XPS 13,2 in 1 Convertible,16GB,256GB SSD,Intel HD Graphics 615,1.22kg,28033000,0.9
-laptop 2 in 1 touch screen,with_expansion,1,1204,Dell,Inspiron 5578,2 in 1 Convertible,16GB,512GB SSD,Intel HD Graphics 620,2.09kg,20043000,0.9289
-laptop 2 in 1 touch screen,with_expansion,2,224,Dell,Inspiron 5379,2 in 1 Convertible,16GB,512GB SSD,Intel UHD Graphics 620,1.62kg,21743000,0.925
-laptop 2 in 1 touch screen,with_expansion,3,1220,Dell,Inspiron 5579,2 in 1 Convertible,16GB,512GB SSD,Intel UHD Graphics 620,2kg,21845000,0.9237
-laptop 2 in 1 touch screen,with_expansion,4,1289,Lenovo,Yoga 900-13ISK,2 in 1 Convertible,16GB,512GB SSD,Intel HD Graphics 520,1.3kg,25483000,0.9092
-laptop 2 in 1 touch screen,with_expansion,5,914,Dell,XPS 13,2 in 1 Convertible,16GB,256GB SSD,Intel HD Graphics 615,1.22kg,28033000,0.9
-laptop macbook,no_expansion,1,8,Apple,Macbook Air,Ultrabook,8GB,256GB Flash Storage,Intel HD Graphics 6000,1.34kg,19697900,0.2884
-laptop macbook,no_expansion,2,46,Apple,MacBook Pro,Ultrabook,8GB,256GB SSD,Intel Iris Graphics 540,1.37kg,24123000,0.2606
-laptop macbook,no_expansion,3,1084,Apple,"MacBook 12""",Ultrabook,8GB,256GB Flash Storage,Intel HD Graphics 515,0.920kg,22100000,0.2471
-laptop macbook,with_expansion,1,8,Apple,Macbook Air,Ultrabook,8GB,256GB Flash Storage,Intel HD Graphics 6000,1.34kg,19697900,0.4057
-laptop macbook,with_expansion,2,46,Apple,MacBook Pro,Ultrabook,8GB,256GB SSD,Intel Iris Graphics 540,1.37kg,24123000,0.3666
-laptop macbook,with_expansion,3,83,Apple,"MacBook 12""",Ultrabook,8GB,512GB SSD,Intel HD Graphics 615,0.92kg,25670000,0.3434
-"buat kuliah, nggak buat gaming",with_expansion,1,466,HP,17-BS092ND (i3-6006U/8GB/256GB/W10),Notebook,8GB,256GB SSD,Intel HD Graphics 520,2.5kg,10878300,0.3737
-"buat kuliah, nggak buat gaming",with_expansion,2,179,Dell,Inspiron 3567,Notebook,8GB,1TB HDD,Intel HD Graphics 620,2.3kg,7803000,0.369
-"buat kuliah, nggak buat gaming",with_expansion,3,245,Lenovo,IdeaPad 320-15ISK,Notebook,8GB,128GB SSD,Intel HD Graphics 520,2.2kg,10013000,0.3665
-"buat kuliah, nggak buat gaming",with_expansion,4,749,Dell,Vostro 3568,Notebook,8GB,256GB SSD,Intel HD Graphics 520,2kg,11305000,0.3629
-"buat kuliah, nggak buat gaming",with_expansion,5,560,HP,17-X047na (i3-6006U/8GB/1TB/W10),Notebook,8GB,1TB HDD,Intel HD Graphics 520,2.65kg,9250550,0.3628
-bukan laptop gaming,no_expansion,1,240,Dell,Inspiron 5567,Notebook,16GB,256GB SSD,AMD Radeon R7 M445,2.36kg,15283000,0.9225
-bukan laptop gaming,no_expansion,2,184,Dell,Inspiron 5570,Notebook,16GB,256GB SSD +  2TB HDD,AMD Radeon 530,2.02kg,17833000,0.9095
-bukan laptop gaming,no_expansion,3,1189,HP,ProBook 450,Notebook,16GB,512GB SSD,Intel UHD Graphics 620,2.1kg,19703000,0.8991
-bukan laptop gaming,no_expansion,4,1204,Dell,Inspiron 5578,2 in 1 Convertible,16GB,512GB SSD,Intel HD Graphics 620,2.09kg,20043000,0.8983
-bukan laptop gaming,no_expansion,5,94,HP,Probook 430,Notebook,16GB,512GB SSD,Intel UHD Graphics 620,1.49kg,20349000,0.8963
-bukan laptop gaming,with_expansion,1,240,Dell,Inspiron 5567,Notebook,16GB,256GB SSD,AMD Radeon R7 M445,2.36kg,15283000,0.9225
-bukan laptop gaming,with_expansion,2,184,Dell,Inspiron 5570,Notebook,16GB,256GB SSD +  2TB HDD,AMD Radeon 530,2.02kg,17833000,0.9095
-bukan laptop gaming,with_expansion,3,1189,HP,ProBook 450,Notebook,16GB,512GB SSD,Intel UHD Graphics 620,2.1kg,19703000,0.8991
-bukan laptop gaming,with_expansion,4,1204,Dell,Inspiron 5578,2 in 1 Convertible,16GB,512GB SSD,Intel HD Graphics 620,2.09kg,20043000,0.8983
-bukan laptop gaming,with_expansion,5,94,HP,Probook 430,Notebook,16GB,512GB SSD,Intel UHD Graphics 620,1.49kg,20349000,0.8963
-laptop kerja kantoran tahan lama,with_expansion,1,213,Lenovo,IdeaPad 320-15IKBN,Notebook,8GB,256GB SSD,Intel HD Graphics 620,2.2kg,10149000,0.3941
-laptop kerja kantoran tahan lama,with_expansion,2,1224,HP,15-bs025nv (i5-7200U/8GB/256GB/W10),Notebook,8GB,256GB SSD,Intel HD Graphics 620,1.91kg,9843000,0.3806
-laptop kerja kantoran tahan lama,with_expansion,3,66,HP,250 G6,Notebook,8GB,256GB SSD,Intel HD Graphics 620,1.86kg,11730000,0.3805
-laptop kerja kantoran tahan lama,with_expansion,4,1099,Dell,Vostro 3568,Notebook,8GB,256GB SSD,Intel HD Graphics 620,2.18kg,12750000,0.3799
-laptop kerja kantoran tahan lama,with_expansion,5,580,Lenovo,Thinkpad E570,Notebook,8GB,256GB SSD,Intel HD Graphics 620,2.3kg,14110000,0.376
-untuk mahasiswa desain grafis,with_expansion,1,359,HP,Zbook 15,Workstation,8GB,256GB SSD,Nvidia Quadro M1200,2.6kg,29550590,0.3379
-untuk mahasiswa desain grafis,with_expansion,2,394,Dell,Precision 5520,Workstation,8GB,256GB SSD,Nvidia Quadro M1200,2kg,36295000,0.3256
-untuk mahasiswa desain grafis,with_expansion,3,1151,HP,ZBook 17,Workstation,8GB,256GB SSD,Nvidia Quadro M3000M,3kg,67139800,0.3242
-untuk mahasiswa desain grafis,with_expansion,4,964,HP,ZBook Studio,Workstation,8GB,8GB SSD,Nvidia Quadro M1000M,2.0kg,38233000,0.3181
-untuk mahasiswa desain grafis,with_expansion,5,417,Lenovo,ThinkPad P51,Workstation,8GB,512GB SSD,Nvidia Quadro M1200,2.67kg,32725000,0.3176
-laptop buat anak sekolah daring hemat,with_expansion,1,26,Dell,Inspiron 3567,Notebook,4GB,1TB HDD,Intel HD Graphics 520,2.3kg,7116880,0.5901
-laptop buat anak sekolah daring hemat,with_expansion,2,55,Acer,Aspire 3,Notebook,4GB,1TB HDD,Intel HD Graphics 620,2.4kg,6528000,0.5824
-laptop buat anak sekolah daring hemat,with_expansion,3,415,Lenovo,IdeaPad 320-15ISK,Notebook,4GB,500GB HDD,Intel HD Graphics 520,2.2kg,6953000,0.5794
-laptop buat anak sekolah daring hemat,with_expansion,4,895,Dell,Inspiron 3552,Notebook,4GB,500GB HDD,Intel HD Graphics,2.2kg,6273000,0.576
-laptop buat anak sekolah daring hemat,with_expansion,5,1168,Lenovo,V110-15ISK (i3-6006U/4GB/1TB/No,Notebook,4GB,1TB HDD,Intel HD Graphics 520,1.9kg,5763000,0.5748
-perangkat ringan buat dibawa bepergian,with_expansion,1,390,Asus,Zenbook Flip,Ultrabook,16GB,512GB SSD,Intel HD Graphics 620,1.1kg,29731300,0.4627
-perangkat ringan buat dibawa bepergian,with_expansion,2,660,Dell,XPS 13,Ultrabook,8GB,256GB SSD,Intel UHD Graphics 620,1.2kg,24648300,0.4504
-perangkat ringan buat dibawa bepergian,with_expansion,3,684,Asus,Zenbook 3,Ultrabook,8GB,256GB SSD,Intel HD Graphics 620,1.1kg,19295000,0.4305
-perangkat ringan buat dibawa bepergian,with_expansion,4,315,Lenovo,IdeaPad 720S-13IKB,Notebook,8GB,256GB SSD,Intel HD Graphics 620,1.1kg,16983000,0.4083
-perangkat ringan buat dibawa bepergian,with_expansion,5,1098,HP,Spectre x360,Ultrabook,16GB,512GB SSD,Intel HD Graphics 620,1.3kg,34833000,0.4066
-ThinkPad RAM 16 GB,no_expansion,1,1257,Lenovo,ThinkPad 13,Notebook,16GB,512GB SSD,Intel HD Graphics 620,1.4kg,25483000,0.2783
-ThinkPad RAM 16 GB,no_expansion,2,793,Lenovo,ThinkPad T470s,Ultrabook,16GB,512GB SSD,Intel HD Graphics 620,1.7kg,39083000,0.2647
-ThinkPad RAM 16 GB,no_expansion,3,406,Lenovo,Thinkpad X1,Ultrabook,16GB,1TB SSD,Intel HD Graphics 620,1.13kg,44625000,0.2484
-ThinkPad RAM 16 GB,no_expansion,4,495,Lenovo,Thinkpad X270,Ultrabook,16GB,512GB SSD,Intel HD Graphics 620,1.36kg,30566000,0.2471
-ThinkPad RAM 16 GB,no_expansion,5,194,Lenovo,Thinkpad Yoga,2 in 1 Convertible,16GB,1TB SSD,Intel HD Graphics 620,1.42kg,48008000,0.2351
-ThinkPad RAM 16 GB,with_expansion,1,1257,Lenovo,ThinkPad 13,Notebook,16GB,512GB SSD,Intel HD Graphics 620,1.4kg,25483000,0.2783
-ThinkPad RAM 16 GB,with_expansion,2,793,Lenovo,ThinkPad T470s,Ultrabook,16GB,512GB SSD,Intel HD Graphics 620,1.7kg,39083000,0.2647
-ThinkPad RAM 16 GB,with_expansion,3,406,Lenovo,Thinkpad X1,Ultrabook,16GB,1TB SSD,Intel HD Graphics 620,1.13kg,44625000,0.2484
-ThinkPad RAM 16 GB,with_expansion,4,495,Lenovo,Thinkpad X270,Ultrabook,16GB,512GB SSD,Intel HD Graphics 620,1.36kg,30566000,0.2471
-ThinkPad RAM 16 GB,with_expansion,5,194,Lenovo,Thinkpad Yoga,2 in 1 Convertible,16GB,1TB SSD,Intel HD Graphics 620,1.42kg,48008000,0.2351
-Asus ROG gaming,no_expansion,1,1227,Asus,Rog Strix,Gaming,16GB,256GB SSD +  1TB HDD,Nvidia GeForce GTX 1070,2.2kg,41633000,0.3839
-Asus ROG gaming,no_expansion,2,862,Asus,Rog GL502VM-DS74,Gaming,16GB,128GB SSD +  1TB HDD,Nvidia GeForce GTX 1060,2.1kg,32283000,0.3256
-Asus ROG gaming,no_expansion,3,396,Asus,Rog GL753VD-GC042T,Gaming,8GB,1TB HDD,Nvidia GeForce GTX 1050,3kg,17663000,0.3239
-Asus ROG gaming,no_expansion,4,1012,Asus,Rog GL553VE-DS74,Gaming,16GB,256GB SSD +  1TB HDD,Nvidia GeForce GTX 1050 Ti,2.5kg,30583000,0.3238
-Asus ROG gaming,no_expansion,5,1265,Asus,Rog GL502VS,Gaming,16GB,256GB SSD +  1TB HDD,Nvidia GeForce GTX 1070,2.34kg,39525000,0.3153
-Asus ROG gaming,with_expansion,1,388,Asus,ROG Strix,Gaming,8GB,128GB SSD +  1TB HDD,Nvidia GeForce GTX 1060,2.3kg,28135000,0.4799
-Asus ROG gaming,with_expansion,2,862,Asus,Rog GL502VM-DS74,Gaming,16GB,128GB SSD +  1TB HDD,Nvidia GeForce GTX 1060,2.1kg,32283000,0.4231
-Asus ROG gaming,with_expansion,3,1107,Asus,Rog GL702VM-GC354T,Gaming,8GB,256GB SSD +  1TB HDD,Nvidia GeForce GTX 1060,2.7kg,27183000,0.4043
-Asus ROG gaming,with_expansion,4,1012,Asus,Rog GL553VE-DS74,Gaming,16GB,256GB SSD +  1TB HDD,Nvidia GeForce GTX 1050 Ti,2.5kg,30583000,0.4038
-Asus ROG gaming,with_expansion,5,396,Asus,Rog GL753VD-GC042T,Gaming,8GB,1TB HDD,Nvidia GeForce GTX 1050,3kg,17663000,0.398
-Dell XPS layar 15 inch,no_expansion,1,298,Dell,XPS 15,Notebook,8GB,256GB SSD,Nvidia GeForce GTX 1050,2kg,31093000,0.3623
-Dell XPS layar 15 inch,with_expansion,1,298,Dell,XPS 15,Notebook,8GB,256GB SSD,Nvidia GeForce GTX 1050,2kg,31093000,0.3623
-Lenovo ThinkPad tanpa HDD,no_expansion,1,512,Lenovo,ThinkPad 13,Notebook,8GB,256GB SSD,Intel HD Graphics 620,1.44kg,16133000,0.2937
-Lenovo ThinkPad tanpa HDD,no_expansion,2,580,Lenovo,Thinkpad E570,Notebook,8GB,256GB SSD,Intel HD Graphics 620,2.3kg,14110000,0.2903
-Lenovo ThinkPad tanpa HDD,no_expansion,3,1184,Lenovo,ThinkPad T570,Notebook,8GB,256GB SSD,Intel HD Graphics 620,1.95kg,23630000,0.2766
-Lenovo ThinkPad tanpa HDD,no_expansion,4,506,Lenovo,ThinkPad L570,Notebook,8GB,256GB SSD,Intel HD Graphics 620,2.3kg,15487000,0.2745
-Lenovo ThinkPad tanpa HDD,no_expansion,5,460,Lenovo,ThinkPad T470,Notebook,8GB,256GB SSD,Intel HD Graphics 620,1.65kg,22865000,0.2707
-Lenovo ThinkPad tanpa HDD,with_expansion,1,512,Lenovo,ThinkPad 13,Notebook,8GB,256GB SSD,Intel HD Graphics 620,1.44kg,16133000,0.2937
-Lenovo ThinkPad tanpa HDD,with_expansion,2,580,Lenovo,Thinkpad E570,Notebook,8GB,256GB SSD,Intel HD Graphics 620,2.3kg,14110000,0.2903
-Lenovo ThinkPad tanpa HDD,with_expansion,3,1184,Lenovo,ThinkPad T570,Notebook,8GB,256GB SSD,Intel HD Graphics 620,1.95kg,23630000,0.2766
-Lenovo ThinkPad tanpa HDD,with_expansion,4,506,Lenovo,ThinkPad L570,Notebook,8GB,256GB SSD,Intel HD Graphics 620,2.3kg,15487000,0.2745
-Lenovo ThinkPad tanpa HDD,with_expansion,5,460,Lenovo,ThinkPad T470,Notebook,8GB,256GB SSD,Intel HD Graphics 620,1.65kg,22865000,0.2707
-ngoding budget 8 juta,with_expansion,1,179,Dell,Inspiron 3567,Notebook,8GB,1TB HDD,Intel HD Graphics 620,2.3kg,7803000,0.0562
-ngoding budget 8 juta,with_expansion,2,261,HP,15-BW094nd (A6-9220/8GB/128GB/W10),Notebook,8GB,128GB SSD,AMD Radeon R4 Graphics,1.91kg,7580300,0.0537
-ngoding budget 8 juta,with_expansion,3,1181,Lenovo,IdeaPad 310-15ISK,Notebook,8GB,1TB HDD,Intel HD Graphics 520,2.2kg,7803000,0.0521
-ngoding budget 8 juta,with_expansion,4,318,Acer,ES1-523-84K7 (A8-7410/8GB/256GB/FHD/W10),Notebook,8GB,256GB SSD,AMD Radeon R5,2.23kg,7973000,0.05
-ngoding budget 8 juta,with_expansion,5,534,Lenovo,IdeaPad 320-15ISK,Notebook,8GB,2TB HDD,Nvidia GeForce 920MX,2.2kg,7803000,0.0475
-laptop maksimal 8000000,no_expansion,1,634,Lenovo,IdeaPad 320-15IKBN,Notebook,4GB,128GB SSD,Intel HD Graphics 620,2.2kg,7956000,0.5913
-laptop maksimal 8000000,no_expansion,2,1135,Vero,V131 (X5-Z8350/4GB/32GB/FHD/W10),Notebook,4GB,32GB Flash Storage,Intel HD Graphics 400,1.35kg,3332000,0.5841
-laptop maksimal 8000000,no_expansion,3,800,Vero,K146 (N3350/4GB/32GB/W10),Notebook,4GB,32GB Flash Storage,Intel HD Graphics 500,1.22kg,3449300,0.5818
-laptop maksimal 8000000,no_expansion,4,633,Mediacom,SmartBook 140,Notebook,2GB,32GB Flash Storage,Intel HD Graphics,1.4kg,4063000,0.5763
-laptop maksimal 8000000,no_expansion,5,31,Chuwi,"LapBook 15.6""",Notebook,4GB,64GB Flash Storage,Intel HD Graphics,1.89kg,4164830,0.5756
-laptop maksimal 8000000,with_expansion,1,634,Lenovo,IdeaPad 320-15IKBN,Notebook,4GB,128GB SSD,Intel HD Graphics 620,2.2kg,7956000,0.5913
-laptop maksimal 8000000,with_expansion,2,1135,Vero,V131 (X5-Z8350/4GB/32GB/FHD/W10),Notebook,4GB,32GB Flash Storage,Intel HD Graphics 400,1.35kg,3332000,0.5841
-laptop maksimal 8000000,with_expansion,3,800,Vero,K146 (N3350/4GB/32GB/W10),Notebook,4GB,32GB Flash Storage,Intel HD Graphics 500,1.22kg,3449300,0.5818
-laptop maksimal 8000000,with_expansion,4,633,Mediacom,SmartBook 140,Notebook,2GB,32GB Flash Storage,Intel HD Graphics,1.4kg,4063000,0.5763
-laptop maksimal 8000000,with_expansion,5,31,Chuwi,"LapBook 15.6""",Notebook,4GB,64GB Flash Storage,Intel HD Graphics,1.89kg,4164830,0.5756
-"laptop 7,5 juta ssd 256gb",no_expansion,1,60,Asus,X541UA-DM1897 (i3-6006U/4GB/256GB/FHD/Linux),Notebook,4GB,256GB SSD,Intel HD Graphics 520,2kg,7055000,0.61
-"laptop 7,5 juta ssd 256gb",no_expansion,2,266,Lenovo,IdeaPad 320-15ISK,Notebook,4GB,256GB SSD,Intel HD Graphics 520,2.2kg,7548000,0.5975
-"laptop 7,5 juta ssd 256gb",no_expansion,3,53,HP,255 G6,Notebook,4GB,256GB SSD,AMD Radeon R4 Graphics,1.86kg,6774330,0.5731
-"laptop 7,5 juta ssd 256gb",no_expansion,4,318,Acer,ES1-523-84K7 (A8-7410/8GB/256GB/FHD/W10),Notebook,8GB,256GB SSD,AMD Radeon R5,2.23kg,7973000,0.5619
-"laptop 7,5 juta ssd 256gb",no_expansion,5,544,HP,250 G6,Notebook,4GB,256GB SSD,Intel HD Graphics 405,1.86kg,6782830,0.5606
-"laptop 7,5 juta ssd 256gb",with_expansion,1,60,Asus,X541UA-DM1897 (i3-6006U/4GB/256GB/FHD/Linux),Notebook,4GB,256GB SSD,Intel HD Graphics 520,2kg,7055000,0.61
-"laptop 7,5 juta ssd 256gb",with_expansion,2,266,Lenovo,IdeaPad 320-15ISK,Notebook,4GB,256GB SSD,Intel HD Graphics 520,2.2kg,7548000,0.5975
-"laptop 7,5 juta ssd 256gb",with_expansion,3,53,HP,255 G6,Notebook,4GB,256GB SSD,AMD Radeon R4 Graphics,1.86kg,6774330,0.5731
-"laptop 7,5 juta ssd 256gb",with_expansion,4,318,Acer,ES1-523-84K7 (A8-7410/8GB/256GB/FHD/W10),Notebook,8GB,256GB SSD,AMD Radeon R5,2.23kg,7973000,0.5619
-"laptop 7,5 juta ssd 256gb",with_expansion,5,544,HP,250 G6,Notebook,4GB,256GB SSD,Intel HD Graphics 405,1.86kg,6782830,0.5606
-kisaran 10 juta ram 8gb,no_expansion,1,218,Lenovo,IdeaPad 320-15IKBN,Notebook,8GB,256GB SSD,Intel HD Graphics 620,2.2kg,9333000,0.7713
-kisaran 10 juta ram 8gb,no_expansion,2,25,HP,15-BS101nv (i7-8550U/8GB/256GB/FHD/W10),Ultrabook,8GB,256GB SSD,Intel HD Graphics 620,1.91kg,11203000,0.7628
-kisaran 10 juta ram 8gb,no_expansion,3,1266,Lenovo,V510-15IKB (i5-7200U/8GB/256GB/FHD/No,Notebook,8GB,256GB SSD,Intel HD Graphics 620,2.3kg,9741000,0.7601
-kisaran 10 juta ram 8gb,no_expansion,4,3,HP,250 G6,Notebook,8GB,256GB SSD,Intel HD Graphics 620,1.86kg,9775000,0.7578
-kisaran 10 juta ram 8gb,no_expansion,5,1188,HP,250 G5,Notebook,8GB,256GB SSD,Intel HD Graphics 520,1.96kg,11543000,0.7382
-kisaran 10 juta ram 8gb,with_expansion,1,218,Lenovo,IdeaPad 320-15IKBN,Notebook,8GB,256GB SSD,Intel HD Graphics 620,2.2kg,9333000,0.7713
-kisaran 10 juta ram 8gb,with_expansion,2,25,HP,15-BS101nv (i7-8550U/8GB/256GB/FHD/W10),Ultrabook,8GB,256GB SSD,Intel HD Graphics 620,1.91kg,11203000,0.7628
-kisaran 10 juta ram 8gb,with_expansion,3,1266,Lenovo,V510-15IKB (i5-7200U/8GB/256GB/FHD/No,Notebook,8GB,256GB SSD,Intel HD Graphics 620,2.3kg,9741000,0.7601
-kisaran 10 juta ram 8gb,with_expansion,4,3,HP,250 G6,Notebook,8GB,256GB SSD,Intel HD Graphics 620,1.86kg,9775000,0.7578
-kisaran 10 juta ram 8gb,with_expansion,5,1188,HP,250 G5,Notebook,8GB,256GB SSD,Intel HD Graphics 520,1.96kg,11543000,0.7382
-"berat maksimal 1,5 kg ssd 256gb",no_expansion,1,94,HP,Probook 430,Notebook,16GB,512GB SSD,Intel UHD Graphics 620,1.49kg,20349000,0.9701
-"berat maksimal 1,5 kg ssd 256gb",no_expansion,2,113,Asus,VivoBook S15,Ultrabook,16GB,256GB SSD +  1TB HDD,Nvidia GeForce MX150,1.5kg,21454000,0.9662
-"berat maksimal 1,5 kg ssd 256gb",no_expansion,3,9,Asus,ZenBook UX430UN,Ultrabook,16GB,512GB SSD,Nvidia GeForce MX150,1.3kg,25415000,0.9383
-"berat maksimal 1,5 kg ssd 256gb",no_expansion,4,1257,Lenovo,ThinkPad 13,Notebook,16GB,512GB SSD,Intel HD Graphics 620,1.4kg,25483000,0.9376
-"berat maksimal 1,5 kg ssd 256gb",no_expansion,5,1289,Lenovo,Yoga 900-13ISK,2 in 1 Convertible,16GB,512GB SSD,Intel HD Graphics 520,1.3kg,25483000,0.9376
-"berat maksimal 1,5 kg ssd 256gb",with_expansion,1,94,HP,Probook 430,Notebook,16GB,512GB SSD,Intel UHD Graphics 620,1.49kg,20349000,0.9701
-"berat maksimal 1,5 kg ssd 256gb",with_expansion,2,113,Asus,VivoBook S15,Ultrabook,16GB,256GB SSD +  1TB HDD,Nvidia GeForce MX150,1.5kg,21454000,0.9662
-"berat maksimal 1,5 kg ssd 256gb",with_expansion,3,9,Asus,ZenBook UX430UN,Ultrabook,16GB,512GB SSD,Nvidia GeForce MX150,1.3kg,25415000,0.9383
-"berat maksimal 1,5 kg ssd 256gb",with_expansion,4,1257,Lenovo,ThinkPad 13,Notebook,16GB,512GB SSD,Intel HD Graphics 620,1.4kg,25483000,0.9376
-"berat maksimal 1,5 kg ssd 256gb",with_expansion,5,1289,Lenovo,Yoga 900-13ISK,2 in 1 Convertible,16GB,512GB SSD,Intel HD Graphics 520,1.3kg,25483000,0.9376
-yang paling murah di bawah 8 juta,no_expansion,1,1233,Acer,C740-C9QX (3205U/2GB/32GB/Chrome,Netbook,2GB,32GB SSD,Intel HD Graphics,1.3kg,2958000,0.8875
-yang paling murah di bawah 8 juta,no_expansion,2,21,Asus,Vivobook E200HA,Netbook,2GB,32GB Flash Storage,Intel HD Graphics 400,0.98kg,3262300,0.8834
-yang paling murah di bawah 8 juta,no_expansion,3,1135,Vero,V131 (X5-Z8350/4GB/32GB/FHD/W10),Notebook,4GB,32GB Flash Storage,Intel HD Graphics 400,1.35kg,3332000,0.8943
-yang paling murah di bawah 8 juta,no_expansion,4,32,Asus,E402WA-GA010T (E2-6110/2GB/32GB/W10),Notebook,2GB,32GB Flash Storage,AMD Radeon R2,1.65kg,3383000,0.8751
-yang paling murah di bawah 8 juta,no_expansion,5,295,Acer,Chromebook C910-C2ST,Notebook,2GB,16GB SSD,Intel HD Graphics,2.19kg,3383000,0.8751
-yang paling murah di bawah 8 juta,with_expansion,1,1233,Acer,C740-C9QX (3205U/2GB/32GB/Chrome,Netbook,2GB,32GB SSD,Intel HD Graphics,1.3kg,2958000,0.8875
-yang paling murah di bawah 8 juta,with_expansion,2,21,Asus,Vivobook E200HA,Netbook,2GB,32GB Flash Storage,Intel HD Graphics 400,0.98kg,3262300,0.8834
-yang paling murah di bawah 8 juta,with_expansion,3,1135,Vero,V131 (X5-Z8350/4GB/32GB/FHD/W10),Notebook,4GB,32GB Flash Storage,Intel HD Graphics 400,1.35kg,3332000,0.8943
-yang paling murah di bawah 8 juta,with_expansion,4,32,Asus,E402WA-GA010T (E2-6110/2GB/32GB/W10),Notebook,2GB,32GB Flash Storage,AMD Radeon R2,1.65kg,3383000,0.8751
-yang paling murah di bawah 8 juta,with_expansion,5,295,Acer,Chromebook C910-C2ST,Notebook,2GB,16GB SSD,Intel HD Graphics,2.19kg,3383000,0.8751
+query,mode,rank,product_id,brand,name,category,display,ram,storage,gpu,weight,price_idr,score
+laptop gaming murah,no_expansion,1,550,Acer,Aspire 7,Gaming,15.6 inch Full HD 1920x1080,8GB,1TB HDD,Nvidia GeForce GTX 1050,2.4kg,13566000,0.3936
+laptop gaming murah,no_expansion,2,708,Dell,Inspiron 5577,Gaming,15.6 inch Full HD 1920x1080,8GB,1TB HDD,Nvidia GeForce GTX 1050,2.56kg,13923000,0.3852
+laptop gaming murah,no_expansion,3,1208,Lenovo,Legion Y520-15IKBN,Gaming,15.6 inch IPS Panel Full HD 1920x1080,8GB,1TB HDD,Nvidia GeForce GTX 1050,2.4kg,13923000,0.3835
+laptop gaming murah,no_expansion,4,1187,MSI,PL60 7RD,Gaming,15.6 inch IPS Panel Full HD 1920x1080,8GB,1TB HDD,Nvidia GeForce GTX 1050,2.2kg,14263000,0.3758
+laptop gaming murah,no_expansion,5,154,Dell,Inspiron 7567,Gaming,15.6 inch Full HD 1920x1080,8GB,1.0TB Hybrid,Nvidia GeForce GTX 1050,2.62kg,15283000,0.3734
+laptop gaming murah,with_expansion,1,550,Acer,Aspire 7,Gaming,15.6 inch Full HD 1920x1080,8GB,1TB HDD,Nvidia GeForce GTX 1050,2.4kg,13566000,0.4358
+laptop gaming murah,with_expansion,2,191,Lenovo,Legion Y520-15IKBN,Gaming,15.6 inch IPS Panel Full HD 1920x1080,8GB,256GB SSD,Nvidia GeForce GTX 1050,2.4kg,13243000,0.426
+laptop gaming murah,with_expansion,3,708,Dell,Inspiron 5577,Gaming,15.6 inch Full HD 1920x1080,8GB,1TB HDD,Nvidia GeForce GTX 1050,2.56kg,13923000,0.4238
+laptop gaming murah,with_expansion,4,92,Asus,FX550IK-DM018T (FX-9830P/8GB/1TB/Radeon,Gaming,15.6 inch Full HD 1920x1080,8GB,1TB HDD,AMD Radeon RX 560,2.45kg,11883000,0.4167
+laptop gaming murah,with_expansion,5,1187,MSI,PL60 7RD,Gaming,15.6 inch IPS Panel Full HD 1920x1080,8GB,1TB HDD,Nvidia GeForce GTX 1050,2.2kg,14263000,0.4064
+edit video 16gb 15 inch,with_expansion,1,744,HP,ZBook 15,Workstation,15.6 inch Full HD 1920x1080,16GB,256GB SSD,Nvidia Quadro M2200,2.6kg,41123000,0.3987
+edit video 16gb 15 inch,with_expansion,2,458,Dell,Precision 3520,Workstation,15.6 inch IPS Panel Full HD 1920x1080,16GB,256GB SSD,Nvidia Quadro M620,2.17kg,33575000,0.3878
+edit video 16gb 15 inch,with_expansion,3,715,Lenovo,ThinkPad P51s,Workstation,15.6 inch Full HD 1920x1080,16GB,512GB SSD,Nvidia Quadro M520M,2.18kg,31535000,0.3709
+edit video 16gb 15 inch,with_expansion,4,440,Lenovo,Thinkpad T570,Workstation,15.6 inch IPS Panel 4K Ultra HD 3840x2160,16GB,512GB SSD,Nvidia GeForce 940MX,2.3kg,41565000,0.274
+edit video 16gb 15 inch,with_expansion,5,208,Dell,Precision 7520,Workstation,15.6 inch 4K Ultra HD 3840x2160,16GB,256GB SSD +  1TB HDD,Nvidia Quadro M1200,2.8kg,51935000,0.2471
+kuliah ringan di bawah 8 juta,with_expansion,1,540,Mediacom,SmartBook Edge,Notebook,13.3 inch IPS Panel Full HD 1920x1080,4GB,32GB SSD,Intel HD Graphics 500,1.2kg,6273000,0.3324
+kuliah ringan di bawah 8 juta,with_expansion,2,522,Asus,VivoBook E12,Netbook,11.6 inch 1366x768,2GB,32GB Flash Storage,Intel HD Graphics 500,1.1kg,4165000,0.3094
+kuliah ringan di bawah 8 juta,with_expansion,3,319,Asus,VivoBook Flip,2 in 1 Convertible,11.6 inch Touchscreen 1366x768,2GB,32GB Flash Storage,Intel HD Graphics 500,1.1kg,4675000,0.3083
+kuliah ringan di bawah 8 juta,with_expansion,4,195,Vero,K147 (N3350/4GB/32GB/FHD/W10),Notebook,14.0 inch IPS Panel Full HD 1920x1080,4GB,32GB Flash Storage,Intel HD Graphics 500,1.3kg,4420000,0.294
+kuliah ringan di bawah 8 juta,with_expansion,5,507,Asus,VivoBook E201NA,Netbook,11.6 inch 1366x768,4GB,64GB Flash Storage,Intel HD Graphics 500,1.2kg,5780000,0.2906
+coding ssd 512gb,with_expansion,1,916,Lenovo,ThinkPad T570,Notebook,15.6 inch IPS Panel Full HD 1920x1080,8GB,512GB SSD,Intel HD Graphics 620,1.95kg,33370830,0.1626
+coding ssd 512gb,with_expansion,2,201,HP,ProBook 430,Notebook,13.3 inch Full HD 1920x1080,8GB,512GB SSD,Intel UHD Graphics 620,1.49kg,16303000,0.1536
+coding ssd 512gb,with_expansion,3,722,Dell,Latitude 5580,Notebook,15.6 inch Full HD 1920x1080,16GB,512GB SSD,Intel HD Graphics 620,1.93kg,24253220,0.1488
+coding ssd 512gb,with_expansion,4,1257,Lenovo,ThinkPad 13,Notebook,13.3 inch IPS Panel Full HD 1920x1080,16GB,512GB SSD,Intel HD Graphics 620,1.4kg,25483000,0.1479
+coding ssd 512gb,with_expansion,5,1189,HP,ProBook 450,Notebook,15.6 inch Full HD 1920x1080,16GB,512GB SSD,Intel UHD Graphics 620,2.1kg,19703000,0.145
+laptop 2 in 1 touch screen,no_expansion,1,1204,Dell,Inspiron 5578,2 in 1 Convertible,15.6 inch Full HD / Touchscreen 1920x1080,16GB,512GB SSD,Intel HD Graphics 620,2.09kg,20043000,0.9289
+laptop 2 in 1 touch screen,no_expansion,2,224,Dell,Inspiron 5379,2 in 1 Convertible,13.3 inch Full HD / Touchscreen 1920x1080,16GB,512GB SSD,Intel UHD Graphics 620,1.62kg,21743000,0.925
+laptop 2 in 1 touch screen,no_expansion,3,1220,Dell,Inspiron 5579,2 in 1 Convertible,15.6 inch Full HD / Touchscreen 1920x1080,16GB,512GB SSD,Intel UHD Graphics 620,2kg,21845000,0.9237
+laptop 2 in 1 touch screen,no_expansion,4,1289,Lenovo,Yoga 900-13ISK,2 in 1 Convertible,13.3 inch IPS Panel Quad HD+ / Touchscreen 3200x1800,16GB,512GB SSD,Intel HD Graphics 520,1.3kg,25483000,0.9092
+laptop 2 in 1 touch screen,no_expansion,5,914,Dell,XPS 13,2 in 1 Convertible,13.3 inch Full HD / Touchscreen 1920x1080,16GB,256GB SSD,Intel HD Graphics 615,1.22kg,28033000,0.9
+laptop 2 in 1 touch screen,with_expansion,1,1204,Dell,Inspiron 5578,2 in 1 Convertible,15.6 inch Full HD / Touchscreen 1920x1080,16GB,512GB SSD,Intel HD Graphics 620,2.09kg,20043000,0.9289
+laptop 2 in 1 touch screen,with_expansion,2,224,Dell,Inspiron 5379,2 in 1 Convertible,13.3 inch Full HD / Touchscreen 1920x1080,16GB,512GB SSD,Intel UHD Graphics 620,1.62kg,21743000,0.925
+laptop 2 in 1 touch screen,with_expansion,3,1220,Dell,Inspiron 5579,2 in 1 Convertible,15.6 inch Full HD / Touchscreen 1920x1080,16GB,512GB SSD,Intel UHD Graphics 620,2kg,21845000,0.9237
+laptop 2 in 1 touch screen,with_expansion,4,1289,Lenovo,Yoga 900-13ISK,2 in 1 Convertible,13.3 inch IPS Panel Quad HD+ / Touchscreen 3200x1800,16GB,512GB SSD,Intel HD Graphics 520,1.3kg,25483000,0.9092
+laptop 2 in 1 touch screen,with_expansion,5,914,Dell,XPS 13,2 in 1 Convertible,13.3 inch Full HD / Touchscreen 1920x1080,16GB,256GB SSD,Intel HD Graphics 615,1.22kg,28033000,0.9
+laptop macbook,no_expansion,1,8,Apple,Macbook Air,Ultrabook,13.3 inch 1440x900,8GB,256GB Flash Storage,Intel HD Graphics 6000,1.34kg,19697900,0.2884
+laptop macbook,no_expansion,2,46,Apple,MacBook Pro,Ultrabook,13.3 inch IPS Panel Retina Display 2560x1600,8GB,256GB SSD,Intel Iris Graphics 540,1.37kg,24123000,0.2606
+laptop macbook,no_expansion,3,1084,Apple,"MacBook 12""",Ultrabook,12.0 inch IPS Panel Retina Display 2304x1440,8GB,256GB Flash Storage,Intel HD Graphics 515,0.920kg,22100000,0.2471
+laptop macbook,with_expansion,1,8,Apple,Macbook Air,Ultrabook,13.3 inch 1440x900,8GB,256GB Flash Storage,Intel HD Graphics 6000,1.34kg,19697900,0.4057
+laptop macbook,with_expansion,2,46,Apple,MacBook Pro,Ultrabook,13.3 inch IPS Panel Retina Display 2560x1600,8GB,256GB SSD,Intel Iris Graphics 540,1.37kg,24123000,0.3666
+laptop macbook,with_expansion,3,83,Apple,"MacBook 12""",Ultrabook,12.0 inch IPS Panel Retina Display 2304x1440,8GB,512GB SSD,Intel HD Graphics 615,0.92kg,25670000,0.3434
+"buat kuliah, nggak buat gaming",with_expansion,1,466,HP,17-BS092ND (i3-6006U/8GB/256GB/W10),Notebook,17.3 inch 1600x900,8GB,256GB SSD,Intel HD Graphics 520,2.5kg,10878300,0.3737
+"buat kuliah, nggak buat gaming",with_expansion,2,179,Dell,Inspiron 3567,Notebook,15.6 inch 1366x768,8GB,1TB HDD,Intel HD Graphics 620,2.3kg,7803000,0.369
+"buat kuliah, nggak buat gaming",with_expansion,3,245,Lenovo,IdeaPad 320-15ISK,Notebook,15.6 inch 1366x768,8GB,128GB SSD,Intel HD Graphics 520,2.2kg,10013000,0.3665
+"buat kuliah, nggak buat gaming",with_expansion,4,749,Dell,Vostro 3568,Notebook,15.6 inch 1366x768,8GB,256GB SSD,Intel HD Graphics 520,2kg,11305000,0.3629
+"buat kuliah, nggak buat gaming",with_expansion,5,560,HP,17-X047na (i3-6006U/8GB/1TB/W10),Notebook,17.3 inch 1600x900,8GB,1TB HDD,Intel HD Graphics 520,2.65kg,9250550,0.3628
+bukan laptop gaming,no_expansion,1,240,Dell,Inspiron 5567,Notebook,15.6 inch Full HD 1920x1080,16GB,256GB SSD,AMD Radeon R7 M445,2.36kg,15283000,0.9225
+bukan laptop gaming,no_expansion,2,184,Dell,Inspiron 5570,Notebook,15.6 inch Full HD 1920x1080,16GB,256GB SSD +  2TB HDD,AMD Radeon 530,2.02kg,17833000,0.9095
+bukan laptop gaming,no_expansion,3,1189,HP,ProBook 450,Notebook,15.6 inch Full HD 1920x1080,16GB,512GB SSD,Intel UHD Graphics 620,2.1kg,19703000,0.8991
+bukan laptop gaming,no_expansion,4,1204,Dell,Inspiron 5578,2 in 1 Convertible,15.6 inch Full HD / Touchscreen 1920x1080,16GB,512GB SSD,Intel HD Graphics 620,2.09kg,20043000,0.8983
+bukan laptop gaming,no_expansion,5,94,HP,Probook 430,Notebook,13.3 inch Full HD 1920x1080,16GB,512GB SSD,Intel UHD Graphics 620,1.49kg,20349000,0.8963
+bukan laptop gaming,with_expansion,1,240,Dell,Inspiron 5567,Notebook,15.6 inch Full HD 1920x1080,16GB,256GB SSD,AMD Radeon R7 M445,2.36kg,15283000,0.9225
+bukan laptop gaming,with_expansion,2,184,Dell,Inspiron 5570,Notebook,15.6 inch Full HD 1920x1080,16GB,256GB SSD +  2TB HDD,AMD Radeon 530,2.02kg,17833000,0.9095
+bukan laptop gaming,with_expansion,3,1189,HP,ProBook 450,Notebook,15.6 inch Full HD 1920x1080,16GB,512GB SSD,Intel UHD Graphics 620,2.1kg,19703000,0.8991
+bukan laptop gaming,with_expansion,4,1204,Dell,Inspiron 5578,2 in 1 Convertible,15.6 inch Full HD / Touchscreen 1920x1080,16GB,512GB SSD,Intel HD Graphics 620,2.09kg,20043000,0.8983
+bukan laptop gaming,with_expansion,5,94,HP,Probook 430,Notebook,13.3 inch Full HD 1920x1080,16GB,512GB SSD,Intel UHD Graphics 620,1.49kg,20349000,0.8963
+laptop kerja kantoran tahan lama,with_expansion,1,213,Lenovo,IdeaPad 320-15IKBN,Notebook,15.6 inch 1366x768,8GB,256GB SSD,Intel HD Graphics 620,2.2kg,10149000,0.3941
+laptop kerja kantoran tahan lama,with_expansion,2,1224,HP,15-bs025nv (i5-7200U/8GB/256GB/W10),Notebook,15.6 inch 1366x768,8GB,256GB SSD,Intel HD Graphics 620,1.91kg,9843000,0.3806
+laptop kerja kantoran tahan lama,with_expansion,3,66,HP,250 G6,Notebook,15.6 inch Full HD 1920x1080,8GB,256GB SSD,Intel HD Graphics 620,1.86kg,11730000,0.3805
+laptop kerja kantoran tahan lama,with_expansion,4,1099,Dell,Vostro 3568,Notebook,15.6 inch Full HD 1920x1080,8GB,256GB SSD,Intel HD Graphics 620,2.18kg,12750000,0.3799
+laptop kerja kantoran tahan lama,with_expansion,5,580,Lenovo,Thinkpad E570,Notebook,15.6 inch Full HD 1920x1080,8GB,256GB SSD,Intel HD Graphics 620,2.3kg,14110000,0.376
+untuk mahasiswa desain grafis,with_expansion,1,359,HP,Zbook 15,Workstation,15.6 inch Full HD 1920x1080,8GB,256GB SSD,Nvidia Quadro M1200,2.6kg,29550590,0.3379
+untuk mahasiswa desain grafis,with_expansion,2,394,Dell,Precision 5520,Workstation,15.6 inch IPS Panel Full HD 1920x1080,8GB,256GB SSD,Nvidia Quadro M1200,2kg,36295000,0.3256
+untuk mahasiswa desain grafis,with_expansion,3,1151,HP,ZBook 17,Workstation,17.3 inch IPS Panel Full HD 1920x1080,8GB,256GB SSD,Nvidia Quadro M3000M,3kg,67139800,0.3242
+untuk mahasiswa desain grafis,with_expansion,4,964,HP,ZBook Studio,Workstation,15.6 inch IPS Panel Full HD 1920x1080,8GB,8GB SSD,Nvidia Quadro M1000M,2.0kg,38233000,0.3181
+untuk mahasiswa desain grafis,with_expansion,5,417,Lenovo,ThinkPad P51,Workstation,15.6 inch Full HD 1920x1080,8GB,512GB SSD,Nvidia Quadro M1200,2.67kg,32725000,0.3176
+laptop buat anak sekolah daring hemat,with_expansion,1,26,Dell,Inspiron 3567,Notebook,15.6 inch 1366x768,4GB,1TB HDD,Intel HD Graphics 520,2.3kg,7116880,0.5901
+laptop buat anak sekolah daring hemat,with_expansion,2,55,Acer,Aspire 3,Notebook,15.6 inch 1366x768,4GB,1TB HDD,Intel HD Graphics 620,2.4kg,6528000,0.5824
+laptop buat anak sekolah daring hemat,with_expansion,3,415,Lenovo,IdeaPad 320-15ISK,Notebook,15.6 inch Full HD 1920x1080,4GB,500GB HDD,Intel HD Graphics 520,2.2kg,6953000,0.5794
+laptop buat anak sekolah daring hemat,with_expansion,4,895,Dell,Inspiron 3552,Notebook,15.6 inch 1366x768,4GB,500GB HDD,Intel HD Graphics,2.2kg,6273000,0.576
+laptop buat anak sekolah daring hemat,with_expansion,5,1168,Lenovo,V110-15ISK (i3-6006U/4GB/1TB/No,Notebook,15.6 inch 1366x768,4GB,1TB HDD,Intel HD Graphics 520,1.9kg,5763000,0.5748
+perangkat ringan buat dibawa bepergian,with_expansion,1,390,Asus,Zenbook Flip,Ultrabook,13.3 inch Full HD / Touchscreen 1920x1080,16GB,512GB SSD,Intel HD Graphics 620,1.1kg,29731300,0.4627
+perangkat ringan buat dibawa bepergian,with_expansion,2,660,Dell,XPS 13,Ultrabook,13.3 inch Full HD 1920x1080,8GB,256GB SSD,Intel UHD Graphics 620,1.2kg,24648300,0.4504
+perangkat ringan buat dibawa bepergian,with_expansion,3,684,Asus,Zenbook 3,Ultrabook,14.0 inch Full HD 1920x1080,8GB,256GB SSD,Intel HD Graphics 620,1.1kg,19295000,0.4305
+perangkat ringan buat dibawa bepergian,with_expansion,4,315,Lenovo,IdeaPad 720S-13IKB,Notebook,13.3 inch IPS Panel Full HD 1920x1080,8GB,256GB SSD,Intel HD Graphics 620,1.1kg,16983000,0.4083
+perangkat ringan buat dibawa bepergian,with_expansion,5,1098,HP,Spectre x360,Ultrabook,13.3 inch IPS Panel 4K Ultra HD 3840x2160,16GB,512GB SSD,Intel HD Graphics 620,1.3kg,34833000,0.4066
+ThinkPad RAM 16 GB,no_expansion,1,1257,Lenovo,ThinkPad 13,Notebook,13.3 inch IPS Panel Full HD 1920x1080,16GB,512GB SSD,Intel HD Graphics 620,1.4kg,25483000,0.2783
+ThinkPad RAM 16 GB,no_expansion,2,793,Lenovo,ThinkPad T470s,Ultrabook,14.0 inch Full HD 1920x1080,16GB,512GB SSD,Intel HD Graphics 620,1.7kg,39083000,0.2647
+ThinkPad RAM 16 GB,no_expansion,3,406,Lenovo,Thinkpad X1,Ultrabook,14.0 inch IPS Panel 2560x1440,16GB,1TB SSD,Intel HD Graphics 620,1.13kg,44625000,0.2484
+ThinkPad RAM 16 GB,no_expansion,4,495,Lenovo,Thinkpad X270,Ultrabook,12.5 inch IPS Panel Full HD 1920x1080,16GB,512GB SSD,Intel HD Graphics 620,1.36kg,30566000,0.2471
+ThinkPad RAM 16 GB,no_expansion,5,194,Lenovo,Thinkpad Yoga,2 in 1 Convertible,14.0 inch Touchscreen 2560x1440,16GB,1TB SSD,Intel HD Graphics 620,1.42kg,48008000,0.2351
+ThinkPad RAM 16 GB,with_expansion,1,1257,Lenovo,ThinkPad 13,Notebook,13.3 inch IPS Panel Full HD 1920x1080,16GB,512GB SSD,Intel HD Graphics 620,1.4kg,25483000,0.2783
+ThinkPad RAM 16 GB,with_expansion,2,793,Lenovo,ThinkPad T470s,Ultrabook,14.0 inch Full HD 1920x1080,16GB,512GB SSD,Intel HD Graphics 620,1.7kg,39083000,0.2647
+ThinkPad RAM 16 GB,with_expansion,3,406,Lenovo,Thinkpad X1,Ultrabook,14.0 inch IPS Panel 2560x1440,16GB,1TB SSD,Intel HD Graphics 620,1.13kg,44625000,0.2484
+ThinkPad RAM 16 GB,with_expansion,4,495,Lenovo,Thinkpad X270,Ultrabook,12.5 inch IPS Panel Full HD 1920x1080,16GB,512GB SSD,Intel HD Graphics 620,1.36kg,30566000,0.2471
+ThinkPad RAM 16 GB,with_expansion,5,194,Lenovo,Thinkpad Yoga,2 in 1 Convertible,14.0 inch Touchscreen 2560x1440,16GB,1TB SSD,Intel HD Graphics 620,1.42kg,48008000,0.2351
+Asus ROG gaming,no_expansion,1,1227,Asus,Rog Strix,Gaming,15.6 inch Full HD 1920x1080,16GB,256GB SSD +  1TB HDD,Nvidia GeForce GTX 1070,2.2kg,41633000,0.3839
+Asus ROG gaming,no_expansion,2,862,Asus,Rog GL502VM-DS74,Gaming,15.6 inch Full HD 1920x1080,16GB,128GB SSD +  1TB HDD,Nvidia GeForce GTX 1060,2.1kg,32283000,0.3256
+Asus ROG gaming,no_expansion,3,396,Asus,Rog GL753VD-GC042T,Gaming,17.3 inch Full HD 1920x1080,8GB,1TB HDD,Nvidia GeForce GTX 1050,3kg,17663000,0.3239
+Asus ROG gaming,no_expansion,4,1012,Asus,Rog GL553VE-DS74,Gaming,15.6 inch Full HD 1920x1080,16GB,256GB SSD +  1TB HDD,Nvidia GeForce GTX 1050 Ti,2.5kg,30583000,0.3238
+Asus ROG gaming,no_expansion,5,1265,Asus,Rog GL502VS,Gaming,15.6 inch IPS Panel Full HD 1920x1080,16GB,256GB SSD +  1TB HDD,Nvidia GeForce GTX 1070,2.34kg,39525000,0.3153
+Asus ROG gaming,with_expansion,1,388,Asus,ROG Strix,Gaming,15.6 inch IPS Panel Full HD 1920x1080,8GB,128GB SSD +  1TB HDD,Nvidia GeForce GTX 1060,2.3kg,28135000,0.4799
+Asus ROG gaming,with_expansion,2,862,Asus,Rog GL502VM-DS74,Gaming,15.6 inch Full HD 1920x1080,16GB,128GB SSD +  1TB HDD,Nvidia GeForce GTX 1060,2.1kg,32283000,0.4231
+Asus ROG gaming,with_expansion,3,1107,Asus,Rog GL702VM-GC354T,Gaming,17.3 inch IPS Panel Full HD 1920x1080,8GB,256GB SSD +  1TB HDD,Nvidia GeForce GTX 1060,2.7kg,27183000,0.4043
+Asus ROG gaming,with_expansion,4,1012,Asus,Rog GL553VE-DS74,Gaming,15.6 inch Full HD 1920x1080,16GB,256GB SSD +  1TB HDD,Nvidia GeForce GTX 1050 Ti,2.5kg,30583000,0.4038
+Asus ROG gaming,with_expansion,5,396,Asus,Rog GL753VD-GC042T,Gaming,17.3 inch Full HD 1920x1080,8GB,1TB HDD,Nvidia GeForce GTX 1050,3kg,17663000,0.398
+Dell XPS layar 15 inch,no_expansion,1,298,Dell,XPS 15,Notebook,15.6 inch Full HD 1920x1080,8GB,256GB SSD,Nvidia GeForce GTX 1050,2kg,31093000,0.3623
+Dell XPS layar 15 inch,with_expansion,1,298,Dell,XPS 15,Notebook,15.6 inch Full HD 1920x1080,8GB,256GB SSD,Nvidia GeForce GTX 1050,2kg,31093000,0.3623
+Lenovo ThinkPad tanpa HDD,no_expansion,1,512,Lenovo,ThinkPad 13,Notebook,13.3 inch Full HD 1920x1080,8GB,256GB SSD,Intel HD Graphics 620,1.44kg,16133000,0.2937
+Lenovo ThinkPad tanpa HDD,no_expansion,2,580,Lenovo,Thinkpad E570,Notebook,15.6 inch Full HD 1920x1080,8GB,256GB SSD,Intel HD Graphics 620,2.3kg,14110000,0.2903
+Lenovo ThinkPad tanpa HDD,no_expansion,3,1184,Lenovo,ThinkPad T570,Notebook,15.6 inch IPS Panel Full HD 1920x1080,8GB,256GB SSD,Intel HD Graphics 620,1.95kg,23630000,0.2766
+Lenovo ThinkPad tanpa HDD,no_expansion,4,506,Lenovo,ThinkPad L570,Notebook,15.6 inch IPS Panel Full HD 1920x1080,8GB,256GB SSD,Intel HD Graphics 620,2.3kg,15487000,0.2745
+Lenovo ThinkPad tanpa HDD,no_expansion,5,460,Lenovo,ThinkPad T470,Notebook,14.0 inch Full HD 1920x1080,8GB,256GB SSD,Intel HD Graphics 620,1.65kg,22865000,0.2707
+Lenovo ThinkPad tanpa HDD,with_expansion,1,512,Lenovo,ThinkPad 13,Notebook,13.3 inch Full HD 1920x1080,8GB,256GB SSD,Intel HD Graphics 620,1.44kg,16133000,0.2937
+Lenovo ThinkPad tanpa HDD,with_expansion,2,580,Lenovo,Thinkpad E570,Notebook,15.6 inch Full HD 1920x1080,8GB,256GB SSD,Intel HD Graphics 620,2.3kg,14110000,0.2903
+Lenovo ThinkPad tanpa HDD,with_expansion,3,1184,Lenovo,ThinkPad T570,Notebook,15.6 inch IPS Panel Full HD 1920x1080,8GB,256GB SSD,Intel HD Graphics 620,1.95kg,23630000,0.2766
+Lenovo ThinkPad tanpa HDD,with_expansion,4,506,Lenovo,ThinkPad L570,Notebook,15.6 inch IPS Panel Full HD 1920x1080,8GB,256GB SSD,Intel HD Graphics 620,2.3kg,15487000,0.2745
+Lenovo ThinkPad tanpa HDD,with_expansion,5,460,Lenovo,ThinkPad T470,Notebook,14.0 inch Full HD 1920x1080,8GB,256GB SSD,Intel HD Graphics 620,1.65kg,22865000,0.2707
+ngoding budget 8 juta,with_expansion,1,179,Dell,Inspiron 3567,Notebook,15.6 inch 1366x768,8GB,1TB HDD,Intel HD Graphics 620,2.3kg,7803000,0.0562
+ngoding budget 8 juta,with_expansion,2,261,HP,15-BW094nd (A6-9220/8GB/128GB/W10),Notebook,15.6 inch 1366x768,8GB,128GB SSD,AMD Radeon R4 Graphics,1.91kg,7580300,0.0537
+ngoding budget 8 juta,with_expansion,3,1181,Lenovo,IdeaPad 310-15ISK,Notebook,15.6 inch 1366x768,8GB,1TB HDD,Intel HD Graphics 520,2.2kg,7803000,0.0521
+ngoding budget 8 juta,with_expansion,4,318,Acer,ES1-523-84K7 (A8-7410/8GB/256GB/FHD/W10),Notebook,15.6 inch Full HD 1920x1080,8GB,256GB SSD,AMD Radeon R5,2.23kg,7973000,0.05
+ngoding budget 8 juta,with_expansion,5,534,Lenovo,IdeaPad 320-15ISK,Notebook,15.6 inch 1366x768,8GB,2TB HDD,Nvidia GeForce 920MX,2.2kg,7803000,0.0475
+laptop maksimal 8000000,no_expansion,1,634,Lenovo,IdeaPad 320-15IKBN,Notebook,15.6 inch Full HD 1920x1080,4GB,128GB SSD,Intel HD Graphics 620,2.2kg,7956000,0.5913
+laptop maksimal 8000000,no_expansion,2,1135,Vero,V131 (X5-Z8350/4GB/32GB/FHD/W10),Notebook,13.3 inch Full HD 1920x1080,4GB,32GB Flash Storage,Intel HD Graphics 400,1.35kg,3332000,0.5841
+laptop maksimal 8000000,no_expansion,3,800,Vero,K146 (N3350/4GB/32GB/W10),Notebook,14.0 inch 1920x1080,4GB,32GB Flash Storage,Intel HD Graphics 500,1.22kg,3449300,0.5818
+laptop maksimal 8000000,no_expansion,4,633,Mediacom,SmartBook 140,Notebook,14.0 inch Full HD 1920x1080,2GB,32GB Flash Storage,Intel HD Graphics,1.4kg,4063000,0.5763
+laptop maksimal 8000000,no_expansion,5,31,Chuwi,"LapBook 15.6""",Notebook,15.6 inch Full HD 1920x1080,4GB,64GB Flash Storage,Intel HD Graphics,1.89kg,4164830,0.5756
+laptop maksimal 8000000,with_expansion,1,634,Lenovo,IdeaPad 320-15IKBN,Notebook,15.6 inch Full HD 1920x1080,4GB,128GB SSD,Intel HD Graphics 620,2.2kg,7956000,0.5913
+laptop maksimal 8000000,with_expansion,2,1135,Vero,V131 (X5-Z8350/4GB/32GB/FHD/W10),Notebook,13.3 inch Full HD 1920x1080,4GB,32GB Flash Storage,Intel HD Graphics 400,1.35kg,3332000,0.5841
+laptop maksimal 8000000,with_expansion,3,800,Vero,K146 (N3350/4GB/32GB/W10),Notebook,14.0 inch 1920x1080,4GB,32GB Flash Storage,Intel HD Graphics 500,1.22kg,3449300,0.5818
+laptop maksimal 8000000,with_expansion,4,633,Mediacom,SmartBook 140,Notebook,14.0 inch Full HD 1920x1080,2GB,32GB Flash Storage,Intel HD Graphics,1.4kg,4063000,0.5763
+laptop maksimal 8000000,with_expansion,5,31,Chuwi,"LapBook 15.6""",Notebook,15.6 inch Full HD 1920x1080,4GB,64GB Flash Storage,Intel HD Graphics,1.89kg,4164830,0.5756
+"laptop 7,5 juta ssd 256gb",no_expansion,1,60,Asus,X541UA-DM1897 (i3-6006U/4GB/256GB/FHD/Linux),Notebook,15.6 inch Full HD 1920x1080,4GB,256GB SSD,Intel HD Graphics 520,2kg,7055000,0.61
+"laptop 7,5 juta ssd 256gb",no_expansion,2,266,Lenovo,IdeaPad 320-15ISK,Notebook,15.6 inch Full HD 1920x1080,4GB,256GB SSD,Intel HD Graphics 520,2.2kg,7548000,0.5975
+"laptop 7,5 juta ssd 256gb",no_expansion,3,53,HP,255 G6,Notebook,15.6 inch Full HD 1920x1080,4GB,256GB SSD,AMD Radeon R4 Graphics,1.86kg,6774330,0.5731
+"laptop 7,5 juta ssd 256gb",no_expansion,4,318,Acer,ES1-523-84K7 (A8-7410/8GB/256GB/FHD/W10),Notebook,15.6 inch Full HD 1920x1080,8GB,256GB SSD,AMD Radeon R5,2.23kg,7973000,0.5619
+"laptop 7,5 juta ssd 256gb",no_expansion,5,544,HP,250 G6,Notebook,15.6 inch Full HD 1920x1080,4GB,256GB SSD,Intel HD Graphics 405,1.86kg,6782830,0.5606
+"laptop 7,5 juta ssd 256gb",with_expansion,1,60,Asus,X541UA-DM1897 (i3-6006U/4GB/256GB/FHD/Linux),Notebook,15.6 inch Full HD 1920x1080,4GB,256GB SSD,Intel HD Graphics 520,2kg,7055000,0.61
+"laptop 7,5 juta ssd 256gb",with_expansion,2,266,Lenovo,IdeaPad 320-15ISK,Notebook,15.6 inch Full HD 1920x1080,4GB,256GB SSD,Intel HD Graphics 520,2.2kg,7548000,0.5975
+"laptop 7,5 juta ssd 256gb",with_expansion,3,53,HP,255 G6,Notebook,15.6 inch Full HD 1920x1080,4GB,256GB SSD,AMD Radeon R4 Graphics,1.86kg,6774330,0.5731
+"laptop 7,5 juta ssd 256gb",with_expansion,4,318,Acer,ES1-523-84K7 (A8-7410/8GB/256GB/FHD/W10),Notebook,15.6 inch Full HD 1920x1080,8GB,256GB SSD,AMD Radeon R5,2.23kg,7973000,0.5619
+"laptop 7,5 juta ssd 256gb",with_expansion,5,544,HP,250 G6,Notebook,15.6 inch Full HD 1920x1080,4GB,256GB SSD,Intel HD Graphics 405,1.86kg,6782830,0.5606
+kisaran 10 juta ram 8gb,no_expansion,1,218,Lenovo,IdeaPad 320-15IKBN,Notebook,15.6 inch Full HD 1920x1080,8GB,256GB SSD,Intel HD Graphics 620,2.2kg,9333000,0.7713
+kisaran 10 juta ram 8gb,no_expansion,2,25,HP,15-BS101nv (i7-8550U/8GB/256GB/FHD/W10),Ultrabook,15.6 inch Full HD 1920x1080,8GB,256GB SSD,Intel HD Graphics 620,1.91kg,11203000,0.7628
+kisaran 10 juta ram 8gb,no_expansion,3,1266,Lenovo,V510-15IKB (i5-7200U/8GB/256GB/FHD/No,Notebook,15.6 inch IPS Panel Full HD 1920x1080,8GB,256GB SSD,Intel HD Graphics 620,2.3kg,9741000,0.7601
+kisaran 10 juta ram 8gb,no_expansion,4,3,HP,250 G6,Notebook,15.6 inch Full HD 1920x1080,8GB,256GB SSD,Intel HD Graphics 620,1.86kg,9775000,0.7578
+kisaran 10 juta ram 8gb,no_expansion,5,1188,HP,250 G5,Notebook,15.6 inch Full HD 1920x1080,8GB,256GB SSD,Intel HD Graphics 520,1.96kg,11543000,0.7382
+kisaran 10 juta ram 8gb,with_expansion,1,218,Lenovo,IdeaPad 320-15IKBN,Notebook,15.6 inch Full HD 1920x1080,8GB,256GB SSD,Intel HD Graphics 620,2.2kg,9333000,0.7713
+kisaran 10 juta ram 8gb,with_expansion,2,25,HP,15-BS101nv (i7-8550U/8GB/256GB/FHD/W10),Ultrabook,15.6 inch Full HD 1920x1080,8GB,256GB SSD,Intel HD Graphics 620,1.91kg,11203000,0.7628
+kisaran 10 juta ram 8gb,with_expansion,3,1266,Lenovo,V510-15IKB (i5-7200U/8GB/256GB/FHD/No,Notebook,15.6 inch IPS Panel Full HD 1920x1080,8GB,256GB SSD,Intel HD Graphics 620,2.3kg,9741000,0.7601
+kisaran 10 juta ram 8gb,with_expansion,4,3,HP,250 G6,Notebook,15.6 inch Full HD 1920x1080,8GB,256GB SSD,Intel HD Graphics 620,1.86kg,9775000,0.7578
+kisaran 10 juta ram 8gb,with_expansion,5,1188,HP,250 G5,Notebook,15.6 inch Full HD 1920x1080,8GB,256GB SSD,Intel HD Graphics 520,1.96kg,11543000,0.7382
+"berat maksimal 1,5 kg ssd 256gb",no_expansion,1,94,HP,Probook 430,Notebook,13.3 inch Full HD 1920x1080,16GB,512GB SSD,Intel UHD Graphics 620,1.49kg,20349000,0.9701
+"berat maksimal 1,5 kg ssd 256gb",no_expansion,2,113,Asus,VivoBook S15,Ultrabook,15.6 inch Full HD 1920x1080,16GB,256GB SSD +  1TB HDD,Nvidia GeForce MX150,1.5kg,21454000,0.9662
+"berat maksimal 1,5 kg ssd 256gb",no_expansion,3,9,Asus,ZenBook UX430UN,Ultrabook,14.0 inch Full HD 1920x1080,16GB,512GB SSD,Nvidia GeForce MX150,1.3kg,25415000,0.9383
+"berat maksimal 1,5 kg ssd 256gb",no_expansion,4,1257,Lenovo,ThinkPad 13,Notebook,13.3 inch IPS Panel Full HD 1920x1080,16GB,512GB SSD,Intel HD Graphics 620,1.4kg,25483000,0.9376
+"berat maksimal 1,5 kg ssd 256gb",no_expansion,5,1289,Lenovo,Yoga 900-13ISK,2 in 1 Convertible,13.3 inch IPS Panel Quad HD+ / Touchscreen 3200x1800,16GB,512GB SSD,Intel HD Graphics 520,1.3kg,25483000,0.9376
+"berat maksimal 1,5 kg ssd 256gb",with_expansion,1,94,HP,Probook 430,Notebook,13.3 inch Full HD 1920x1080,16GB,512GB SSD,Intel UHD Graphics 620,1.49kg,20349000,0.9701
+"berat maksimal 1,5 kg ssd 256gb",with_expansion,2,113,Asus,VivoBook S15,Ultrabook,15.6 inch Full HD 1920x1080,16GB,256GB SSD +  1TB HDD,Nvidia GeForce MX150,1.5kg,21454000,0.9662
+"berat maksimal 1,5 kg ssd 256gb",with_expansion,3,9,Asus,ZenBook UX430UN,Ultrabook,14.0 inch Full HD 1920x1080,16GB,512GB SSD,Nvidia GeForce MX150,1.3kg,25415000,0.9383
+"berat maksimal 1,5 kg ssd 256gb",with_expansion,4,1257,Lenovo,ThinkPad 13,Notebook,13.3 inch IPS Panel Full HD 1920x1080,16GB,512GB SSD,Intel HD Graphics 620,1.4kg,25483000,0.9376
+"berat maksimal 1,5 kg ssd 256gb",with_expansion,5,1289,Lenovo,Yoga 900-13ISK,2 in 1 Convertible,13.3 inch IPS Panel Quad HD+ / Touchscreen 3200x1800,16GB,512GB SSD,Intel HD Graphics 520,1.3kg,25483000,0.9376
+yang paling murah di bawah 8 juta,no_expansion,1,1233,Acer,C740-C9QX (3205U/2GB/32GB/Chrome,Netbook,11.6 inch 1366x768,2GB,32GB SSD,Intel HD Graphics,1.3kg,2958000,0.8875
+yang paling murah di bawah 8 juta,no_expansion,2,21,Asus,Vivobook E200HA,Netbook,11.6 inch 1366x768,2GB,32GB Flash Storage,Intel HD Graphics 400,0.98kg,3262300,0.8834
+yang paling murah di bawah 8 juta,no_expansion,3,1135,Vero,V131 (X5-Z8350/4GB/32GB/FHD/W10),Notebook,13.3 inch Full HD 1920x1080,4GB,32GB Flash Storage,Intel HD Graphics 400,1.35kg,3332000,0.8943
+yang paling murah di bawah 8 juta,no_expansion,4,32,Asus,E402WA-GA010T (E2-6110/2GB/32GB/W10),Notebook,14.0 inch 1366x768,2GB,32GB Flash Storage,AMD Radeon R2,1.65kg,3383000,0.8751
+yang paling murah di bawah 8 juta,no_expansion,5,295,Acer,Chromebook C910-C2ST,Notebook,15.6 inch 1366x768,2GB,16GB SSD,Intel HD Graphics,2.19kg,3383000,0.8751
+yang paling murah di bawah 8 juta,with_expansion,1,1233,Acer,C740-C9QX (3205U/2GB/32GB/Chrome,Netbook,11.6 inch 1366x768,2GB,32GB SSD,Intel HD Graphics,1.3kg,2958000,0.8875
+yang paling murah di bawah 8 juta,with_expansion,2,21,Asus,Vivobook E200HA,Netbook,11.6 inch 1366x768,2GB,32GB Flash Storage,Intel HD Graphics 400,0.98kg,3262300,0.8834
+yang paling murah di bawah 8 juta,with_expansion,3,1135,Vero,V131 (X5-Z8350/4GB/32GB/FHD/W10),Notebook,13.3 inch Full HD 1920x1080,4GB,32GB Flash Storage,Intel HD Graphics 400,1.35kg,3332000,0.8943
+yang paling murah di bawah 8 juta,with_expansion,4,32,Asus,E402WA-GA010T (E2-6110/2GB/32GB/W10),Notebook,14.0 inch 1366x768,2GB,32GB Flash Storage,AMD Radeon R2,1.65kg,3383000,0.8751
+yang paling murah di bawah 8 juta,with_expansion,5,295,Acer,Chromebook C910-C2ST,Notebook,15.6 inch 1366x768,2GB,16GB SSD,Intel HD Graphics,2.19kg,3383000,0.8751
