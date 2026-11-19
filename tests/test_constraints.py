@@ -110,3 +110,17 @@ def test_system_assumption_metadata():
     ram_item = next(item for item in structured if item["key"] == "ram_min")
     assert ram_item["source"] == "system_assumption"
     assert "asumsi sistem" in ram_item["label"]
+
+
+def test_expander_word_boundary_no_substring_leak():
+    expander = QueryExpander(DICT_JSON_PATH)
+
+    terms_spec, matched_spec = expander.expand_with_matches("spesifikasi murah")
+    assert "murah" in matched_spec
+    for tok in ("celeron", "pentium", "4gb"):
+        assert tok in terms_spec.split(), f"Token {tok} tidak boleh terhapus oleh substring 'pes' di 'spesifikasi'"
+
+    terms_pes, matched_pes = expander.expand_with_matches("laptop main pes, tapi murah")
+    assert "pes" in matched_pes and "murah" in matched_pes
+    for tok in ("celeron", "pentium", "4gb"):
+        assert tok not in terms_pes.split(), f"Query gaming 'pes' harus tetap membuang token lemah {tok}"

@@ -60,3 +60,16 @@ def test_zero_constraint_violations_on_dataset():
         assert data["count"] > 0, f"Harusnya ada hasil untuk: {q}"
         for r in data["results"]:
             assert pred(r), f"Pelanggaran constraint pada {q}: {r}"
+
+
+def test_stats_endpoint_and_catalog_size():
+    stats_resp = client.get("/api/stats")
+    assert stats_resp.status_code == 200
+    stats = stats_resp.get_json()
+    assert stats["total_documents"] > 0
+    assert stats["price_note"]
+
+    search_resp = client.get("/api/search", query_string={"q": "thinkpad", "top": 5})
+    assert search_resp.status_code == 200
+    search_data = search_resp.get_json()
+    assert search_data["catalog_size"] == stats["total_documents"]

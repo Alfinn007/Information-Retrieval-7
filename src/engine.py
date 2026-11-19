@@ -117,7 +117,10 @@ class LaptopRecommenderEngine:
         self.repo = repo
         self.preprocessor = preprocessor
         self.expander = expander
-        self.vectorizer = TfidfVectorizer(sublinear_tf=True)
+        self.vectorizer = TfidfVectorizer(
+            sublinear_tf=True,
+            token_pattern=r'(?u)\b(?:[a-z0-9]{2,}|[0-9])(?:\.[a-z0-9]+)*\b',
+        )
         self.tfidf_matrix = None
 
         self.ram_gb = None

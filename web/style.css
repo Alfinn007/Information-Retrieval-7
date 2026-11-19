@@ -812,13 +812,21 @@ body {
   font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  cursor: default;
+  cursor: pointer;
   user-select: none;
-  pointer-events: none;
   box-shadow: 0 -4px 0px var(--ink);
   display: flex;
   align-items: center;
   gap: 10px;
+  transition: background 0.15s ease, transform 0.12s ease;
+}
+
+.trapezoid-cta-btn:hover {
+  background: var(--orange-hover);
+}
+
+.trapezoid-cta-btn:active {
+  transform: translateY(2px);
 }
 
 .cta-stripes {
@@ -929,6 +937,16 @@ body {
 .deck-btn.active {
   background: var(--ink);
   color: var(--lime);
+}
+
+.deck-indicator {
+  cursor: default;
+}
+
+.deck-indicator:hover {
+  background: var(--ink);
+  transform: none;
+  box-shadow: 2px 2px 0px var(--ink);
 }
 
 .results-query-summary {

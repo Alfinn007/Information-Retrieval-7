@@ -25,6 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
   
   const stickerBrand = document.getElementById('sticker-brand');
   const stickerDate = document.getElementById('sticker-date');
+  const btnCtaSearch = document.getElementById('btn-cta-search');
+  const screenDocCount = document.getElementById('screen-doc-count');
+  const footerDatasetMeta = document.getElementById('footer-dataset-meta');
 
   // Mobile Floating Search Button
   const mobileFloatingBtn = document.getElementById('mobile-floating-btn');
@@ -58,12 +61,13 @@ document.addEventListener('DOMContentLoaded', () => {
     stickerDate.textContent = `${yyyy}.${mm}.${dd}`;
   }
 
-  // Currency Formatter Rupiah
+  // Currency Formatter Rupiah & Angka
   const rupiahFormatter = new Intl.NumberFormat('id-ID', {
     style: 'currency',
     currency: 'IDR',
     maximumFractionDigits: 0
   });
+  const numberFormatter = new Intl.NumberFormat('id-ID');
 
   // =========================================================================
   // 1. RETRO WEB AUDIO API (SYNTHESIZED SOUND FX - TANPA FILE AUDIO EKSTERNAL)
@@ -368,8 +372,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const results = data.results || [];
 
-    // 1. Update Counter Odometer
-    animateCounter(results.length);
+    // 1. Update Counter Odometer (total kandidat cocok)
+    const totalMatched = (typeof data.total_candidates === 'number') ? data.total_candidates : results.length;
+    animateCounter(totalMatched);
+
+    if (typeof data.catalog_size === 'number' && data.catalog_size > 0) {
+      const formattedCatalog = numberFormatter.format(data.catalog_size);
+      if (screenDocCount) screenDocCount.textContent = `${formattedCatalog} DOCS ONLINE`;
+      if (footerDatasetMeta) footerDatasetMeta.textContent = `DATASET: ${formattedCatalog} LAPTOP`;
+    }
 
     // 2. Update Informasi Metadata & Chips
     renderMetadata(data);
@@ -484,6 +495,7 @@ document.addEventListener('DOMContentLoaded', () => {
         : '';
 
       const variants = Array.isArray(item.variants) ? item.variants : [];
+      const closedDetailLabel = variants.length > 0 ? `Detail Lengkap ▼ (+${variants.length} varian)` : 'Detail Lengkap ▼';
       const variantsHtml = variants.length > 0
         ? `<div class="variants-section">
              <div class="variants-title">Varian konfigurasi lain (${variants.length}):</div>
@@ -543,7 +555,7 @@ document.addEventListener('DOMContentLoaded', () => {
               📋 Salin Spek
             </button>
             <button type="button" class="btn-card-action btn-toggle-detail" title="Buka Detail">
-              Detail Lengkap ▼${variants.length > 0 ? ` (+${variants.length} varian)` : ''}
+              ${closedDetailLabel}
             </button>
           </div>
           ${reasonsHtml}
@@ -602,7 +614,7 @@ document.addEventListener('DOMContentLoaded', () => {
         playClickSound();
         triggerHaptic(15);
         const isOpen = accordion.classList.toggle('open');
-        btnToggle.textContent = isOpen ? 'Tutup Detail ▲' : 'Detail Lengkap ▼';
+        btnToggle.textContent = isOpen ? 'Tutup Detail ▲' : closedDetailLabel;
       }
 
       if (btnToggle) btnToggle.addEventListener('click', toggleAccordion);
@@ -653,6 +665,14 @@ document.addEventListener('DOMContentLoaded', () => {
   if (searchForm) {
     searchForm.addEventListener('submit', (e) => {
       e.preventDefault();
+      performSearch(searchInput.value);
+    });
+  }
+
+  if (btnCtaSearch) {
+    btnCtaSearch.addEventListener('click', () => {
+      playClickSound();
+      triggerHaptic(20);
       performSearch(searchInput.value);
     });
   }

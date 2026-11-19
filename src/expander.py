@@ -16,6 +16,21 @@ CONTEXTUAL_CHEAP_SPECS = {
 
 PRODUCT_IDENTITY_TOKENS = {"macbook", "apple", "macos", "mac os", "imac", "chromebook"}
 
+_HEAVY_WORDS = sorted(
+    set(
+        INTENT_SYNONYMS.get("gaming", [])
+        + INTENT_SYNONYMS.get("edit video", [])
+        + INTENT_SYNONYMS.get("desain", [])
+        + INTENT_SYNONYMS.get("coding", [])
+        + ["kencang", "cepat", "ngebut", "gahar"]
+    ),
+    key=len,
+    reverse=True,
+)
+_HEAVY_WORDS_RX = re.compile(
+    r'(?<![a-z0-9])(?:' + "|".join(re.escape(w.lower()) for w in _HEAVY_WORDS) + r')(?![a-z0-9])'
+)
+
 
 class QueryExpander:
     def __init__(self, json_path: Path):
@@ -43,17 +58,20 @@ class QueryExpander:
                 self.dictionary.setdefault(f"{words[1]} {words[0]}", self.dictionary[key])
 
         self._keys = sorted(self.dictionary.keys(), key=len, reverse=True)
-        self._patterns = {
-            k: re.compile(r'(?<![a-z0-9])' + re.escape(k.lower()) + r'(?![a-z0-9])')
-            for k in self._keys
-        }
+        self._keys_lower = [(k, k.lower()) for k in self._keys]
+        self._pattern_cache = {}
 
     def matched_phrases(self, query: str) -> List[str]:
         """Daftar frasa kamus yang cocok pada query (tanpa tumpang tindih)."""
         remaining = query.lower()
         matched = []
-        for key in self._keys:
-            pattern = self._patterns[key]
+        for key, key_low in self._keys_lower:
+            if key_low not in remaining:
+                continue
+            pattern = self._pattern_cache.get(key)
+            if pattern is None:
+                pattern = re.compile(r'(?<![a-z0-9])' + re.escape(key_low) + r'(?![a-z0-9])')
+                self._pattern_cache[key] = pattern
             if pattern.search(remaining):
                 matched.append(key)
                 remaining = pattern.sub(' ' * len(key), remaining)
@@ -88,14 +106,7 @@ class QueryExpander:
             constraints is not None and (getattr(constraints, 'exclude_gaming', False) or getattr(constraints, 'gaming_negated', False))
         )
 
-        heavy_words = set(
-            INTENT_SYNONYMS.get("gaming", [])
-            + INTENT_SYNONYMS.get("edit video", [])
-            + INTENT_SYNONYMS.get("desain", [])
-            + INTENT_SYNONYMS.get("coding", [])
-            + ["kencang", "cepat", "ngebut", "gahar"]
-        )
-        user_has_heavy_task = any(w in query_lower for w in heavy_words)
+        user_has_heavy_task = bool(_HEAVY_WORDS_RX.search(query_lower))
         gaming_alias_set = set(INTENT_SYNONYMS.get("gaming", []))
 
         ram_tokens = {'2gb', '4gb', '6gb', '8gb', '12gb', '16gb', '24gb', '32gb', '64gb'}

@@ -15,6 +15,7 @@ WEB_DIR = BASE_DIR / "web"
 
 DEFAULT_TOP_N = 30
 MAX_TOP_N = 100
+PRICE_NOTE = f"Harga IDR adalah estimasi dari harga EUR dataset dengan kurs tetap 1 EUR = Rp{EURO_TO_IDR_RATE:,.0f}".replace(',', '.')
 
 app = Flask(__name__, static_folder=str(WEB_DIR), static_url_path='')
 CORS(app)
@@ -53,6 +54,15 @@ def serve_index():
 def serve_static(path):
     """Menyajikan file statis (CSS, JS, asset) dari folder web/."""
     return send_from_directory(str(WEB_DIR), path)
+
+
+@app.route('/api/stats', methods=['GET'])
+def api_stats():
+    """Metadata katalog aktif (jumlah dokumen setelah deduplikasi)."""
+    return jsonify({
+        "total_documents": int(len(engine.repo.df)),
+        "price_note": PRICE_NOTE,
+    })
 
 
 @app.route('/api/search', methods=['GET'])
@@ -110,8 +120,9 @@ def api_search():
         "relaxed": bool(search_out.relaxed),
         "count": len(results_list),
         "total_candidates": int(search_out.total_candidates),
+        "catalog_size": int(len(engine.repo.df)),
         "top_limit": top_n,
-        "price_note": f"Harga IDR adalah estimasi dari harga EUR dataset dengan kurs tetap 1 EUR = Rp{EURO_TO_IDR_RATE:,.0f}".replace(',', '.'),
+        "price_note": PRICE_NOTE,
         "results": results_list,
     }
 

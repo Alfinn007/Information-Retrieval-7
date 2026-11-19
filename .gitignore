@@ -13,6 +13,5 @@ venv/
 env/
 ENV/
 
-.vercel
-
+.pytest_cache/
 .vercel

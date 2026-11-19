@@ -123,7 +123,7 @@
                   <div class="laptop-screen" id="screen-container">
                     <div class="screen-header-bar">
                       <span class="screen-title">TERMINAL IR-7 [SYS_REC]</span>
-                      <span class="screen-stat">1.303 DOCS ONLINE</span>
+                      <span class="screen-stat" id="screen-doc-count">1.275 DOCS ONLINE</span>
                     </div>
                     
                     <form id="search-form" class="screen-form" autocomplete="off">
@@ -227,17 +227,17 @@
             <span class="badge-xx1">XX1</span>
             <div class="footer-meta">
               <span class="meta-line">IR-LAPTOP-7 · TF-IDF + QUERY EXPANSION</span>
-              <span class="meta-line dim">DATASET: 1.303 LAPTOP · 2026</span>
+              <span class="meta-line dim" id="footer-dataset-meta">DATASET: 1.275 LAPTOP</span>
             </div>
           </div>
 
-          <!-- Tengah: Tab Oranye Trapesium (Elemen Desain Dekoratif) -->
+          <!-- Tengah: Tab Oranye Trapesium (Tombol Cari) -->
           <div class="footer-col footer-center">
-            <div class="trapezoid-cta-btn" aria-hidden="true">
-              <span class="cta-stripes">----</span>
+            <button type="button" class="trapezoid-cta-btn" id="btn-cta-search" title="Cari Laptop Sekarang">
+              <span class="cta-stripes" aria-hidden="true">----</span>
               <span class="cta-label">CARI SEKARANG</span>
-              <span class="cta-stripes">----</span>
-            </div>
+              <span class="cta-stripes" aria-hidden="true">----</span>
+            </button>
           </div>
 
           <!-- Kanan: Odometer Counter Hasil -->
@@ -263,9 +263,9 @@
             <div class="tape-deck-toolbar">
               <span class="toolbar-title">KONTROL PITA:</span>
               <div class="deck-buttons">
-                <button type="button" class="deck-btn active" id="btn-sort-rel" title="Urutan Peringkat dari Server">
+                <span class="deck-btn active deck-indicator" id="btn-sort-rel" title="Urutan Peringkat dari Server">
                   <span class="deck-icon">&#9658;</span> RELEVANSI
-                </button>
+                </span>
                 <button type="button" class="deck-btn" id="btn-scroll-top" title="Kembali ke Atas">
                   <span class="deck-icon">&#9632;</span> ATAS
                 </button>

@@ -130,3 +130,37 @@ def test_equal_price_equal_score_and_no_relax_on_empty():
     # Istilah tidak dikenal tidak boleh mengisi laptop acak
     out_unknown = eng.search("laptop merekxyztidakada999", top_n=5)
     assert out_unknown.results.empty
+
+
+def test_decimal_weight_tokenization_does_not_match_heavy_laptops():
+    eng = _build_fixture_engine([
+        {
+            "id": "light_12", "brand": "BrandA", "name": "FeatherBook", "category": "Notebook",
+            "display": "14.0 inch 1920x1080", "cpu": "Intel Core i5 8250U", "ram": "8GB",
+            "storage": "256GB SSD", "gpu": "Intel UHD 620", "os": "Windows 10",
+            "weight": "1.2kg", "price_idr": 8000000,
+        },
+        {
+            "id": "heavy_22", "brand": "BrandB", "name": "BrickBook", "category": "Notebook",
+            "display": "14.0 inch 1920x1080", "cpu": "Intel Core i5 8250U", "ram": "8GB",
+            "storage": "256GB SSD", "gpu": "Intel UHD 620", "os": "Windows 10",
+            "weight": "2.2kg", "price_idr": 8000000,
+        },
+        {
+            "id": "heavy_23", "brand": "BrandC", "name": "TankBook", "category": "Notebook",
+            "display": "14.0 inch 1920x1080", "cpu": "Intel Core i5 8250U", "ram": "8GB",
+            "storage": "256GB SSD", "gpu": "Intel UHD 620", "os": "Windows 10",
+            "weight": "2.3kg", "price_idr": 8000000,
+        },
+    ])
+
+    analyzer = eng.vectorizer.build_analyzer()
+    assert analyzer("1.2kg") == ["1.2kg"]
+    assert set(analyzer("1.2kg")).isdisjoint(set(analyzer("2.2kg")))
+    assert set(analyzer("1.2kg")).isdisjoint(set(analyzer("2kg")))
+
+    out = eng.search("laptop ringan", top_n=5)
+    assert not out.results.empty
+    assert out.results.iloc[0]["id"] == "light_12"
+    if len(out.results) > 1:
+        assert out.results.iloc[0]["score"] > out.results.iloc[1]["score"]

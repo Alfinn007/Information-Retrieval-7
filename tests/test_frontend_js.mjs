@@ -25,12 +25,21 @@ function createElement(id = '') {
       contains(c) { return this._set.has(c); }
     },
     listeners: {},
+    _selectors: {},
     addEventListener(ev, fn) {
       this.listeners[ev] = this.listeners[ev] || [];
       this.listeners[ev].push(fn);
     },
     appendChild(child) { this.children.push(child); },
-    querySelector() { return null; },
+    querySelector(sel) {
+      if (['.btn-toggle-detail', '.card-accordion', '.btn-copy-spec', '.toast-msg'].includes(sel)) {
+        if (!this._selectors[sel]) {
+          this._selectors[sel] = createElement(sel);
+        }
+        return this._selectors[sel];
+      }
+      return null;
+    },
     getAttribute() { return ''; },
     focus() {},
     scrollIntoView() { this._scrolled = true; },
@@ -48,7 +57,8 @@ function setupHarness(fetchImpl) {
     'relaxed-banner', 'result-counter', 'sticker-brand', 'sticker-date',
     'mobile-floating-btn', 'btn-sort-rel',
     'btn-scroll-top', 'laptop-chassis', 'hero-stage',
-    'btn-sound-toggle', 'retro-toast', 'screen-container', 'hasil', 'hero'
+    'btn-sound-toggle', 'retro-toast', 'screen-container', 'hasil', 'hero',
+    'btn-cta-search', 'screen-doc-count', 'footer-dataset-meta'
   ];
   ids.forEach(id => elements.set(id, createElement(id)));
 
@@ -204,6 +214,59 @@ async function flushMicrotasks() {
   assert.equal(elements.get('error-state').style.display, 'none');
   assert.equal(elements.get('cards-container').children.length, 1);
   assert.ok(elements.get('cards-container').children[0].innerHTML.includes('ThinkPad T470'));
+}
+
+// 5. total_candidates & catalog_size sinkronisasi + tombol CTA + toggle varian accordion
+{
+  const requestedUrls = [];
+  const { elements, start } = setupHarness(async (url) => {
+    requestedUrls.push(url);
+    return {
+      ok: true,
+      status: 200,
+      async json() {
+        return {
+          query: 'laptop gaming murah',
+          expanded_query: 'gaming',
+          constraints: 'RAM >= 8GB',
+          matched_phrases: ['gaming'],
+          relaxed: false,
+          count: 1,
+          total_candidates: 142,
+          catalog_size: 1275,
+          results: [{
+            rank: 1, id: '10', brand: 'Acer', name: 'Nitro 5', category: 'Gaming',
+            display: '15.6 inch', cpu: 'i5', ram: '8GB', storage: '512GB SSD',
+            gpu: 'GTX 1050', os: 'Win 10', weight: '2.4kg', price_idr: 11000000, score: 0.6,
+            match_reasons: ['RAM 8GB memenuhi >= 8GB'],
+            variants: [
+              { cpu: 'i7', ram: '16GB', storage: '512GB SSD', gpu: 'GTX 1050', price_idr: 13000000 },
+              { cpu: 'i7', ram: '16GB', storage: '1TB SSD', gpu: 'GTX 1060', price_idr: 15000000 }
+            ]
+          }]
+        };
+      }
+    };
+  });
+
+  start();
+  await flushMicrotasks();
+
+  assert.equal(elements.get('result-counter').textContent, '000000000142');
+  assert.equal(elements.get('screen-doc-count').textContent, '1.275 DOCS ONLINE');
+  assert.equal(elements.get('footer-dataset-meta').textContent, 'DATASET: 1.275 LAPTOP');
+
+  const card = elements.get('cards-container').children[0];
+  const btnToggle = card.querySelector('.btn-toggle-detail');
+  btnToggle.listeners.click[0]({ stopPropagation() {} });
+  assert.equal(btnToggle.textContent, 'Tutup Detail ▲');
+  btnToggle.listeners.click[0]({ stopPropagation() {} });
+  assert.equal(btnToggle.textContent, 'Detail Lengkap ▼ (+2 varian)');
+
+  elements.get('search-input').value = 'asus rog';
+  elements.get('btn-cta-search').listeners.click[0]();
+  await flushMicrotasks();
+  assert.ok(requestedUrls.some(u => u.includes('q=asus%20rog')));
 }
 
 console.log('ALL FRONTEND JS TESTS PASSED');
