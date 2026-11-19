@@ -54,6 +54,10 @@ _CODING_ALT = "|".join(re.escape(p) for p in sorted(set(CODING_ALIASES), key=len
 _LIGHT_ALT = "|".join(re.escape(p) for p in sorted(set(LIGHTWEIGHT_ALIASES), key=len, reverse=True))
 
 _NEG_HDD_RX = re.compile(r'\b(?:tanpa|no|non|bukan|jangan)\s+(?:pakai\s+|ada\s+)?(?:hdd|harddisk|hard\s*disk)\b')
+_NEG_TOUCH_RX = re.compile(
+    r'\b(?:tanpa|no|non|bukan|jangan|tidak|nggak|enggak|gak|ga)\s+(?:pakai\s+|ada\s+|layar\s+)?'
+    r'(?:touch\s*screen|layar\s+sentuh|layar\s+touch|sentuh)\b'
+)
 _NEG_GAMING_RX = re.compile(
     rf'\b(?P<neg>{_NEG_ALT})\s+(?:usah\s+|perlu\s+|mau\s+)?(?:untuk\s+|buat\s+)?(?P<lap>laptop\s+)?(?:{_GAMING_ALT})\b'
 )
@@ -137,6 +141,36 @@ _SCREEN = re.compile(
     rf'(?:(?:(?P<op1>{_COMP_OP})\s+)?(?:layar\s*)?(?:(?P<op2>{_COMP_OP})\s*)?'
     rf'\b(?P<v>\d{{2}}(?:[.,]\d)?)\s*(?:inch|inci|in\b|")(?:\s*(?P<op3>{_SUF_COMP_OP}))?)'
 )
+
+_OS_PATTERNS = [
+    (re.compile(r'\b(?:(?:os|dengan)\s+)?(?:windows|win)\s*11\b'), "windows 11"),
+    (re.compile(r'\b(?:(?:os|dengan)\s+)?(?:windows|win)\s*10\s*s\b'), "windows 10 s"),
+    (re.compile(r'\b(?:(?:os|dengan)\s+)?(?:windows|win)\s*10\b'), "windows 10"),
+    (re.compile(r'\b(?:(?:os|dengan)\s+)?(?:windows|win)\s*8(?:\.1)?\b'), "windows 8"),
+    (re.compile(r'\b(?:(?:os|dengan)\s+)?(?:windows|win)\s*7\b'), "windows 7"),
+    (re.compile(r'\b(?:tanpa\s+os|no\s+os|free\s*dos|tanpa\s+windows|bebas\s+os)\b'), "no os"),
+    (re.compile(r'\b(?:(?:os|dengan)\s+)?(?:linux|ubuntu)\b'), "linux"),
+    (re.compile(r'\b(?:(?:os|dengan)\s+)?chrome\s*os\b'), "chrome os"),
+    (re.compile(r'\b(?:(?:os|dengan)\s+)?mac\s*os(?:\s*x)?\b'), "macos"),
+    (re.compile(r'\b(?:(?:os|dengan)\s+)?android\b(?!\s+studio)'), "android"),
+    (re.compile(r'\b(?:(?:os|dengan)\s+)?windows\b'), "windows"),
+]
+
+_GPU_MODEL_RX = re.compile(
+    r'\b(?:(?:nvidia\s+)?(?:geforce\s+)?(?P<nv>(?:rtx|gtx)\s*\d{3,4}(?:\s*(?:ti|super|max-q))?|mx\s*\d{3}|9[45678]0mx?)'
+    r'|(?:nvidia\s+)?(?P<quadro>quadro\s*[a-z]?\d{3,4}m?)'
+    r'|(?:amd\s+)?(?:radeon\s+)?(?P<rx>rx\s*\d{3,4}(?:\s*xt|m)?)'
+    r'|(?:intel\s+)?(?P<arc>arc\s*a\d{3}m?))\b'
+)
+_CPU_APPLE_EXPLICIT_RX = re.compile(r'\bapple\s+(?P<am>m[1-4](?:\s+(?:pro|max|ultra))?)\b')
+_CPU_APPLE_SHORT_RX = re.compile(r'\b(?P<am>m[1-4](?:\s+(?:pro|max|ultra))?)\b')
+_CPU_ULTRA_RX = re.compile(r'\b(?:intel\s+)?core\s+ultra\s+(?P<tier>[579])\b')
+_CPU_INTEL_I_RX = re.compile(r'\b(?P<intel>intel\s+)?(?:core\s+)?(?P<tier>i[3579])(?:[\s-]+(?P<sku>\d{4,5}[a-z]{0,2}))?\b')
+_CPU_RYZEN_TIER_RX = re.compile(r'\b(?:amd\s+)?ryzen\s+(?P<tier>[3579]|\d{4}[a-z]{0,2})\b')
+_CPU_OTHER_RX = re.compile(r'\b(?:intel\s+)?(?P<fam>celeron|pentium|xeon|atom)\b')
+
+_TOUCH_RX = re.compile(r'\b(?:(?:wajib|harus)\s+)?(?:touch\s*screen|layar\s+sentuh|layar\s+touch)\b')
+_CONVERTIBLE_RX = re.compile(r'\b(?:2\s*in\s*1|2in1|convertible|bisa\s+dilipat)\b')
 
 
 def _fmt_idr(val: int) -> str:
@@ -256,7 +290,16 @@ class Constraints:
     prefer_lightweight: bool = False
 
     required_brand: Optional[str] = None
+    allowed_brands: List[str] = field(default_factory=list)
+    excluded_brands: List[str] = field(default_factory=list)
     required_family: Optional[str] = None
+    required_model_tokens: List[str] = field(default_factory=list)
+    required_os: Optional[str] = None
+    required_gpu: Optional[str] = None
+    required_cpu: Optional[str] = None
+    require_touchscreen: bool = False
+    exclude_touchscreen: bool = False
+    require_convertible: bool = False
 
     applied_filters: List[Dict[str, Any]] = field(default_factory=list)
 
@@ -290,7 +333,16 @@ class Constraints:
             and not self.sort_cheapest_explicit
             and not self.prefer_lightweight
             and self.required_brand is None
+            and not self.allowed_brands
+            and not self.excluded_brands
             and self.required_family is None
+            and not self.required_model_tokens
+            and self.required_os is None
+            and self.required_gpu is None
+            and self.required_cpu is None
+            and not self.require_touchscreen
+            and not self.exclude_touchscreen
+            and not self.require_convertible
         )
 
     def build_applied_filters(self) -> List[Dict[str, Any]]:
@@ -366,10 +418,35 @@ class Constraints:
         if self.screen_inch is not None:
             items.append({"key": "screen_inch", "label": f"layar ~{self.screen_inch:g} inch", "source": "user", "kind": "hard"})
 
-        if self.required_brand:
+        if self.allowed_brands:
+            if len(self.allowed_brands) == 1:
+                items.append({"key": "brand", "label": f"merek {self.allowed_brands[0]}", "source": "user", "kind": "hard"})
+            else:
+                items.append({"key": "allowed_brands", "label": f"merek {' atau '.join(self.allowed_brands)}", "source": "user", "kind": "hard"})
+        elif self.required_brand:
             items.append({"key": "brand", "label": f"merek {self.required_brand}", "source": "user", "kind": "hard"})
-        if self.required_family:
+        if self.excluded_brands:
+            items.append({"key": "excluded_brands", "label": f"bukan merek {', '.join(self.excluded_brands)}", "source": "user", "kind": "hard"})
+
+        if self.required_family and self.required_model_tokens:
+            items.append({"key": "family", "label": f"seri {self.required_family} {' '.join(self.required_model_tokens)}", "source": "user", "kind": "hard"})
+        elif self.required_family:
             items.append({"key": "family", "label": f"seri {self.required_family}", "source": "user", "kind": "hard"})
+        elif self.required_model_tokens:
+            items.append({"key": "model", "label": f"model {' '.join(self.required_model_tokens)}", "source": "user", "kind": "hard"})
+
+        if self.required_cpu:
+            items.append({"key": "cpu", "label": f"CPU {self.required_cpu}", "source": "user", "kind": "hard"})
+        if self.required_gpu:
+            items.append({"key": "gpu", "label": f"GPU {self.required_gpu}", "source": "user", "kind": "hard"})
+        if self.required_os:
+            items.append({"key": "os", "label": f"OS {self.required_os}", "source": "user", "kind": "hard"})
+        if self.require_convertible:
+            items.append({"key": "require_convertible", "label": "kategori 2-in-1 Convertible", "source": "user", "kind": "hard"})
+        if self.require_touchscreen:
+            items.append({"key": "require_touchscreen", "label": "layar touchscreen", "source": "user", "kind": "hard"})
+        if self.exclude_touchscreen:
+            items.append({"key": "exclude_touchscreen", "label": "tanpa touchscreen", "source": "user", "kind": "hard"})
 
         if self.exclude_gaming:
             items.append({"key": "exclude_gaming", "label": "bukan kategori Gaming", "source": "user", "kind": "hard"})
@@ -410,6 +487,10 @@ def _strip_negated_clauses(text: str, c: Constraints) -> str:
 
     for m in _NEG_HDD_RX.finditer(text):
         c.exclude_hdd = True
+        spans.append(m.span())
+
+    for m in _NEG_TOUCH_RX.finditer(text):
+        c.exclude_touchscreen = True
         spans.append(m.span())
 
     for m in _NEG_GAMING_RX.finditer(text):
@@ -661,6 +742,80 @@ def parse_constraints(query: str) -> Tuple[Constraints, str]:
             spans.append(m_rb.span())
 
     clean_remaining = _cut(text_no_storage, spans)
+
+    # 6b. OS, GPU, CPU, Touchscreen & 2-in-1 Convertible eksplisit
+    spec_spans: List[Tuple[int, int]] = []
+    for rx, os_val in _OS_PATTERNS:
+        m_os = rx.search(clean_remaining)
+        if m_os:
+            c.required_os = os_val
+            spec_spans.append(m_os.span())
+            break
+
+    clean_no_os = _cut(clean_remaining, spec_spans)
+    spec_spans = []
+
+    m_gpu = _GPU_MODEL_RX.search(clean_no_os)
+    if m_gpu:
+        raw_gpu = m_gpu.group('nv') or m_gpu.group('quadro') or m_gpu.group('rx') or m_gpu.group('arc')
+        c.required_gpu = re.sub(r'\s+', ' ', raw_gpu).strip()
+        spec_spans.append(m_gpu.span())
+
+    clean_no_gpu = _cut(clean_no_os, spec_spans)
+    spec_spans = []
+
+    m_cpu = _CPU_APPLE_EXPLICIT_RX.search(clean_no_gpu)
+    if m_cpu:
+        am = re.sub(r'\s+', ' ', m_cpu.group('am')).strip()
+        c.required_cpu = f"apple {am}"
+        spec_spans.append(m_cpu.span())
+    else:
+        m_am = _CPU_APPLE_SHORT_RX.search(clean_no_gpu)
+        if m_am and re.search(r'\b(?:macbook|apple|macos)\b', _cut(clean_no_gpu, [m_am.span()])):
+            before_am = clean_no_gpu[:m_am.start()].rstrip()
+            if not before_am.endswith('core m'):
+                am = re.sub(r'\s+', ' ', m_am.group('am')).strip()
+                c.required_cpu = f"apple {am}"
+                spec_spans.append(m_am.span())
+        if c.required_cpu is None:
+            m_cu = _CPU_ULTRA_RX.search(clean_no_gpu)
+            m_ci = _CPU_INTEL_I_RX.search(clean_no_gpu) if not m_cu else None
+            m_ry = _CPU_RYZEN_TIER_RX.search(clean_no_gpu) if not (m_cu or m_ci) else None
+            m_ot = _CPU_OTHER_RX.search(clean_no_gpu) if not (m_cu or m_ci or m_ry) else None
+            if m_cu:
+                c.required_cpu = f"core ultra {m_cu.group('tier')}"
+                spec_spans.append(m_cu.span())
+            elif m_ci:
+                parts = []
+                if m_ci.group('intel'):
+                    parts.append('intel')
+                parts.extend(['core', m_ci.group('tier')])
+                if m_ci.group('sku'):
+                    parts.append(m_ci.group('sku'))
+                c.required_cpu = " ".join(parts)
+                spec_spans.append(m_ci.span())
+            elif m_ry:
+                c.required_cpu = f"ryzen {m_ry.group('tier')}"
+                spec_spans.append(m_ry.span())
+            elif m_ot:
+                c.required_cpu = m_ot.group('fam')
+                spec_spans.append(m_ot.span())
+
+    clean_no_cpu = _cut(clean_no_gpu, spec_spans)
+    spec_spans = []
+
+    if not c.exclude_touchscreen:
+        m_touch = _TOUCH_RX.search(clean_no_cpu)
+        if m_touch:
+            c.require_touchscreen = True
+            spec_spans.append(m_touch.span())
+
+    m_conv = _CONVERTIBLE_RX.search(clean_no_cpu)
+    if m_conv:
+        c.require_convertible = True
+        spec_spans.append(m_conv.span())
+
+    clean_remaining = _cut(clean_no_cpu, spec_spans)
 
     # 7. Preferensi paling murah vs preferensi murah/hemat
     if _EXPLICIT_CHEAPEST.search(clean_remaining):

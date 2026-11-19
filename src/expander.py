@@ -111,6 +111,9 @@ class QueryExpander:
             or re.search(r'\b(128gb|256gb|500gb|512gb|1tb|2tb|ssd|hdd)\b', query_lower)
         )
         exclude_hdd = bool(constraints is not None and getattr(constraints, 'exclude_hdd', False))
+        exclude_touch = bool(constraints is not None and getattr(constraints, 'exclude_touchscreen', False))
+        has_req_gpu = bool(constraints is not None and getattr(constraints, 'required_gpu', None))
+        has_req_cpu = bool(constraints is not None and getattr(constraints, 'required_cpu', None))
         gaming_blocked = bool(
             constraints is not None and (getattr(constraints, 'exclude_gaming', False) or getattr(constraints, 'gaming_negated', False))
         )
@@ -120,6 +123,8 @@ class QueryExpander:
 
         ram_tokens = {'2gb', '4gb', '6gb', '8gb', '12gb', '16gb', '24gb', '32gb', '64gb'}
         storage_tokens = {'128gb', '256gb', '500gb', '512gb', '1tb', '2tb', 'ssd', 'hdd'}
+        gpu_tokens = {'gtx', 'geforce', 'quadro', '1050', '1060', '1070', '1080', '960m', '950m', 'mx150', 'rx', '560', '580', 'radeon'}
+        cpu_tokens = {'i3', 'i5', 'i7', 'i9', 'celeron', 'pentium', 'atom', 'xeon', 'ryzen3', 'ryzen5', 'ryzen7'}
         weak_tokens = {'celeron', 'pentium', 'atom', '2gb', '4gb'}
         generic_product_noise = {'ssd', 'retina'}
 
@@ -139,6 +144,12 @@ class QueryExpander:
                 if is_product_phrase and tok in generic_product_noise:
                     continue
                 if exclude_hdd and tok == 'hdd':
+                    continue
+                if exclude_touch and tok == 'touchscreen':
+                    continue
+                if has_req_gpu and tok in gpu_tokens:
+                    continue
+                if has_req_cpu and tok in cpu_tokens:
                     continue
                 if user_has_ram and tok in ram_tokens:
                     continue

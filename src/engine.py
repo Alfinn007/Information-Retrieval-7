@@ -26,6 +26,12 @@ CANDIDATE_PRODUCT_FAMILIES = [
     'chromebook', 'surface', 'gram', 'thinkbook',
 ]
 
+SUBMODEL_QUALIFIERS = {
+    'air', 'pro', 'mini', 'max', 'plus', 'ultra', 'flip', 'yoga', 'strix',
+    'zephyrus', 'carbon', 'book', 'studio', 'edge', 'stealth', 'blade',
+    'x360', 'folio',
+}
+
 
 def parse_storage_specs(storage_str: str) -> Dict[str, int]:
     """
@@ -137,6 +143,12 @@ class LaptopRecommenderEngine:
         self.quality_scores = None
         self.brand_low = None
         self.name_low = None
+        self.os_low = None
+        self.cpu_low = None
+        self.gpu_low = None
+        self.disp_low = None
+        self.has_touchscreen = None
+        self.is_convertible = None
         self.known_brands: set = set()
         self.known_families: List[str] = []
 
@@ -180,6 +192,12 @@ class LaptopRecommenderEngine:
 
         self.brand_low = df['brand'].astype(str).str.strip().str.lower().to_numpy()
         self.name_low = df['name'].astype(str).str.strip().str.lower().to_numpy()
+        self.os_low = df['os'].astype(str).str.strip().str.lower().to_numpy()
+        self.cpu_low = df['cpu'].astype(str).str.strip().str.lower().to_numpy()
+        self.gpu_low = df['gpu'].astype(str).str.strip().str.lower().to_numpy()
+        self.disp_low = disp_str.str.strip().to_numpy()
+        self.has_touchscreen = disp_str.str.contains('touchscreen', regex=False).to_numpy()
+        self.is_convertible = cat_low.str.contains(r'2 in 1|convertible', regex=True).to_numpy()
         self.known_brands = {b for b in self.brand_low if b}
 
         all_names = " ".join(self.name_low)
@@ -188,17 +206,66 @@ class LaptopRecommenderEngine:
             if re.search(rf'(?<![a-z0-9]){re.escape(fam)}(?![a-z0-9])', all_names)
         ]
 
-    def _detect_product_identity(self, text_query: str, c: Constraints):
+    @staticmethod
+    def _cut_text_spans(text: str, spans: List[tuple]) -> str:
+        if not spans:
+            return text
+        chars = list(text)
+        for s, e in spans:
+            for i in range(max(0, s), min(len(chars), e)):
+                chars[i] = ' '
+        return re.sub(r'\s+', ' ', ''.join(chars)).strip()
+
+    def _detect_product_identity(self, text_query: str, c: Constraints) -> str:
         q_low = text_query.lower()
+
+        if self.known_brands:
+            brand_alt = "|".join(re.escape(b) for b in sorted(self.known_brands, key=len, reverse=True))
+            neg_brand_rx = re.compile(
+                rf'\b(?:bukan|selain|jangan|tanpa|anti|non|no|nggak|enggak|gak|ga|tidak|tak)\s+'
+                rf'(?:mau\s+|perlu\s+|usah\s+)?(?:laptop\s+)?(?:merek\s+|merk\s+|brand\s+)?'
+                rf'(?P<brand>{brand_alt})(?![a-z0-9])'
+            )
+            neg_spans = []
+            for m in neg_brand_rx.finditer(q_low):
+                b = m.group('brand').lower()
+                if b not in c.excluded_brands:
+                    c.excluded_brands.append(b)
+                neg_spans.append(m.span())
+            q_low = self._cut_text_spans(q_low, neg_spans)
+
+            pos_brand_rx = re.compile(rf'(?<![a-z0-9])(?P<brand>{brand_alt})(?![a-z0-9])')
+            pos_spans = []
+            pos_brands = []
+            for m in pos_brand_rx.finditer(q_low):
+                b = m.group('brand').lower()
+                if b not in c.excluded_brands and b not in pos_brands:
+                    pos_brands.append(b)
+                pos_spans.append(m.span())
+            if pos_brands:
+                c.allowed_brands = sorted(pos_brands)
+                c.required_brand = c.allowed_brands[0] if len(c.allowed_brands) == 1 else None
+            q_low = self._cut_text_spans(q_low, pos_spans)
+
         for fam in self.known_families:
-            if re.search(rf'(?<![a-z0-9]){re.escape(fam)}(?![a-z0-9])', q_low):
+            m_fam = re.search(rf'(?<![a-z0-9]){re.escape(fam)}(?![a-z0-9])', q_low)
+            if m_fam:
                 c.required_family = fam
+                m_next = re.match(r'\s+([a-z0-9-]+)', q_low[m_fam.end():])
+                if m_next:
+                    next_tok = m_next.group(1)
+                    if next_tok in SUBMODEL_QUALIFIERS or re.match(r'^[a-z]+\d+[a-z0-9-]*$', next_tok):
+                        if next_tok not in c.required_model_tokens:
+                            c.required_model_tokens.append(next_tok)
                 break
-        for brand in sorted(self.known_brands, key=len, reverse=True):
-            if re.search(rf'(?<![a-z0-9]){re.escape(brand)}(?![a-z0-9])', q_low):
-                c.required_brand = brand
-                break
+
+        for m_code in re.finditer(r'\b([a-z]{1,3}\d{3,4}[a-z0-9-]*)\b', q_low):
+            tok = m_code.group(1)
+            if tok not in c.required_model_tokens and not re.match(r'^(?:win|rx|mx|gtx|rtx)\d+$', tok):
+                c.required_model_tokens.append(tok)
+
         c.build_applied_filters()
+        return q_low
 
     def _constraint_mask(self, c: Constraints) -> np.ndarray:
         df = self.repo.df
@@ -249,12 +316,75 @@ class LaptopRecommenderEngine:
             valid_in = np.isfinite(self.inches)
             mask &= valid_in & (np.abs(self.inches - c.screen_inch) <= SCREEN_TOLERANCE)
 
-        if c.required_brand:
+        if c.allowed_brands:
+            mask &= np.isin(self.brand_low, [b.lower() for b in c.allowed_brands])
+        elif c.required_brand:
             mask &= (self.brand_low == c.required_brand.lower())
+        if c.excluded_brands:
+            mask &= ~np.isin(self.brand_low, [b.lower() for b in c.excluded_brands])
+
         if c.required_family:
             fam_rx = re.compile(rf'(?<![a-z0-9]){re.escape(c.required_family.lower())}(?![a-z0-9])')
             fam_mask = np.array([bool(fam_rx.search(n)) for n in self.name_low], dtype=bool)
             mask &= fam_mask
+
+        for tok in c.required_model_tokens:
+            tok_rx = re.compile(rf'(?<![a-z0-9]){re.escape(tok.lower())}(?![a-z0-9])')
+            mask &= np.array([bool(tok_rx.search(n)) for n in self.name_low], dtype=bool)
+
+        if c.required_os:
+            req_os = c.required_os.lower()
+            if req_os in ('windows 10', 'windows 8', 'windows'):
+                mask &= np.array([o.startswith(req_os) for o in self.os_low], dtype=bool)
+            elif req_os == 'macos':
+                mask &= np.isin(self.os_low, ['macos', 'mac os x'])
+            else:
+                mask &= (self.os_low == req_os)
+
+        if c.required_gpu:
+            parts = [re.escape(p) for p in re.split(r'\s+', c.required_gpu.lower()) if p]
+            if len(parts) == 1 and re.match(r'^([a-z]+)(\d+.*)$', parts[0]):
+                m_g = re.match(r'^([a-z]+)(\d+.*)$', parts[0])
+                gpu_pat = rf'(?<![a-z0-9]){re.escape(m_g.group(1))}\s*{re.escape(m_g.group(2))}(?![a-z0-9])'
+            else:
+                gpu_pat = r'(?<![a-z0-9])' + r'\s*'.join(parts) + r'(?![a-z0-9])'
+            gpu_rx = re.compile(gpu_pat)
+            mask &= np.array([bool(gpu_rx.search(g)) for g in self.gpu_low], dtype=bool)
+
+        if c.required_cpu:
+            req_cpu = c.required_cpu.lower()
+            if req_cpu.startswith('apple '):
+                rest = req_cpu[len('apple '):]
+                cpu_pat = rf'(?<![a-z0-9])apple\s+{re.escape(rest)}(?![a-z0-9])'
+            elif req_cpu.startswith('intel core '):
+                rest = req_cpu[len('intel core '):].split()
+                if len(rest) == 2:
+                    cpu_pat = rf'(?<![a-z0-9])intel\s+core\s+{re.escape(rest[0])}[\s-]+{re.escape(rest[1])}(?![a-z0-9])'
+                else:
+                    cpu_pat = rf'(?<![a-z0-9])intel\s+core\s+{re.escape(rest[0])}(?![a-z0-9])'
+            elif req_cpu.startswith('core ultra '):
+                tier = req_cpu[len('core ultra '):]
+                cpu_pat = rf'(?<![a-z0-9])core\s+ultra\s+{re.escape(tier)}(?![a-z0-9])'
+            elif req_cpu.startswith('core '):
+                rest = req_cpu[len('core '):].split()
+                if len(rest) == 2:
+                    cpu_pat = rf'(?<![a-z0-9])(?:intel\s+)?core\s+{re.escape(rest[0])}[\s-]+{re.escape(rest[1])}(?![a-z0-9])'
+                else:
+                    cpu_pat = rf'(?<![a-z0-9])(?:intel\s+)?core\s+{re.escape(rest[0])}(?![a-z0-9])'
+            elif req_cpu.startswith('ryzen '):
+                tier = req_cpu[len('ryzen '):]
+                cpu_pat = rf'(?<![a-z0-9])ryzen\s+{re.escape(tier)}(?![a-z0-9])'
+            else:
+                cpu_pat = rf'(?<![a-z0-9]){re.escape(req_cpu)}(?![a-z0-9])'
+            cpu_rx = re.compile(cpu_pat)
+            mask &= np.array([bool(cpu_rx.search(cpu)) for cpu in self.cpu_low], dtype=bool)
+
+        if c.require_convertible:
+            mask &= self.is_convertible
+        if c.require_touchscreen:
+            mask &= self.has_touchscreen
+        if c.exclude_touchscreen:
+            mask &= ~self.has_touchscreen
 
         if c.exclude_gaming:
             mask &= ~self.is_gaming_category
@@ -303,6 +433,18 @@ class LaptopRecommenderEngine:
                 reasons.append(f"Berat {w:g} kg")
         if (c.screen_inch is not None or c.screen_min_inch is not None or c.screen_max_inch is not None) and np.isfinite(self.inches[idx]):
             reasons.append(f"Layar {self.inches[idx]:g} inch")
+        if c.required_cpu:
+            reasons.append(f"CPU {row['cpu']}")
+        if c.required_gpu:
+            reasons.append(f"GPU {row['gpu']}")
+        if c.required_os:
+            reasons.append(f"OS {row['os']}")
+        if c.require_convertible:
+            reasons.append("2 in 1 Convertible")
+        if c.require_touchscreen:
+            reasons.append("Layar Touchscreen")
+        elif c.exclude_touchscreen:
+            reasons.append("Tanpa Touchscreen")
         return reasons
 
     def search(
@@ -318,7 +460,7 @@ class LaptopRecommenderEngine:
             parse_constraints(query) if use_constraints else (Constraints(), query)
         )
         if use_constraints:
-            self._detect_product_identity(text_query, constraints)
+            text_query = self._detect_product_identity(text_query, constraints)
 
         base_q = self.preprocessor.clean_text(text_query)
         if use_expansion and text_query:

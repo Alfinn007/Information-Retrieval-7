@@ -128,3 +128,42 @@ def test_paket1_audit_price_component_and_conversational_queries():
         for _, row in out_85.results.iterrows()
         for cfg in ([row] + list(row.get("variants") or []))
     )
+
+
+def test_paket2_audit_brand_submodel_and_explicit_spec_queries():
+    cases = [
+        ("bukan Asus", 456, lambda r: r["brand"].lower() != "asus"),
+        ("selain Asus", 456, lambda r: r["brand"].lower() != "asus"),
+        ("jangan Asus", 456, lambda r: r["brand"].lower() != "asus"),
+        ("Asus atau Lenovo", 240, lambda r: r["brand"].lower() in {"asus", "lenovo"}),
+        ("Lenovo atau Asus", 240, lambda r: r["brand"].lower() in {"asus", "lenovo"}),
+        ("MacBook Air", 1, lambda r: "macbook" in r["name"].lower() and "air" in r["name"].lower()),
+        ("Lenovo ThinkPad T480", 0, lambda r: False),
+        ("MacBook M3", 0, lambda r: False),
+        ("wajib touchscreen", 88, lambda r: "touchscreen" in r["display"].lower()),
+        ("tanpa touchscreen", 508, lambda r: "touchscreen" not in r["display"].lower()),
+        (
+            "laptop 2 in 1 touch screen",
+            54,
+            lambda r: "2 in 1" in r["category"].lower() and "touchscreen" in r["display"].lower(),
+        ),
+        ("RTX 4060", 0, lambda r: False),
+        ("NVIDIA RTX 4060", 0, lambda r: False),
+        ("laptop gaming RTX 4060 budget 20 juta", 0, lambda r: False),
+        ("Windows 11", 0, lambda r: False),
+        ("laptop dengan Windows 11", 0, lambda r: False),
+        ("Intel Core i5", 214, lambda r: "intel core i5" in r["cpu"].lower()),
+        ("Linux", 31, lambda r: r["os"].lower() == "linux"),
+    ]
+
+    for query, expected_cands, row_pred in cases:
+        resp = client.get("/api/search", query_string={"q": query, "top": 100})
+        assert resp.status_code == 200
+        data = resp.get_json()
+        assert data["total_candidates"] == expected_cands, f"Mismatch kandidat pada {query}: {data['constraints']}"
+        for r in data["results"]:
+            assert row_pred(r), f"Pelanggaran kartu utama pada {query}: {r}"
+
+    d_al = client.get("/api/search", query_string={"q": "Asus atau Lenovo", "top": 100}).get_json()
+    d_la = client.get("/api/search", query_string={"q": "Lenovo atau Asus", "top": 100}).get_json()
+    assert [r["id"] for r in d_al["results"]] == [r["id"] for r in d_la["results"]]

@@ -182,3 +182,37 @@ def test_paket1_component_binding_and_operator_directions():
 
     c_scr_min, _ = parse_constraints("layar minimal 15 inci")
     assert c_scr_min.screen_min_inch == 15.0 and c_scr_min.screen_inch is None
+
+
+def test_paket2_explicit_specs_and_touchscreen():
+    c_w11, _ = parse_constraints("Windows 11")
+    assert c_w11.required_os == "windows 11"
+
+    c_dw11, _ = parse_constraints("laptop dengan Windows 11")
+    assert c_dw11.required_os == "windows 11"
+
+    c_lin, _ = parse_constraints("Linux")
+    assert c_lin.required_os == "linux"
+
+    c_rtx, _ = parse_constraints("NVIDIA RTX 4060")
+    assert c_rtx.required_gpu == "rtx 4060"
+
+    c_i5, _ = parse_constraints("Intel Core i5")
+    assert c_i5.required_cpu == "intel core i5"
+
+    c_m3, rem_m3 = parse_constraints("MacBook M3")
+    assert c_m3.required_cpu == "apple m3"
+    assert "macbook" in rem_m3
+
+    c_wt, _ = parse_constraints("wajib touchscreen")
+    assert c_wt.require_touchscreen is True and c_wt.exclude_touchscreen is False
+
+    c_nt, rem_nt = parse_constraints("tanpa touchscreen")
+    assert c_nt.exclude_touchscreen is True and c_nt.require_touchscreen is False
+    assert "touchscreen" not in rem_nt
+
+    c_2in1, _ = parse_constraints("laptop 2 in 1 touch screen")
+    assert c_2in1.require_convertible is True and c_2in1.require_touchscreen is True
+
+    c_as, _ = parse_constraints("laptop buat android studio")
+    assert c_as.required_os is None and c_as.ram_min == 8
