@@ -211,15 +211,40 @@ class LaptopRecommenderEngine:
             mask &= (price <= c.price_max) if c.price_max_inclusive else (price < c.price_max)
         if c.ram_min is not None:
             mask &= (self.ram_gb >= c.ram_min) if c.ram_min_inclusive else (self.ram_gb > c.ram_min)
+        if c.ram_max is not None:
+            mask &= (self.ram_gb <= c.ram_max) if c.ram_max_inclusive else (self.ram_gb < c.ram_max)
         if c.storage_min_gb is not None:
             mask &= (self.storage_gb >= c.storage_min_gb) if c.storage_min_inclusive else (self.storage_gb > c.storage_min_gb)
+        if c.storage_max_gb is not None:
+            mask &= (self.storage_gb > 0) & (
+                (self.storage_gb <= c.storage_max_gb) if c.storage_max_inclusive else (self.storage_gb < c.storage_max_gb)
+            )
         if c.ssd_min_gb is not None:
             mask &= (self.ssd_gb >= c.ssd_min_gb) if c.ssd_min_inclusive else (self.ssd_gb > c.ssd_min_gb)
+        if c.ssd_max_gb is not None:
+            mask &= (self.ssd_gb > 0) & (
+                (self.ssd_gb <= c.ssd_max_gb) if c.ssd_max_inclusive else (self.ssd_gb < c.ssd_max_gb)
+            )
+        if c.hdd_min_gb is not None:
+            mask &= (self.hdd_gb >= c.hdd_min_gb) if c.hdd_min_inclusive else (self.hdd_gb > c.hdd_min_gb)
+        if c.hdd_max_gb is not None:
+            mask &= (self.hdd_gb > 0) & (
+                (self.hdd_gb <= c.hdd_max_gb) if c.hdd_max_inclusive else (self.hdd_gb < c.hdd_max_gb)
+            )
         if c.exclude_hdd:
             mask &= (self.hdd_gb == 0)
+        if c.weight_min_kg is not None:
+            valid_w = np.isfinite(self.weight_kg)
+            mask &= valid_w & ((self.weight_kg >= c.weight_min_kg) if c.weight_min_inclusive else (self.weight_kg > c.weight_min_kg))
         if c.weight_max_kg is not None:
             valid_w = np.isfinite(self.weight_kg)
             mask &= valid_w & ((self.weight_kg <= c.weight_max_kg) if c.weight_max_inclusive else (self.weight_kg < c.weight_max_kg))
+        if c.screen_min_inch is not None:
+            valid_in = np.isfinite(self.inches)
+            mask &= valid_in & ((self.inches >= c.screen_min_inch) if c.screen_min_inclusive else (self.inches > c.screen_min_inch))
+        if c.screen_max_inch is not None:
+            valid_in = np.isfinite(self.inches)
+            mask &= valid_in & ((self.inches <= c.screen_max_inch) if c.screen_max_inclusive else (self.inches < c.screen_max_inch))
         if c.screen_inch is not None:
             valid_in = np.isfinite(self.inches)
             mask &= valid_in & (np.abs(self.inches - c.screen_inch) <= SCREEN_TOLERANCE)
@@ -247,18 +272,36 @@ class LaptopRecommenderEngine:
             price_str = f"Rp{int(row['price_idr']):,}".replace(',', '.')
             reasons.append(f"Harga {price_str} sesuai batas")
         if c.ram_min is not None:
-            reasons.append(f"RAM {int(self.ram_gb[idx])}GB memenuhi >= {c.ram_min}GB")
+            op = ">=" if c.ram_min_inclusive else ">"
+            reasons.append(f"RAM {int(self.ram_gb[idx])}GB memenuhi {op} {c.ram_min}GB")
+        if c.ram_max is not None:
+            op = "<=" if c.ram_max_inclusive else "<"
+            reasons.append(f"RAM {int(self.ram_gb[idx])}GB memenuhi {op} {c.ram_max}GB")
         if c.ssd_min_gb is not None:
-            reasons.append(f"SSD {int(self.ssd_gb[idx])}GB memenuhi >= {c.ssd_min_gb}GB")
-        elif c.storage_min_gb is not None:
-            reasons.append(f"Storage {int(self.storage_gb[idx])}GB memenuhi >= {c.storage_min_gb}GB")
+            op = ">=" if c.ssd_min_inclusive else ">"
+            reasons.append(f"SSD {int(self.ssd_gb[idx])}GB memenuhi {op} {c.ssd_min_gb}GB")
+        if c.ssd_max_gb is not None:
+            op = "<=" if c.ssd_max_inclusive else "<"
+            reasons.append(f"SSD {int(self.ssd_gb[idx])}GB memenuhi {op} {c.ssd_max_gb}GB")
+        if c.hdd_min_gb is not None:
+            op = ">=" if c.hdd_min_inclusive else ">"
+            reasons.append(f"HDD {int(self.hdd_gb[idx])}GB memenuhi {op} {c.hdd_min_gb}GB")
+        if c.hdd_max_gb is not None:
+            op = "<=" if c.hdd_max_inclusive else "<"
+            reasons.append(f"HDD {int(self.hdd_gb[idx])}GB memenuhi {op} {c.hdd_max_gb}GB")
+        if c.storage_min_gb is not None:
+            op = ">=" if c.storage_min_inclusive else ">"
+            reasons.append(f"Storage {int(self.storage_gb[idx])}GB memenuhi {op} {c.storage_min_gb}GB")
+        if c.storage_max_gb is not None:
+            op = "<=" if c.storage_max_inclusive else "<"
+            reasons.append(f"Storage {int(self.storage_gb[idx])}GB memenuhi {op} {c.storage_max_gb}GB")
         if c.exclude_hdd:
             reasons.append("Tanpa HDD")
-        if c.weight_max_kg is not None or c.prefer_lightweight:
+        if c.weight_min_kg is not None or c.weight_max_kg is not None or c.prefer_lightweight:
             w = self.weight_kg[idx]
             if np.isfinite(w):
                 reasons.append(f"Berat {w:g} kg")
-        if c.screen_inch is not None and np.isfinite(self.inches[idx]):
+        if (c.screen_inch is not None or c.screen_min_inch is not None or c.screen_max_inch is not None) and np.isfinite(self.inches[idx]):
             reasons.append(f"Layar {self.inches[idx]:g} inch")
         return reasons
 
@@ -288,9 +331,14 @@ class LaptopRecommenderEngine:
         if not exp_display:
             exp_display = f"(Filter: {constraints.describe()})" if not constraints.is_empty else "-"
 
-        q_vec = self.vectorizer.transform([base_q]) if base_q else None
-        if q_vec is not None and exp_q:
-            q_vec = q_vec + alpha * self.vectorizer.transform([exp_q])
+        if base_q and exp_q:
+            q_vec = self.vectorizer.transform([base_q]) + alpha * self.vectorizer.transform([exp_q])
+        elif base_q:
+            q_vec = self.vectorizer.transform([base_q])
+        elif exp_q:
+            q_vec = self.vectorizer.transform([exp_q])
+        else:
+            q_vec = None
 
         mask = self._constraint_mask(constraints)
         valid = np.where(mask)[0]

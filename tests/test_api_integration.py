@@ -73,3 +73,58 @@ def test_stats_endpoint_and_catalog_size():
     assert search_resp.status_code == 200
     search_data = search_resp.get_json()
     assert search_data["catalog_size"] == stats["total_documents"]
+
+
+def _extract_inches(display_str: str) -> float:
+    import re
+    m = re.search(r'(\d+(?:\.\d+)?)', str(display_str))
+    return float(m.group(1)) if m else float('nan')
+
+
+def _all_items_with_variants(row):
+    return [row] + list(row.get("variants") or [])
+
+
+def test_paket1_audit_price_component_and_conversational_queries():
+    cases = [
+        ("laptop harga maksimal 8 juta", 125, lambda item: item["price_idr"] <= 8_000_000),
+        ("maksimal 8 juta dong", 125, lambda item: item["price_idr"] <= 8_000_000),
+        ("maksimal Rp8 juta", 125, lambda item: item["price_idr"] <= 8_000_000),
+        ("budget Rp 8 juta", 125, lambda item: item["price_idr"] <= 8_000_000),
+        ("budget saya 8 juta", 125, lambda item: item["price_idr"] <= 8_000_000),
+        ("maksimal 8.000.000", 125, lambda item: item["price_idr"] <= 8_000_000),
+        ("≤ 8 juta", 125, lambda item: item["price_idr"] <= 8_000_000),
+        ("minimal 5 juta dan maksimal 8 juta", 92, lambda item: 5_000_000 <= item["price_idr"] <= 8_000_000),
+        ("antara 5 dan 8 juta", 92, lambda item: 5_000_000 <= item["price_idr"] <= 8_000_000),
+        ("Lenovo minimal 5 juta dan maksimal 8 juta", 25, lambda item: 5_000_000 <= item["price_idr"] <= 8_000_000),
+        ("Lenovo maksimal 8 juta dan minimal 5 juta", 25, lambda item: 5_000_000 <= item["price_idr"] <= 8_000_000),
+        ("Lenovo maksimal Rp8 juta", 30, lambda item: item["price_idr"] <= 8_000_000),
+        ("Lenovo minimal 15 juta dan maksimal 8 juta", 0, lambda item: False),
+        ("8,5 juta ke bawah", 148, lambda item: item["price_idr"] <= 8_500_000),
+        ("minimal RAM 16 GB", 141, lambda item: int(item["ram"].replace("GB", "")) >= 16),
+        ("RAM maksimal 8 GB", 472, lambda item: int(item["ram"].replace("GB", "")) <= 8),
+        ("Lenovo RAM maksimal 8 GB", 109, lambda item: int(item["ram"].replace("GB", "")) <= 8),
+        ("RAM 128GB", 0, lambda item: False),
+        ("SSD 0,5 TB", 95, lambda item: parse_storage_specs(item["storage"])["ssd_gb"] >= 500),
+        ("SSD maksimal 256 GB", 358, lambda item: 0 < parse_storage_specs(item["storage"])["ssd_gb"] <= 256),
+        ("HDD 1TB", 254, lambda item: parse_storage_specs(item["storage"])["hdd_gb"] >= 1000),
+        ("Lenovo berat minimal 2 kg", 65, lambda item: parse_weight_kg(item["weight"]) >= 2.0),
+        ("layar minimal 15 inci", 385, lambda item: _extract_inches(item["display"]) >= 15.0),
+    ]
+
+    for query, expected_cands, item_pred in cases:
+        resp = client.get("/api/search", query_string={"q": query, "top": 100})
+        assert resp.status_code == 200
+        data = resp.get_json()
+        assert data["total_candidates"] == expected_cands, f"Mismatch kandidat pada {query}: {data['constraints']}"
+        for r in data["results"]:
+            for cfg in _all_items_with_variants(r):
+                assert item_pred(cfg), f"Pelanggaran constraint pada {query}: {cfg}"
+
+    # Pastikan konfigurasi tepat Rp8.500.000 tidak terbuang oleh '8,5 juta ke bawah'
+    out_85 = flask_app.engine.search("8,5 juta ke bawah", top_n=200)
+    assert any(
+        cfg["price_idr"] == 8_500_000
+        for _, row in out_85.results.iterrows()
+        for cfg in ([row] + list(row.get("variants") or []))
+    )

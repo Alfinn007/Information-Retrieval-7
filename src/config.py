@@ -10,7 +10,12 @@ EURO_TO_IDR_RATE = 17000
 STOPWORDS_ID = {
     "laptop", "yang", "untuk", "buat", "dengan", "cari", "carikan", "dan", "atau",
     "rekomendasi", "kebutuhan", "tolong", "bagus", "cocok", "banget", "sekali",
-    "punya", "ada", "kapasitas", "ukuran", "storage", "penyimpanan", "memori", "ram"
+    "punya", "ada", "kapasitas", "ukuran", "storage", "penyimpanan", "memori", "ram",
+    "harga", "harganya", "dong", "nih", "deh", "ya", "yah", "sih", "lah", "kan",
+    "aja", "saja", "kok", "plis", "please", "saya", "aku", "gue", "gw", "kami", "kita",
+    "mau", "ingin", "pengen", "butuh", "perlu", "cariin", "kasih", "tampilkan",
+    "rekomendasikan", "pilihkan", "di", "ke", "dari", "pada", "pakai", "pake",
+    "memiliki", "tapi", "tetapi", "namun", "kalau", "kalo",
 }
 
 TECH_NORMALIZATION_RULES = {

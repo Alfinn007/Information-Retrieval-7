@@ -96,9 +96,18 @@ class QueryExpander:
             user_ram_match = re.search(r'\b(2|4|6|8|12|16|24|32|64)\s*gb\b', query_lower)
             user_ram_val = int(user_ram_match.group(1)) if user_ram_match else 0
 
-        user_has_ram = user_ram_val > 0
+        user_has_ram = user_ram_val > 0 or bool(
+            constraints is not None and getattr(constraints, 'ram_max', None)
+        )
         user_has_storage = bool(
-            (constraints is not None and (getattr(constraints, 'storage_min_gb', None) or getattr(constraints, 'ssd_min_gb', None)))
+            (constraints is not None and (
+                getattr(constraints, 'storage_min_gb', None)
+                or getattr(constraints, 'storage_max_gb', None)
+                or getattr(constraints, 'ssd_min_gb', None)
+                or getattr(constraints, 'ssd_max_gb', None)
+                or getattr(constraints, 'hdd_min_gb', None)
+                or getattr(constraints, 'hdd_max_gb', None)
+            ))
             or re.search(r'\b(128gb|256gb|500gb|512gb|1tb|2tb|ssd|hdd)\b', query_lower)
         )
         exclude_hdd = bool(constraints is not None and getattr(constraints, 'exclude_hdd', False))

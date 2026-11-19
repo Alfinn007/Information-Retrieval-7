@@ -15,16 +15,23 @@ VALID_RAM_GB = {2, 4, 6, 8, 12, 16, 24, 32, 64}
 SCREEN_TOLERANCE = 0.6
 AROUND_RATIO = 0.2
 
-_UPPER_STRICT = r'(?:di\s?bawah|under|kurang\s+dari|<(?!=))'
-_UPPER_INCLUSIVE = r'(?:maksimal|maksimum|maks|max|budget|anggaran|tidak\s+lebih\s+dari|paling\s+mahal|<=)'
+_UPPER_STRICT = r'(?:\b(?:di\s?bawah|under|kurang\s+dari)\b|<(?!=))'
+_UPPER_INCLUSIVE = r'(?:\b(?:maksimal|maksimum|maks|max|(?:budget|anggaran)(?:\s+(?:saya|ku|aku|kami))?|tidak\s+lebih\s+dari|paling\s+mahal)\b|<=)'
 _UPPER = rf'(?:{_UPPER_STRICT}|{_UPPER_INCLUSIVE})'
 
-_LOWER_STRICT = r'(?:di\s?atas|above|lebih\s+dari|>(?!=))'
-_LOWER_INCLUSIVE = r'(?:minimal|minimum|min|>=)'
+_LOWER_STRICT = r'(?:\b(?:di\s?atas|above|lebih\s+dari)\b|>(?!=))'
+_LOWER_INCLUSIVE = r'(?:\b(?:minimal|minimum|min)\b|>=)'
 _LOWER = rf'(?:{_LOWER_STRICT}|{_LOWER_INCLUSIVE})'
 
-_AROUND = r'(?:sekitar|kisaran|around|harga|di\s+harga|~)'
+_AROUND = r'\b(?:sekitar|kisaran|around|harga|di\s+harga)\b|~'
 _SEP = r'(?:-|–|—|sampai|sd|s/d|hingga|to)'
+
+_COMP_UPPER_STRICT = r'(?:\b(?:di\s?bawah|under|kurang\s+dari)\b|<(?!=))'
+_COMP_UPPER_INCL = r'(?:\b(?:maksimal|maksimum|maks|max|tidak\s+lebih\s+dari|paling\s+(?:berat|besar|tinggi))\b|<=)'
+_COMP_LOWER_STRICT = r'(?:\b(?:di\s?atas|above|lebih\s+dari)\b|>(?!=))'
+_COMP_LOWER_INCL = r'(?:\b(?:minimal|minimum|min)\b|>=)'
+_COMP_OP = rf'(?:{_COMP_UPPER_STRICT}|{_COMP_UPPER_INCL}|{_COMP_LOWER_STRICT}|{_COMP_LOWER_INCL})'
+_SUF_COMP_OP = r'\b(?:ke\s?bawah|ke\s?atas|maksimal|maksimum|maks|max|minimal|minimum|min)\b'
 
 
 def _compile_phrase_rx(phrases: List[str]) -> re.Pattern:
@@ -60,58 +67,84 @@ _NEG_LIGHT_RX = re.compile(
     rf'\b(?:{_NEG_ALT})\s+(?:usah\s+|perlu\s+)?(?:{_LIGHT_ALT})\b'
 )
 
+_RANGE_ANTARA_JUTA = re.compile(
+    r'\bantara\s+(?:rp\.?\s*)?(?P<a>\d+(?:[.,]\d+)?)\s*(?:jutaan|juta|jtan|jt)?\s*(?:dan|sampai|hingga|sd|s/d|-|–|—|to)\s*(?:rp\.?\s*)?(?P<b>\d+(?:[.,]\d+)?)\s*(?:jutaan|juta|jtan|jt)\b'
+)
+_RANGE_ANTARA_PLAIN = re.compile(
+    r'\bantara\s+(?:rp\.?\s*)?(?P<a>\d{1,3}(?:\.\d{3}){2,}|\d{6,9})\s*(?:dan|sampai|hingga|sd|s/d|-|–|—|to)\s*(?:rp\.?\s*)?(?P<b>\d{1,3}(?:\.\d{3}){2,}|\d{6,9})\b'
+)
 _RANGE_JUTA = re.compile(
-    rf'(?P<a>\d+(?:[.,]\d+)?)\s*(?:jutaan|juta|jtan|jt)?\s*{_SEP}\s*(?P<b>\d+(?:[.,]\d+)?)\s*(?:jutaan|juta|jtan|jt)\b'
+    rf'(?:rp\.?\s*)?(?P<a>\d+(?:[.,]\d+)?)\s*(?:jutaan|juta|jtan|jt)?\s*{_SEP}\s*(?:rp\.?\s*)?(?P<b>\d+(?:[.,]\d+)?)\s*(?:jutaan|juta|jtan|jt)\b'
 )
 _RANGE_PLAIN = re.compile(
-    rf'(?:rp\.?\s*)?(?P<a>\d{{1,3}}(?:\.\d{{3}})+|\d{{6,9}})\s*{_SEP}\s*(?:rp\.?\s*)?(?P<b>\d{{1,3}}(?:\.\d{{3}})+|\d{{6,9}})\b'
+    rf'(?:rp\.?\s*)?(?P<a>\d{{1,3}}(?:\.\d{{3}}){{2,}}|\d{{6,9}})\s*{_SEP}\s*(?:rp\.?\s*)?(?P<b>\d{{1,3}}(?:\.\d{{3}}){{2,}}|\d{{6,9}})\b'
 )
 _MONEY = re.compile(
-    r'(?:rp\.?\s*(?P<full>\d{1,3}(?:\.\d{3})+|\d{6,9})\b'
-    r'|(?P<num>\d+(?:[.,]\d+)?)\s*(?P<unit>jutaan|juta|jtan|jt)\b'
+    r'(?:(?:rp\.?\s*)?(?P<num>\d+(?:[.,]\d+)?)\s*(?P<unit>jutaan|juta|jtan|jt)\b'
+    r'|rp\.?\s*(?P<rp_full>\d{1,3}(?:\.\d{3})+|\d{6,9})\b'
+    r'|(?P<full>\b\d{1,3}(?:\.\d{3}){2,}\b)'
     r'|(?P<plain>\b\d{6,9}\b))'
 )
 
 _SSD_A = re.compile(
-    r'\b(?:(?P<op>minimal|minimum|min|di\s?atas|lebih\s+dari|>=?)\s+)?'
-    r'ssd\s*(?:(?P<op2>minimal|minimum|min|di\s?atas|lebih\s+dari|>=?)\s+)?'
-    r'(?P<v>\d+(?:\.\d+)?)\s*(?P<u>tb|gb)\b'
+    rf'(?:(?:(?P<op1>{_COMP_OP})\s+)?\bssd\s*(?:(?P<op2>{_COMP_OP})\s*)?'
+    rf'(?P<v>\d+(?:[.,]\d+)?)\s*(?P<u>tb|gb)(?:\s*(?P<op3>{_SUF_COMP_OP}))?\b)'
 )
 _SSD_B = re.compile(
-    r'\b(?:(?P<op>minimal|minimum|min|di\s?atas|lebih\s+dari|>=?)\s+)?'
-    r'(?P<v>\d+(?:\.\d+)?)\s*(?P<u>tb|gb)\s*ssd\b'
+    rf'(?:(?:(?P<op1>{_COMP_OP})\s+)?\b(?P<v>\d+(?:[.,]\d+)?)\s*(?P<u>tb|gb)\s*ssd'
+    rf'(?:\s*(?P<op3>{_SUF_COMP_OP}))?\b)'
+)
+
+_HDD_A = re.compile(
+    rf'(?:(?:(?P<op1>{_COMP_OP})\s+)?\b(?:hdd|harddisk|hard\s*disk)\s*(?:(?P<op2>{_COMP_OP})\s*)?'
+    rf'(?P<v>\d+(?:[.,]\d+)?)\s*(?P<u>tb|gb)(?:\s*(?P<op3>{_SUF_COMP_OP}))?\b)'
+)
+_HDD_B = re.compile(
+    rf'(?:(?:(?P<op1>{_COMP_OP})\s+)?\b(?P<v>\d+(?:[.,]\d+)?)\s*(?P<u>tb|gb)\s*(?:hdd|harddisk|hard\s*disk)'
+    rf'(?:\s*(?P<op3>{_SUF_COMP_OP}))?\b)'
+)
+
+_RAM_EXP_A = re.compile(
+    rf'(?:(?:(?P<op1>{_COMP_OP})\s+)?\bram\s*(?:(?P<op2>{_COMP_OP})\s*)?'
+    rf'(?P<v>\d{{1,4}})\s*(?:gb|g)?(?:\s*(?P<op3>{_SUF_COMP_OP}))?\b)'
+)
+_RAM_EXP_B = re.compile(
+    rf'(?:(?:(?P<op1>{_COMP_OP})\s+)?\b(?P<v>\d{{1,4}})\s*(?:gb|g)\s*ram'
+    rf'(?:\s*(?P<op3>{_SUF_COMP_OP}))?\b)'
 )
 
 _STORAGE_TB = re.compile(
-    r'\b(?:(?:storage|penyimpanan|kapasitas|memori)\s*)?'
-    r'(?:(?P<op>minimal|minimum|min|di\s?atas|lebih\s+dari|>=?)\s+)?'
-    r'(?P<v>[12])(?:\.0)?\s*tb\b'
+    rf'(?:(?:(?P<op1>{_COMP_OP})\s+)?\b(?:storage|penyimpanan|kapasitas|memori)\s*(?:(?P<op2>{_COMP_OP})\s*)?'
+    rf'|(?:(?P<op3>{_COMP_OP})\s+)?\b)'
+    rf'(?P<v>\d+(?:[.,]\d+)?)\s*tb(?:\s*(?P<op4>{_SUF_COMP_OP}))?\b'
 )
 _STORAGE_GB = re.compile(
-    r'\b(?:(?:storage|penyimpanan|kapasitas|memori)\s*)?'
-    r'(?:(?P<op>minimal|minimum|min|di\s?atas|lebih\s+dari|>=?)\s+)?'
-    r'(?P<v>128|256|500|512|1000|1024)\s*gb\b'
+    rf'(?:(?:(?P<op1>{_COMP_OP})\s+)?\b(?:storage|penyimpanan|kapasitas|memori)\s*(?:(?P<op2>{_COMP_OP})\s*)?'
+    rf'|(?:(?P<op3>{_COMP_OP})\s+)?\b)'
+    rf'(?P<v>128|256|500|512|1000|1024)\s*gb(?:\s*(?P<op4>{_SUF_COMP_OP}))?\b'
 )
 
 _WEIGHT = re.compile(
-    r'(?:berat\s*(?P<op1>maksimal|maksimum|maks|max|di\s?bawah|kurang\s+dari|<=?)?\s*|'
-    r'(?P<op2>maksimal|maksimum|maks|max|di\s?bawah|kurang\s+dari|<=?)\s+)'
-    r'(?P<v>\d+(?:[.,]\d+)?)\s*kg\b'
-    r'|(?P<v2>\d+(?:[.,]\d+)?)\s*kg\b'
+    rf'(?:(?:(?P<op1>{_COMP_OP})\s+)?\bberat\s*(?:(?P<op2>{_COMP_OP})\s*)?(?P<v>\d+(?:[.,]\d+)?)\s*kg(?:\s*(?P<op3>{_SUF_COMP_OP}))?\b'
+    rf'|(?:(?P<op4>{_COMP_OP})\s+)?\b(?P<v2>\d+(?:[.,]\d+)?)\s*kg(?:\s*(?P<op5>{_SUF_COMP_OP}))?\b)'
 )
 
-_RAM_A = re.compile(
-    r'\bram\s*(?:(?P<op>minimal|minimum|min|di\s?atas|lebih\s+dari|>=?)\s*)?(?P<v>\d{1,2})\s*(?:gb|g)?\b'
-)
-_RAM_B = re.compile(
-    r'\b(?:(?P<op>minimal|minimum|min|di\s?atas|lebih\s+dari|>=?)\s*)?(?P<v>\d{1,2})\s*(?:gb|g)\s*(?:ram)?\b'
+_RAM_BARE = re.compile(
+    rf'(?:(?:(?P<op1>{_COMP_OP})\s+)?\b(?P<v>\d{{1,2}})\s*(?:gb|g)(?:\s*(?P<op2>{_SUF_COMP_OP}))?\b)'
 )
 
-_SCREEN = re.compile(r'(?:layar\s*)?\b(?P<v>\d{2}(?:[.,]\d)?)\s*(?:inch|inci|in\b|")')
+_SCREEN = re.compile(
+    rf'(?:(?:(?P<op1>{_COMP_OP})\s+)?(?:layar\s*)?(?:(?P<op2>{_COMP_OP})\s*)?'
+    rf'\b(?P<v>\d{{2}}(?:[.,]\d)?)\s*(?:inch|inci|in\b|")(?:\s*(?P<op3>{_SUF_COMP_OP}))?)'
+)
 
 
 def _fmt_idr(val: int) -> str:
     return f"Rp{val:,.0f}".replace(",", ".")
+
+
+def _fmt_gb(gb: int) -> str:
+    return f"{gb // 1000}TB" if gb >= 1000 and gb % 1000 == 0 else f"{gb}GB"
 
 
 def _to_float(s: str) -> float:
@@ -123,6 +156,8 @@ def _parse_money_token(raw: str) -> int:
 
 
 def _money_value(m: re.Match) -> int:
+    if m.group('rp_full'):
+        return _parse_money_token(m.group('rp_full'))
     if m.group('full'):
         return _parse_money_token(m.group('full'))
     if m.group('plain'):
@@ -130,11 +165,37 @@ def _money_value(m: re.Match) -> int:
     return int(round(_to_float(m.group('num')) * 1_000_000))
 
 
-def _is_strict_op(op: Optional[str]) -> bool:
+def _classify_op(op: Optional[str], default_dir: str = 'min') -> Tuple[str, bool]:
     if not op:
-        return False
-    op_l = op.lower().strip()
-    return bool(re.match(r'^(?:di\s?atas|lebih\s+dari|di\s?bawah|kurang\s+dari|under|above|[<>])$', op_l))
+        return default_dir, True
+    op_l = re.sub(r'\s+', ' ', op.lower().strip())
+    if re.match(r'^(?:di\s?bawah|under|kurang\s+dari|<)$', op_l):
+        return 'max', False
+    if re.match(r'^(?:maksimal|maksimum|maks|max|tidak\s+lebih\s+dari|paling\s+(?:berat|besar|tinggi)|<=|ke\s?bawah)$', op_l):
+        return 'max', True
+    if re.match(r'^(?:di\s?atas|above|lebih\s+dari|>)$', op_l):
+        return 'min', False
+    if re.match(r'^(?:minimal|minimum|min|>=|ke\s?atas)$', op_l):
+        return 'min', True
+    return default_dir, True
+
+
+def _apply_price_min(c: "Constraints", value: int, inclusive: bool):
+    if c.price_min is None or value > c.price_min:
+        c.price_min = value
+        c.price_min_inclusive = inclusive
+    elif value == c.price_min:
+        c.price_min_inclusive = c.price_min_inclusive and inclusive
+    c.price_around_target = None
+
+
+def _apply_price_max(c: "Constraints", value: int, inclusive: bool):
+    if c.price_max is None or value < c.price_max:
+        c.price_max = value
+        c.price_max_inclusive = inclusive
+    elif value == c.price_max:
+        c.price_max_inclusive = c.price_max_inclusive and inclusive
+    c.price_around_target = None
 
 
 def _cut(text: str, spans: List[Tuple[int, int]]) -> str:
@@ -155,19 +216,35 @@ class Constraints:
 
     ram_min: Optional[int] = None
     ram_min_inclusive: bool = True
+    ram_max: Optional[int] = None
+    ram_max_inclusive: bool = True
     ram_source: str = "user"
     ram_reason: Optional[str] = None
 
     storage_min_gb: Optional[int] = None
     storage_min_inclusive: bool = True
+    storage_max_gb: Optional[int] = None
+    storage_max_inclusive: bool = True
     ssd_min_gb: Optional[int] = None
     ssd_min_inclusive: bool = True
+    ssd_max_gb: Optional[int] = None
+    ssd_max_inclusive: bool = True
+    hdd_min_gb: Optional[int] = None
+    hdd_min_inclusive: bool = True
+    hdd_max_gb: Optional[int] = None
+    hdd_max_inclusive: bool = True
     exclude_hdd: bool = False
 
+    weight_min_kg: Optional[float] = None
+    weight_min_inclusive: bool = True
     weight_max_kg: Optional[float] = None
     weight_max_inclusive: bool = True
 
     screen_inch: Optional[float] = None
+    screen_min_inch: Optional[float] = None
+    screen_min_inclusive: bool = True
+    screen_max_inch: Optional[float] = None
+    screen_max_inclusive: bool = True
 
     require_gaming_gpu: bool = False
     exclude_gaming: bool = False
@@ -193,11 +270,19 @@ class Constraints:
             self.price_min is None
             and self.price_max is None
             and self.ram_min is None
+            and self.ram_max is None
             and self.storage_min_gb is None
+            and self.storage_max_gb is None
             and self.ssd_min_gb is None
+            and self.ssd_max_gb is None
+            and self.hdd_min_gb is None
+            and self.hdd_max_gb is None
             and not self.exclude_hdd
+            and self.weight_min_kg is None
             and self.weight_max_kg is None
             and self.screen_inch is None
+            and self.screen_min_inch is None
+            and self.screen_max_inch is None
             and not self.require_gaming_gpu
             and not self.exclude_gaming
             and not self.require_creator_spec
@@ -214,9 +299,15 @@ class Constraints:
         if self.price_min is not None and self.price_max is not None:
             if self.price_around_target is not None:
                 label = f"harga {_fmt_idr(self.price_min)} - {_fmt_idr(self.price_max)} (sekitar {_fmt_idr(self.price_around_target)})"
+                items.append({"key": "price_range", "label": label, "source": "user", "kind": "hard"})
+            elif self.price_min > self.price_max or not self.price_min_inclusive or not self.price_max_inclusive:
+                op_min = ">=" if self.price_min_inclusive else ">"
+                op_max = "<=" if self.price_max_inclusive else "<"
+                items.append({"key": "price_min", "label": f"harga {op_min} {_fmt_idr(self.price_min)}", "source": "user", "kind": "hard"})
+                items.append({"key": "price_max", "label": f"harga {op_max} {_fmt_idr(self.price_max)}", "source": "user", "kind": "hard"})
             else:
                 label = f"harga {_fmt_idr(self.price_min)} - {_fmt_idr(self.price_max)}"
-            items.append({"key": "price_range", "label": label, "source": "user", "kind": "hard"})
+                items.append({"key": "price_range", "label": label, "source": "user", "kind": "hard"})
         elif self.price_min is not None:
             op = ">=" if self.price_min_inclusive else ">"
             items.append({"key": "price_min", "label": f"harga {op} {_fmt_idr(self.price_min)}", "source": "user", "kind": "hard"})
@@ -231,24 +322,47 @@ class Constraints:
             else:
                 label = f"RAM {op} {self.ram_min}GB"
             items.append({"key": "ram_min", "label": label, "source": self.ram_source, "kind": "hard"})
+        if self.ram_max is not None:
+            op = "<=" if self.ram_max_inclusive else "<"
+            items.append({"key": "ram_max", "label": f"RAM {op} {self.ram_max}GB", "source": "user", "kind": "hard"})
 
         if self.ssd_min_gb is not None:
             op = ">=" if self.ssd_min_inclusive else ">"
-            lbl = f"{self.ssd_min_gb // 1000}TB" if self.ssd_min_gb >= 1000 and self.ssd_min_gb % 1000 == 0 else f"{self.ssd_min_gb}GB"
-            items.append({"key": "ssd_min_gb", "label": f"SSD {op} {lbl}", "source": "user", "kind": "hard"})
+            items.append({"key": "ssd_min_gb", "label": f"SSD {op} {_fmt_gb(self.ssd_min_gb)}", "source": "user", "kind": "hard"})
+        if self.ssd_max_gb is not None:
+            op = "<=" if self.ssd_max_inclusive else "<"
+            items.append({"key": "ssd_max_gb", "label": f"SSD {op} {_fmt_gb(self.ssd_max_gb)}", "source": "user", "kind": "hard"})
+
+        if self.hdd_min_gb is not None:
+            op = ">=" if self.hdd_min_inclusive else ">"
+            items.append({"key": "hdd_min_gb", "label": f"HDD {op} {_fmt_gb(self.hdd_min_gb)}", "source": "user", "kind": "hard"})
+        if self.hdd_max_gb is not None:
+            op = "<=" if self.hdd_max_inclusive else "<"
+            items.append({"key": "hdd_max_gb", "label": f"HDD {op} {_fmt_gb(self.hdd_max_gb)}", "source": "user", "kind": "hard"})
 
         if self.storage_min_gb is not None:
             op = ">=" if self.storage_min_inclusive else ">"
-            lbl = f"{self.storage_min_gb // 1000}TB" if self.storage_min_gb >= 1000 and self.storage_min_gb % 1000 == 0 else f"{self.storage_min_gb}GB"
-            items.append({"key": "storage_min_gb", "label": f"Storage {op} {lbl}", "source": "user", "kind": "hard"})
+            items.append({"key": "storage_min_gb", "label": f"Storage {op} {_fmt_gb(self.storage_min_gb)}", "source": "user", "kind": "hard"})
+        if self.storage_max_gb is not None:
+            op = "<=" if self.storage_max_inclusive else "<"
+            items.append({"key": "storage_max_gb", "label": f"Storage {op} {_fmt_gb(self.storage_max_gb)}", "source": "user", "kind": "hard"})
 
         if self.exclude_hdd:
             items.append({"key": "exclude_hdd", "label": "tanpa HDD", "source": "user", "kind": "hard"})
 
+        if self.weight_min_kg is not None:
+            op = ">=" if self.weight_min_inclusive else ">"
+            items.append({"key": "weight_min_kg", "label": f"berat {op} {self.weight_min_kg:g} kg", "source": "user", "kind": "hard"})
         if self.weight_max_kg is not None:
             op = "<=" if self.weight_max_inclusive else "<"
             items.append({"key": "weight_max_kg", "label": f"berat {op} {self.weight_max_kg:g} kg", "source": "user", "kind": "hard"})
 
+        if self.screen_min_inch is not None:
+            op = ">=" if self.screen_min_inclusive else ">"
+            items.append({"key": "screen_min_inch", "label": f"layar {op} {self.screen_min_inch:g} inch", "source": "user", "kind": "hard"})
+        if self.screen_max_inch is not None:
+            op = "<=" if self.screen_max_inclusive else "<"
+            items.append({"key": "screen_max_inch", "label": f"layar {op} {self.screen_max_inch:g} inch", "source": "user", "kind": "hard"})
         if self.screen_inch is not None:
             items.append({"key": "screen_inch", "label": f"layar ~{self.screen_inch:g} inch", "source": "user", "kind": "hard"})
 
@@ -315,117 +429,187 @@ def _strip_negated_clauses(text: str, c: Constraints) -> str:
 
 
 def parse_constraints(query: str) -> Tuple[Constraints, str]:
-    text = re.sub(r'\s+', ' ', query.lower()).strip()
+    normalized = query.lower().replace('≤', '<=').replace('≥', '>=')
+    text = re.sub(r'\s+', ' ', normalized).strip()
     c = Constraints()
 
     # 1. Negasi diproses terlebih dahulu sebelum intent & expander
     text = _strip_negated_clauses(text, c)
     spans: List[Tuple[int, int]] = []
 
-    # 2. Harga (rentang atau nominal tunggal)
-    m_rj = _RANGE_JUTA.search(text)
-    m_rp = _RANGE_PLAIN.search(text) if not m_rj else None
-    if m_rj:
-        v1 = int(round(_to_float(m_rj.group('a')) * 1_000_000))
-        v2 = int(round(_to_float(m_rj.group('b')) * 1_000_000))
-        c.price_min, c.price_max = min(v1, v2), max(v1, v2)
-        start, end = m_rj.span()
-        prefix = text[max(0, start - 25):start]
-        cue = re.search(r'(?:budget|anggaran|harga|kisaran|sekitar)\s*$', prefix)
-        if cue:
-            start -= len(cue.group(0))
-        spans.append((start, end))
-    elif m_rp:
-        v1 = _parse_money_token(m_rp.group('a'))
-        v2 = _parse_money_token(m_rp.group('b'))
-        c.price_min, c.price_max = min(v1, v2), max(v1, v2)
-        start, end = m_rp.span()
-        prefix = text[max(0, start - 25):start]
-        cue = re.search(r'(?:budget|anggaran|harga|kisaran|sekitar)\s*$', prefix)
-        if cue:
-            start -= len(cue.group(0))
-        spans.append((start, end))
-    else:
-        m = _MONEY.search(text)
-        if m:
-            value = _money_value(m)
-            start, end = m.start(), m.end()
-            prefix = text[max(0, start - 28):start]
-            suffix = text[end:end + 20]
-
-            suf_u_strict = re.match(r'\s*(?:ke\s?bawah)\b', suffix)
-            suf_u_incl = re.match(r'\s*(?:maks(?:imal|imum)?|max)\b', suffix)
-            suf_l_incl = re.match(r'\s*(?:ke\s?atas|minimal|minimum|min)\b', suffix)
-
-            cue_u_strict = re.search(_UPPER_STRICT + r'\s*$', prefix)
-            cue_u_incl = re.search(_UPPER_INCLUSIVE + r'\s*$', prefix)
-            cue_l_strict = re.search(_LOWER_STRICT + r'\s*$', prefix)
-            cue_l_incl = re.search(_LOWER_INCLUSIVE + r'\s*$', prefix)
-            cue_a = re.search(_AROUND + r'\s*$', prefix)
-
-            if cue_u_strict or suf_u_strict:
-                c.price_max = value
-                c.price_max_inclusive = False
-                if cue_u_strict:
-                    start -= len(cue_u_strict.group(0))
-                if suf_u_strict:
-                    end += len(suf_u_strict.group(0))
-            elif cue_u_incl or suf_u_incl:
-                c.price_max = value
-                c.price_max_inclusive = True
-                if cue_u_incl:
-                    start -= len(cue_u_incl.group(0))
-                if suf_u_incl:
-                    end += len(suf_u_incl.group(0))
-            elif cue_l_strict:
-                c.price_min = value
-                c.price_min_inclusive = False
-                start -= len(cue_l_strict.group(0))
-            elif cue_l_incl or suf_l_incl:
-                c.price_min = value
-                c.price_min_inclusive = True
-                if cue_l_incl:
-                    start -= len(cue_l_incl.group(0))
-                if suf_l_incl:
-                    end += len(suf_l_incl.group(0))
+    # 2. Harga (rentang & klausa nominal tunggal/majemuk)
+    for rx, is_juta in (
+        (_RANGE_ANTARA_JUTA, True),
+        (_RANGE_ANTARA_PLAIN, False),
+        (_RANGE_JUTA, True),
+        (_RANGE_PLAIN, False),
+    ):
+        for m_r in rx.finditer(text):
+            if is_juta:
+                v1 = int(round(_to_float(m_r.group('a')) * 1_000_000))
+                v2 = int(round(_to_float(m_r.group('b')) * 1_000_000))
             else:
-                c.price_around_target = value
-                c.price_min = int(round(value * (1 - AROUND_RATIO)))
-                c.price_max = int(round(value * (1 + AROUND_RATIO)))
-                if cue_a:
-                    start -= len(cue_a.group(0))
+                v1 = _parse_money_token(m_r.group('a'))
+                v2 = _parse_money_token(m_r.group('b'))
+            _apply_price_min(c, min(v1, v2), True)
+            _apply_price_max(c, max(v1, v2), True)
+            start, end = m_r.span()
+            prefix = text[max(0, start - 32):start]
+            cue = re.search(r'(?:harga\s+)?(?:budget|anggaran|harga|kisaran|sekitar)(?:\s+(?:saya|ku|aku|kami))?\s*$', prefix)
+            if cue:
+                start -= len(cue.group(0))
             spans.append((start, end))
+        if spans:
+            break
 
-    text_no_price = _cut(text, spans)
+    text_after_ranges = _cut(text, spans)
+    spans = []
+    prev_end = 0
+    explicit_price_bound = (c.price_min is not None or c.price_max is not None)
+
+    for m in _MONEY.finditer(text_after_ranges):
+        value = _money_value(m)
+        start, end = m.start(), m.end()
+        prefix = text_after_ranges[max(prev_end, start - 35):start]
+        suffix = text_after_ranges[end:end + 22]
+
+        suf_u_incl = re.match(r'\s*(?:ke\s?bawah|maks(?:imal|imum)?|max)\b', suffix)
+        suf_l_incl = re.match(r'\s*(?:ke\s?atas|minimal|minimum|min)\b', suffix)
+
+        cue_u_strict = re.search(r'(?:harga\s+)?' + _UPPER_STRICT + r'\s*$', prefix)
+        cue_u_incl = re.search(r'(?:harga\s+)?' + _UPPER_INCLUSIVE + r'\s*$', prefix)
+        cue_l_strict = re.search(r'(?:harga\s+)?' + _LOWER_STRICT + r'\s*$', prefix)
+        cue_l_incl = re.search(r'(?:harga\s+)?' + _LOWER_INCLUSIVE + r'\s*$', prefix)
+        cue_a = re.search(r'(?:' + _AROUND + r')\s*$', prefix)
+
+        if cue_u_strict:
+            _apply_price_max(c, value, False)
+            explicit_price_bound = True
+            start -= len(cue_u_strict.group(0))
+        elif cue_u_incl or suf_u_incl:
+            _apply_price_max(c, value, True)
+            explicit_price_bound = True
+            if cue_u_incl:
+                start -= len(cue_u_incl.group(0))
+            if suf_u_incl:
+                end += len(suf_u_incl.group(0))
+                lead_cue = re.search(r'(?:harga|budget|anggaran)(?:\s+(?:saya|ku|aku|kami))?\s*$', prefix)
+                if lead_cue:
+                    start -= len(lead_cue.group(0))
+        elif cue_l_strict:
+            _apply_price_min(c, value, False)
+            explicit_price_bound = True
+            start -= len(cue_l_strict.group(0))
+        elif cue_l_incl or suf_l_incl:
+            _apply_price_min(c, value, True)
+            explicit_price_bound = True
+            if cue_l_incl:
+                start -= len(cue_l_incl.group(0))
+            if suf_l_incl:
+                end += len(suf_l_incl.group(0))
+                lead_cue = re.search(r'(?:harga|budget|anggaran)(?:\s+(?:saya|ku|aku|kami))?\s*$', prefix)
+                if lead_cue:
+                    start -= len(lead_cue.group(0))
+        elif not explicit_price_bound and c.price_min is None and c.price_max is None:
+            _apply_price_min(c, int(round(value * (1 - AROUND_RATIO))), True)
+            _apply_price_max(c, int(round(value * (1 + AROUND_RATIO))), True)
+            c.price_around_target = value
+            if cue_a:
+                start -= len(cue_a.group(0))
+        prev_end = max(prev_end, m.end())
+        spans.append((start, end))
+
+    text_no_price = _cut(text_after_ranges, spans)
     spans = []
 
-    # 3. SSD & Storage lebih dulu supaya angka kapasitas tidak terbaca sebagai RAM
+    # 3a. SSD eksplisit (termasuk desimal koma seperti 0,5 TB & batas atas)
     for rx in (_SSD_A, _SSD_B):
         m = rx.search(text_no_price)
         if m:
-            val = float(m.group('v'))
+            val = _to_float(m.group('v'))
             gb = int(round(val * 1000)) if m.group('u') == 'tb' else int(round(val))
-            c.ssd_min_gb = gb
-            op = m.group('op') or (m.groupdict().get('op2') if 'op2' in m.groupdict() else None)
-            c.ssd_min_inclusive = not _is_strict_op(op)
+            op = m.group('op1') or (m.groupdict().get('op2')) or m.group('op3')
+            direction, inclusive = _classify_op(op, default_dir='min')
+            if direction == 'max':
+                c.ssd_max_gb = gb
+                c.ssd_max_inclusive = inclusive
+            else:
+                c.ssd_min_gb = gb
+                c.ssd_min_inclusive = inclusive
             spans.append(m.span())
             break
 
     text_no_ssd = _cut(text_no_price, spans)
     spans = []
 
-    m_tb = _STORAGE_TB.search(text_no_ssd)
-    m_gb = _STORAGE_GB.search(text_no_ssd)
-    if m_tb:
-        c.storage_min_gb = int(m_tb.group('v')) * 1000
-        c.storage_min_inclusive = not _is_strict_op(m_tb.group('op'))
+    # 3b. HDD eksplisit
+    for rx in (_HDD_A, _HDD_B):
+        m = rx.search(text_no_ssd)
+        if m:
+            val = _to_float(m.group('v'))
+            gb = int(round(val * 1000)) if m.group('u') == 'tb' else int(round(val))
+            op = m.group('op1') or (m.groupdict().get('op2')) or m.group('op3')
+            direction, inclusive = _classify_op(op, default_dir='min')
+            if direction == 'max':
+                c.hdd_max_gb = gb
+                c.hdd_max_inclusive = inclusive
+            else:
+                c.hdd_min_gb = gb
+                c.hdd_min_inclusive = inclusive
+            spans.append(m.span())
+            break
+
+    text_no_hdd = _cut(text_no_ssd, spans)
+    spans = []
+
+    # 3c. RAM eksplisit sebelum storage umum agar 'RAM 128GB' tidak bocor ke storage
+    for rx in (_RAM_EXP_A, _RAM_EXP_B):
+        m = rx.search(text_no_hdd)
+        if m:
+            ram_val = int(m.group('v'))
+            if ram_val > 0:
+                op = m.group('op1') or (m.groupdict().get('op2')) or m.group('op3')
+                direction, inclusive = _classify_op(op, default_dir='min')
+                if direction == 'max':
+                    c.ram_max = ram_val
+                    c.ram_max_inclusive = inclusive
+                else:
+                    c.ram_min = ram_val
+                    c.ram_min_inclusive = inclusive
+                c.ram_source = "user"
+                spans.append(m.span())
+                break
+
+    text_no_ram_exp = _cut(text_no_hdd, spans)
+    spans = []
+
+    # 3d. Storage umum (eksplisit atau angka kapasitas standar)
+    m_tb = _STORAGE_TB.search(text_no_ram_exp)
+    m_gb = _STORAGE_GB.search(text_no_ram_exp)
+    if m_tb and 0.25 <= _to_float(m_tb.group('v')) <= 16.0:
+        gb = int(round(_to_float(m_tb.group('v')) * 1000))
+        op = m_tb.group('op1') or m_tb.group('op2') or m_tb.group('op3') or m_tb.group('op4')
+        direction, inclusive = _classify_op(op, default_dir='min')
+        if direction == 'max':
+            c.storage_max_gb = gb
+            c.storage_max_inclusive = inclusive
+        else:
+            c.storage_min_gb = gb
+            c.storage_min_inclusive = inclusive
         spans.append(m_tb.span())
     elif m_gb:
-        c.storage_min_gb = int(m_gb.group('v'))
-        c.storage_min_inclusive = not _is_strict_op(m_gb.group('op'))
+        gb = int(m_gb.group('v'))
+        op = m_gb.group('op1') or m_gb.group('op2') or m_gb.group('op3') or m_gb.group('op4')
+        direction, inclusive = _classify_op(op, default_dir='min')
+        if direction == 'max':
+            c.storage_max_gb = gb
+            c.storage_max_inclusive = inclusive
+        else:
+            c.storage_min_gb = gb
+            c.storage_min_inclusive = inclusive
         spans.append(m_gb.span())
 
-    text_no_storage = _cut(text_no_ssd, spans)
+    text_no_storage = _cut(text_no_ram_exp, spans)
     spans = []
 
     # 4. Berat (kg)
@@ -434,26 +618,47 @@ def parse_constraints(query: str) -> Tuple[Constraints, str]:
         v_str = m_w.group('v') or m_w.group('v2')
         w_val = _to_float(v_str)
         if 0.3 <= w_val <= 10.0:
-            c.weight_max_kg = w_val
-            op = m_w.group('op1') or m_w.group('op2')
-            c.weight_max_inclusive = not _is_strict_op(op)
+            op = m_w.group('op1') or m_w.group('op2') or m_w.group('op3') or m_w.group('op4') or m_w.group('op5')
+            direction, inclusive = _classify_op(op, default_dir='max')
+            if direction == 'min':
+                c.weight_min_kg = w_val
+                c.weight_min_inclusive = inclusive
+            else:
+                c.weight_max_kg = w_val
+                c.weight_max_inclusive = inclusive
             spans.append(m_w.span())
 
-    # 5. RAM
-    for rx in (_RAM_A, _RAM_B):
-        m = rx.search(text_no_storage)
-        if m and int(m.group('v')) in VALID_RAM_GB:
-            c.ram_min = int(m.group('v'))
-            c.ram_min_inclusive = not _is_strict_op(m.group('op'))
-            c.ram_source = "user"
-            spans.append(m.span())
-            break
-
-    # 6. Layar
+    # 5. Layar (inch)
     m_scr = _SCREEN.search(text_no_storage)
     if m_scr and 10 <= _to_float(m_scr.group('v')) <= 18.5:
-        c.screen_inch = _to_float(m_scr.group('v'))
+        scr_val = _to_float(m_scr.group('v'))
+        op = m_scr.group('op1') or m_scr.group('op2') or m_scr.group('op3')
+        if op:
+            direction, inclusive = _classify_op(op, default_dir='min')
+            if direction == 'max':
+                c.screen_max_inch = scr_val
+                c.screen_max_inclusive = inclusive
+            else:
+                c.screen_min_inch = scr_val
+                c.screen_min_inclusive = inclusive
+        else:
+            c.screen_inch = scr_val
         spans.append(m_scr.span())
+
+    # 6. Bare RAM (tanpa kata 'ram', hanya nilai valid)
+    if c.ram_min is None and c.ram_max is None:
+        m_rb = _RAM_BARE.search(text_no_storage)
+        if m_rb and int(m_rb.group('v')) in VALID_RAM_GB:
+            op = m_rb.group('op1') or m_rb.group('op2')
+            direction, inclusive = _classify_op(op, default_dir='min')
+            if direction == 'max':
+                c.ram_max = int(m_rb.group('v'))
+                c.ram_max_inclusive = inclusive
+            else:
+                c.ram_min = int(m_rb.group('v'))
+                c.ram_min_inclusive = inclusive
+            c.ram_source = "user"
+            spans.append(m_rb.span())
 
     clean_remaining = _cut(text_no_storage, spans)
 
@@ -471,18 +676,18 @@ def parse_constraints(query: str) -> Tuple[Constraints, str]:
     # 8. Intent kebutuhan & asumsi sistem
     if _GAMING_INTENT.search(clean_remaining) and not c.exclude_gaming:
         c.require_gaming_gpu = True
-        if c.ram_min is None:
+        if c.ram_min is None and (c.ram_max is None or c.ram_max >= 8):
             c.ram_min = 8
             c.ram_source = "system_assumption"
             c.ram_reason = "gaming"
     elif _CREATOR_INTENT.search(clean_remaining):
         c.require_creator_spec = True
-        if c.ram_min is None:
+        if c.ram_min is None and (c.ram_max is None or c.ram_max >= 8):
             c.ram_min = 8
             c.ram_source = "system_assumption"
             c.ram_reason = "edit video/desain"
     elif _CODING_INTENT.search(clean_remaining):
-        if c.ram_min is None:
+        if c.ram_min is None and (c.ram_max is None or c.ram_max >= 8):
             c.ram_min = 8
             c.ram_source = "system_assumption"
             c.ram_reason = "coding/ngoding"

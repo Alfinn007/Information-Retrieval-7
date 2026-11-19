@@ -124,3 +124,61 @@ def test_expander_word_boundary_no_substring_leak():
     assert "pes" in matched_pes and "murah" in matched_pes
     for tok in ("celeron", "pentium", "4gb"):
         assert tok not in terms_pes.split(), f"Query gaming 'pes' harus tetap membuang token lemah {tok}"
+
+
+def test_paket1_multi_clause_and_price_variants():
+    for q in (
+        "minimal 5 juta dan maksimal 8 juta",
+        "maksimal 8 juta dan minimal 5 juta",
+        "antara 5 dan 8 juta",
+    ):
+        c, _ = parse_constraints(q)
+        assert c.price_min == 5_000_000 and c.price_max == 8_000_000
+        assert c.price_min_inclusive is True and c.price_max_inclusive is True
+        assert c.price_around_target is None
+
+    c_contra, _ = parse_constraints("minimal 15 juta dan maksimal 8 juta")
+    assert c_contra.price_min == 15_000_000 and c_contra.price_max == 8_000_000
+
+    for q in (
+        "maksimal Rp8 juta",
+        "budget Rp 8 juta",
+        "budget saya 8 juta",
+        "maksimal 8.000.000",
+        "≤ 8 juta",
+        "laptop harga maksimal 8 juta",
+        "maksimal 8 juta dong",
+    ):
+        c, _ = parse_constraints(q)
+        assert c.price_max == 8_000_000, f"Gagal pada: {q}"
+        assert c.price_max_inclusive is True
+        assert c.price_around_target is None, f"Tidak boleh jadi around pada: {q}"
+
+    c_kebawah, _ = parse_constraints("8,5 juta ke bawah")
+    assert c_kebawah.price_max == 8_500_000 and c_kebawah.price_max_inclusive is True
+
+
+def test_paket1_component_binding_and_operator_directions():
+    c_ram_min, _ = parse_constraints("minimal RAM 16 GB")
+    assert c_ram_min.ram_min == 16 and c_ram_min.ram_max is None
+
+    c_ram_max, _ = parse_constraints("RAM maksimal 8 GB")
+    assert c_ram_max.ram_max == 8 and c_ram_max.ram_min is None
+
+    c_ram_128, _ = parse_constraints("RAM 128GB")
+    assert c_ram_128.ram_min == 128 and c_ram_128.storage_min_gb is None
+
+    c_ssd_half, _ = parse_constraints("SSD 0,5 TB")
+    assert c_ssd_half.ssd_min_gb == 500 and c_ssd_half.ssd_max_gb is None
+
+    c_ssd_max, _ = parse_constraints("SSD maksimal 256 GB")
+    assert c_ssd_max.ssd_max_gb == 256 and c_ssd_max.ssd_min_gb is None and c_ssd_max.storage_min_gb is None
+
+    c_hdd, _ = parse_constraints("HDD 1TB")
+    assert c_hdd.hdd_min_gb == 1000 and c_hdd.storage_min_gb is None
+
+    c_w_min, _ = parse_constraints("Lenovo berat minimal 2 kg")
+    assert c_w_min.weight_min_kg == 2.0 and c_w_min.weight_max_kg is None
+
+    c_scr_min, _ = parse_constraints("layar minimal 15 inci")
+    assert c_scr_min.screen_min_inch == 15.0 and c_scr_min.screen_inch is None
